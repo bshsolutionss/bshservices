@@ -116,6 +116,18 @@ const Header = () => {
           </p>
         </div>
       </Link>
+      <Link
+        href="/Services/ai"
+        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+      >
+        <Camera className="text-[#1A14A5]" size={20} />
+        <div>
+          <h4 className="font-semibold text-[#231F20]">Ai</h4>
+          <p className="text-sm text-gray-600">
+            Stunning visuals to capture your brand story.
+          </p>
+        </div>
+      </Link>
     </div>
   </NavigationMenuContent>
 </NavigationMenuItem>

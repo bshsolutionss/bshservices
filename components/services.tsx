@@ -25,6 +25,8 @@ import {
   SlidersHorizontal,
   Aperture,
 } from "lucide-react";
+import { MessageSquare } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -94,6 +96,44 @@ const TABS: Tab[] = [
       { title: "Drone Photography", desc: "Aerial shots with cinematic quality.", icon: Camera },
     ],
   },
+  {
+    id: "ai",
+    title: "AI Services",
+    icon: Cpu,
+    items: [
+      {
+        title: "AI Automation",
+        desc: "Automate workflows, customer service, and operations using AI.",
+        icon: SlidersHorizontal,
+      },
+      {
+        title: "AI Chatbots",
+        desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
+        icon: MessageSquare,
+      },
+      {
+        title: "AI Website Integration",
+        desc: "Integrate AI search, chatbot, personalization & automation.",
+        icon: Monitor,
+      },
+      {
+        title: "AI Social Media Automation",
+        desc: "AI-driven content creation, scheduling & auto-replies.",
+        icon: Megaphone,
+      },
+      {
+        title: "AI Video Automation",
+        desc: "Auto-generated ads, reels & product videos using AI tools.",
+        icon: Video,
+      },
+      {
+        title: "AEO (AI SEO Optimization)",
+        desc: "AI-powered SEO, content generation & search ranking improvement.",
+        icon: BarChart3,
+      },
+    ],
+  },
+
 ];
 
 export default function Services(): JSX.Element {
@@ -106,6 +146,7 @@ export default function Services(): JSX.Element {
     design: "/images/Designing.png",
     marketing: "/images/Marketing.png",
     photography: "/images/Photography.png",
+    ai: "/images/Photography.png",
   };
 
   return (
@@ -136,11 +177,10 @@ export default function Services(): JSX.Element {
                 role="tab"
                 aria-selected={active === tab.id}
                 onClick={() => setActive(tab.id)}
-                className={`flex items-center gap-3 px-5 py-3 rounded-2xl focus:outline-none transition-all ${
-                  active === tab.id
+                className={`flex items-center gap-3 px-5 py-3 rounded-2xl focus:outline-none transition-all ${active === tab.id
                     ? "bg-white shadow-lg text-[#1A14A5]"
                     : "bg-white/60 hover:bg-white/90 text-[#231F20]"
-                }`}
+                  }`}
               >
                 <tab.icon className="w-5 h-5" />
                 <span className="font-semibold">{tab.title}</span>
@@ -192,18 +232,20 @@ export default function Services(): JSX.Element {
                   Explore our {activeTab.title.toLowerCase()} services and discover how we can bring your vision to life with quality and innovation.
                 </p>
 
-          <Button
-  size="lg"
-  className="bg-[#1A14A5] text-white font-semibold hover:bg-black px-8 py-4 rounded-xl transition-all duration-300 w-fit shadow-lg"
-  onClick={() => {
-    if (active === "development") router.push("/Services/development#development-form");
-    else if (active === "design") router.push("/Services/designing#designing-form");
-    else if (active === "marketing") router.push("/Services/marketing#marketing-form");
-    else if (active === "photography") router.push("/Services/photography#photography-form");
-  }}
->
-  Get a Quote
-</Button>
+                <Button
+                  size="lg"
+                  className="bg-[#1A14A5] text-white font-semibold hover:bg-black px-8 py-4 rounded-xl transition-all duration-300 w-fit shadow-lg"
+                  onClick={() => {
+                    if (active === "development") router.push("/Services/development#development-form");
+                    else if (active === "design") router.push("/Services/designing#designing-form");
+                    else if (active === "marketing") router.push("/Services/marketing#marketing-form");
+                    else if (active === "photography") router.push("/Services/photography#photography-form");
+                    else if (active === "ai") router.push("/Services/ai#ai-form");
+
+                  }}
+                >
+                  Get a Quote
+                </Button>
 
               </div>
             </motion.div>

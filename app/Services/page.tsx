@@ -1,16 +1,44 @@
-
-import React from 'react'
+import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-const page = () => {
-  return (
-    <>
-   <Header />
-    
-    <Footer />
-    </>
-  )
-}
+import Services from "@/components/services";
+// import Testimonial from "@/components/testimonial";
+import Faq from "@/components/faq";
 
-export default page
+import Contactform from "@/components/contactform";
+
+import ProcessFlow from "@/components/ProcessFlow";
+
+// import Portfolio from "@/components/portfolio";
+
+
+import OurTechnologies from "@/components/Ourtechnologies";
+
+
+const page = () => {
+
+
+  
+  return (
+    <div>
+      <Header />
+
+      
+       
+   
+ 
+      <Services />
+        <ProcessFlow />
+        <OurTechnologies />
+      {/* <Portfolio /> */}
+    {/* <Testimonial /> */}
+      <Faq />
+      <Contactform />
+
+      <Footer />
+    </div>
+  );
+};
+
+export default page;

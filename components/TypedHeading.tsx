@@ -9,7 +9,7 @@ const TypedHeading: React.FC = () => {
 
   useEffect(() => {
     const options = {
-      strings: ["BSH SOLUTIONS", "Creative Agency", "Digital Experts"],
+      strings: ["BSH SOLUTIONS", "Creative Agency", "Digital Experts", "Automation Experts"],
       typeSpeed: 70,
       backSpeed: 40,
       backDelay: 1200,

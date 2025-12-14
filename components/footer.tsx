@@ -1,7 +1,7 @@
 "use client"
 import React from "react"
 import Image from "next/image"
-import { Facebook, Instagram,  Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Instagram,  Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
@@ -45,10 +45,10 @@ const Footer = () => {
          
           <motion.li><Link href="/" className="hover:text-[#1A14A5] transition">Home</Link></motion.li>
         
-          <motion.li><Link href="/About" className="hover:text-[#1A14A5] transition">About</Link></motion.li>
+          <motion.li><Link href="/about" className="hover:text-[#1A14A5] transition">About</Link></motion.li>
           <motion.li><Link href="/Services" className="hover:text-[#1A14A5] transition">Services</Link></motion.li>
           <motion.li><Link href="/#faq" className="hover:text-[#1A14A5] transition">FAQ</Link></motion.li>
-          <motion.li><Link href="/Contact" className="hover:text-[#1A14A5] transition">Contact</Link></motion.li>
+          <motion.li><Link href="/contact" className="hover:text-[#1A14A5] transition">Contact</Link></motion.li>
         </motion.ul>
 
         {/* Contact Info + Socials */}
@@ -81,6 +81,9 @@ const Footer = () => {
             
             <Link href="https://www.linkedin.com/company/bshsolutions" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
               <Linkedin className="text-[#1A14A5]" />
+            </Link>
+            <Link href="https://www.youtube.com/@bshsolutions" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
+              <Youtube className="text-[#1A14A5]" />
             </Link>
           </div>
           </div>

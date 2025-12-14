@@ -50,6 +50,20 @@ import {
   SiMeta,
   SiBuffer,
   SiHootsuite,
+
+
+
+
+
+   SiOpenai,
+  SiTensorflow,
+  SiPytorch,
+  SiHuggingface,
+  SiKeras,
+  SiScikitlearn,
+  SiAmazon,
+  SiGooglecloud,
+ 
 } from "react-icons/si";
 
 const techStack = [
@@ -102,6 +116,21 @@ const techStack = [
   { name: "Meta Business Suite", icon: <SiMeta color="#0866FF" /> },
   { name: "Buffer", icon: <SiBuffer color="#000000" /> },
   { name: "Hootsuite", icon: <SiHootsuite color="#1D9BF0" /> },
+
+
+
+
+
+
+    { name: "OpenAI", icon: <SiOpenai color="#412991" /> },
+  { name: "TensorFlow", icon: <SiTensorflow color="#FF6F00" /> },
+  { name: "PyTorch", icon: <SiPytorch color="#EE4C2C" /> },
+  { name: "Hugging Face", icon: <SiHuggingface color="#FFCC4D" /> },
+  { name: "Keras", icon: <SiKeras color="#D00000" /> },
+  { name: "Scikit-Learn", icon: <SiScikitlearn color="#F7931E" /> },
+  { name: "AWS AI", icon: <SiAmazon color="#FF9900" /> },
+  { name: "Google Cloud AI", icon: <SiGooglecloud color="#4285F4" /> },
+ 
 ];
 
 export default function OurTechnologies() {
