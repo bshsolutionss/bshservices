@@ -7,33 +7,28 @@ import Services from "@/components/services";
 import Faq from "@/components/faq";
 import About from "@/components/about";
 import Contactform from "@/components/contactform";
-import MovingText from "@/components/MovingText";
+// import MovingText from "@/components/MovingText";
 import ProcessFlow from "@/components/ProcessFlow";
 import "./globals.css";
 // import Portfolio from "@/components/portfolio";
 
-import { StatCounter } from "@/components/stat-counter"
+import { StatCounter } from "@/components/stat-counter";
 import OurTechnologies from "@/components/Ourtechnologies";
 
-
 const page = () => {
-
-
-  
   return (
     <div>
       <Header />
       <Heros />
-       <StatCounter />
-       <MovingText />
-       
-   
+      <StatCounter />
+      {/* <MovingText /> */}
+
       <About />
       <Services />
-        <ProcessFlow />
-        <OurTechnologies />
+      <ProcessFlow />
+      <OurTechnologies />
       {/* <Portfolio /> */}
-    {/* <Testimonial /> */}
+      {/* <Testimonial /> */}
       <Faq />
       <Contactform />
 
