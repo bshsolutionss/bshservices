@@ -42,7 +42,7 @@ export default function AIServicesPage() {
           { name: "OpenAI", icon: <SiOpenai color="#15AABF" /> },
           { name: "Google Cloud AI", icon: <SiGooglecloud color="#4285F4" /> },
         ]}
-        image="/images/ai/ai-automation.png"
+        image="/images/ai/1.png"
       />
 
       {/* ===== 2. Social Media Automation ===== */}
@@ -62,7 +62,7 @@ export default function AIServicesPage() {
           { name: "Zapier", icon: <SiZapier color="#FF4A00" /> },
           { name: "Buffer AI", icon: <FaCogs color="#6F42C1" /> },
         ]}
-        image="/images/ai/social-automation.png"
+        image="/images/ai/2.png"
         reverse
       />
 
@@ -83,7 +83,7 @@ export default function AIServicesPage() {
           { name: "Meta AI", icon: <FaRobot color="#000" /> },
           { name: "Dialogflow", icon: <SiGooglecloud color="#4285F4" /> },
         ]}
-        image="/images/ai/ai-chatbot.png"
+        image="/images/ai/3.png"
       />
 
       {/* ===== 4. AI Website Integration ===== */}
@@ -103,7 +103,7 @@ export default function AIServicesPage() {
           { name: "Pinecone Vector DB", icon: <FaCogs color="#0B84F3" /> },
           { name: "LangChain", icon: <FaRobot color="#444" /> },
         ]}
-        image="/images/ai/ai-website.png"
+        image="/images/ai/4.png"
         reverse
       />
 
@@ -124,7 +124,7 @@ export default function AIServicesPage() {
           { name: "Workflow Automation", icon: <SiZapier color="#FF4A00" /> },
           { name: "GPT Solutions", icon: <SiOpenai color="#15AABF" /> },
         ]}
-        image="/images/ai/aeo.png"
+        image="/images/ai/5.png"
       />
 
       {/* ===== 6. AI Video Automation ===== */}
@@ -144,28 +144,8 @@ export default function AIServicesPage() {
           { name: "CapCut AI", icon: <FaCogs color="#0B84F3" /> },
           { name: "ElevenLabs", icon: <FaRobot /> },
         ]}
-        image="/images/ai/video-automation.png"
+        image="/images/ai/6.png"
         reverse
-      />
-
-      {/* ===== 7. SEO-Based AI Content ===== */}
-      <ServiceSection
-        id="seo-ai-content"
-        title="SEO-Based AI Content"
-        description="Google-ranked SEO content created using advanced AI + human-level editing & fact-checking."
-        features={[
-          "SEO keyword research",
-          "Long-form articles",
-          "Product descriptions",
-          "Fact-checked AI content",
-        ]}
-        tech={[
-          { name: "GPT-4/5", icon: <SiOpenai color="#15AABF" /> },
-          { name: "Surfer SEO", icon: <FaSearch color="#4C8BF5" /> },
-          { name: "Ahrefs", icon: <FaSearch color="#0D6EFD" /> },
-          { name: "Google NLP", icon: <SiGooglecloud color="#4285F4" /> },
-        ]}
-        image="/images/ai/seo-content.png"
       />
 
       <section id="AI-form">
