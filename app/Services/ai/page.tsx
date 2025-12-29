@@ -18,7 +18,7 @@ export default function AIServicesPage() {
       <Hero
         title="AI-Powered Business Services"
         subtitle="We help businesses automate, scale, and grow using modern AI solutions that deliver real, measurable results."
-        image="/images/ai/ai-hero.png"
+        image="/images/ai/ai.png"
       />
 
       <section className="text-center py-16">

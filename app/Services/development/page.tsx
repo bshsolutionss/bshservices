@@ -151,7 +151,7 @@ export default function DevelopmentPage() {
           { name: "Firebase", icon: <SiFirebase color="#FFCA28" /> },
           { name: "Prisma", icon: <SiPrisma color="#2D3748" /> },
         ]}
-        image="/images/develophdjdment/5.png"
+        image="/images/development/5.png"
       />
 
       {/* ===== 6. Maintenance & Support ===== */}
@@ -174,10 +174,10 @@ export default function DevelopmentPage() {
         image="/images/development/6.png"
         reverse
       />
-<section id="development-form">
-  <Form serviceName="Development" />
-</section>
-      
+      <section id="development-form">
+        <Form serviceName="Development" />
+      </section>
+
       <Footer />
     </>
   );
