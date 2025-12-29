@@ -7,7 +7,7 @@ import Services from "@/components/services";
 import Faq from "@/components/faq";
 import About from "@/components/about";
 import Contactform from "@/components/contactform";
-// import MovingText from "@/components/MovingText";
+import MovingText from "@/components/MovingText";
 import ProcessFlow from "@/components/ProcessFlow";
 import "./globals.css";
 // import Portfolio from "@/components/portfolio";
@@ -21,7 +21,7 @@ const page = () => {
       <Header />
       <Heros />
       <StatCounter />
-      {/* <MovingText /> */}
+      <MovingText />
 
       <About />
       <Services />
