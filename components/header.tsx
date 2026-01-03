@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,26 +11,26 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { Menu, Phone, Code, Palette, Camera, Megaphone } from "lucide-react"
-import Lenis from "@studio-freight/lenis"
+} from "@/components/ui/navigation-menu";
+import { Menu, Phone, Code, Palette, Camera, Megaphone } from "lucide-react";
+import Lenis from "@studio-freight/lenis";
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Enable Lenis Smooth Scroll
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
       smoothWheel: true,
-    })
+    });
 
     function raf(time: number) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
+      lenis.raf(time);
+      requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf)
-  }, [])
+    requestAnimationFrame(raf);
+  }, []);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-[#F4F7FE]/80 backdrop-blur-xl shadow-lg border-b border-white/20">
@@ -51,72 +51,81 @@ const Header = () => {
           <NavigationMenu>
             <NavigationMenuList className="flex items-center space-x-6 text-[#231F20] font-medium">
               <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
                   <Link href="/">Home</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              
-
               {/* Mega Dropdown for Services */}
-            <NavigationMenuItem>
-  <NavigationMenuTrigger className="hover:text-[#1A14A5] transition">
-    Services
-  </NavigationMenuTrigger>
-  <NavigationMenuContent>
-    <div className="grid grid-cols-2 gap-6 p-6 w-[500px] bg-white/95 backdrop-blur-lg shadow-xl rounded-2xl">
-      <Link
-        href="/Services/development"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Code className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Development</h4>
-          <p className="text-sm text-gray-600">
-            Web & mobile solutions tailored for your needs.
-          </p>
-        </div>
-      </Link>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="hover:text-[#1A14A5] transition">
+                  Services
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid grid-cols-2 gap-6 p-6 w-[500px] bg-white/95 backdrop-blur-lg shadow-xl rounded-2xl">
+                    <Link
+                      href="/Services/development"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Code className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Development
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Web & mobile solutions tailored for your needs.
+                        </p>
+                      </div>
+                    </Link>
 
-      <Link
-        href="/Services/designing"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Palette className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Designing</h4>
-          <p className="text-sm text-gray-600">
-            UI/UX that blends creativity and usability.
-          </p>
-        </div>
-      </Link>
+                    <Link
+                      href="/Services/designing"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Palette className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Designing
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          UI/UX that blends creativity and usability.
+                        </p>
+                      </div>
+                    </Link>
 
-      <Link
-        href="/Services/marketing"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Megaphone className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Marketing</h4>
-          <p className="text-sm text-gray-600">
-            Strategies that help your brand grow faster.
-          </p>
-        </div>
-      </Link>
+                    <Link
+                      href="/Services/marketing"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Megaphone className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Marketing
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Strategies that help your brand grow faster.
+                        </p>
+                      </div>
+                    </Link>
 
-      <Link
-        href="/Services/photography"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Camera className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Photography</h4>
-          <p className="text-sm text-gray-600">
-            Stunning visuals to capture your brand story.
-          </p>
-        </div>
-      </Link>
-      <Link
+                    <Link
+                      href="/Services/photography"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Camera className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Photography
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Stunning visuals to capture your brand story.
+                        </p>
+                      </div>
+                    </Link>
+                    {/* <Link
         href="/Services/ai"
         className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
       >
@@ -127,12 +136,15 @@ const Header = () => {
             Stunning visuals to capture your brand story.
           </p>
         </div>
-      </Link>
-    </div>
-  </NavigationMenuContent>
-</NavigationMenuItem>
-<NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
+      </Link> */}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
                   <Link href="/about">About</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -154,7 +166,10 @@ const Header = () => {
 
         {/* Right - Buttons */}
         <div className="hidden md:flex space-x-3">
-          <Button className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl px-5" asChild>
+          <Button
+            className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl px-5"
+            asChild
+          >
             <Link href="/contact">Contact</Link>
           </Button>
           <Button
@@ -180,7 +195,7 @@ const Header = () => {
           <Link href="/" className="block hover:text-[#1A14A5]">
             Home
           </Link>
-        
+
           <div>
             <p className="font-semibold text-[#231F20] mb-2">Services</p>
             <div className="space-y-2 pl-3">
@@ -210,7 +225,7 @@ const Header = () => {
               </Link>
             </div>
           </div>
-            <Link href="/about" className="block hover:text-[#1A14A5]">
+          <Link href="/about" className="block hover:text-[#1A14A5]">
             About
           </Link>
           {/* <Link href="/Blog" className="block hover:text-[#1A14A5]">
@@ -220,7 +235,10 @@ const Header = () => {
             Case Studies
           </Link> */}
           <div className="flex flex-col gap-3 pt-4">
-            <Button className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl" asChild>
+            <Button
+              className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl"
+              asChild
+            >
               <Link href="/contact">Contact</Link>
             </Button>
             <Button
@@ -233,7 +251,7 @@ const Header = () => {
         </div>
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
