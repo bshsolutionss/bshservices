@@ -49,12 +49,36 @@ const TABS: Tab[] = [
     title: "Development",
     icon: Globe,
     items: [
-      { title: "Website Development", desc: "Fast, secure, and scalable web solutions.", icon: Monitor },
-      { title: "E-commerce", desc: "Custom online stores with secure payment gateways.", icon: ShoppingCart },
-      { title: "Mobile Apps", desc: "Cross-platform apps built for performance.", icon: Smartphone },
-      { title: "Custom Software", desc: "Tailored systems to automate and optimize business.", icon: Cpu },
-      { title: "Web Applications", desc: "Dynamic, API-integrated web apps.", icon: ChartBar },
-      { title: "Maintenance & Support", desc: "Ongoing updates, fixes, and technical support.", icon: SlidersHorizontal },
+      {
+        title: "Website Development",
+        desc: "Fast, secure, and scalable web solutions.",
+        icon: Monitor,
+      },
+      {
+        title: "E-commerce",
+        desc: "Custom online stores with secure payment gateways.",
+        icon: ShoppingCart,
+      },
+      {
+        title: "Mobile Apps",
+        desc: "Cross-platform apps built for performance.",
+        icon: Smartphone,
+      },
+      {
+        title: "Custom Software",
+        desc: "Tailored systems to automate and optimize business.",
+        icon: Cpu,
+      },
+      {
+        title: "Web Applications",
+        desc: "Dynamic, API-integrated web apps.",
+        icon: ChartBar,
+      },
+      {
+        title: "Maintenance & Support",
+        desc: "Ongoing updates, fixes, and technical support.",
+        icon: SlidersHorizontal,
+      },
     ],
   },
   {
@@ -62,12 +86,36 @@ const TABS: Tab[] = [
     title: "Designing",
     icon: Brush,
     items: [
-      { title: "Branding", desc: "Complete visual identity design.", icon: Paintbrush },
-      { title: "UI / UX", desc: "Designs that delight and convert.", icon: Monitor },
-      { title: "Graphic Design", desc: "Creative visuals for print and digital.", icon: Palette },
-      { title: "Logo Design", desc: "Unique, memorable brand marks.", icon: PenTool },
-      { title: "Motion Graphics", desc: "Animated visuals and video graphics.", icon: Video },
-      { title: "Packaging Design", desc: "Professional product packaging designs.", icon: ChartBar },
+      {
+        title: "Branding",
+        desc: "Complete visual identity design.",
+        icon: Paintbrush,
+      },
+      {
+        title: "UI / UX",
+        desc: "Designs that delight and convert.",
+        icon: Monitor,
+      },
+      {
+        title: "Graphic Design",
+        desc: "Creative visuals for print and digital.",
+        icon: Palette,
+      },
+      {
+        title: "Logo Design",
+        desc: "Unique, memorable brand marks.",
+        icon: PenTool,
+      },
+      {
+        title: "Motion Graphics",
+        desc: "Animated visuals and video graphics.",
+        icon: Video,
+      },
+      {
+        title: "Packaging Design",
+        desc: "Professional product packaging designs.",
+        icon: ChartBar,
+      },
     ],
   },
   {
@@ -75,12 +123,36 @@ const TABS: Tab[] = [
     title: "Marketing",
     icon: BarChart3,
     items: [
-      { title: "PPC Advertising", desc: "Targeted paid ad campaigns for high ROI.", icon: DollarSign },
-      { title: "Social Media Marketing", desc: "Growth through creative social campaigns.", icon: Users },
-      { title: "SEO Optimization", desc: "Rank higher with data-driven SEO.", icon: Megaphone },
-      { title: "Email Marketing", desc: "Automated and personalized email flows.", icon: ChartBar },
-      { title: "Content Marketing", desc: "Engaging blog, video, and media strategies.", icon: PenTool },
-      { title: "Influencer Marketing", desc: "Collaborate with trusted voices in your niche.", icon: Users },
+      {
+        title: "PPC Advertising",
+        desc: "Targeted paid ad campaigns for high ROI.",
+        icon: DollarSign,
+      },
+      {
+        title: "Social Media Marketing",
+        desc: "Growth through creative social campaigns.",
+        icon: Users,
+      },
+      {
+        title: "SEO Optimization",
+        desc: "Rank higher with data-driven SEO.",
+        icon: Megaphone,
+      },
+      {
+        title: "Email Marketing",
+        desc: "Automated and personalized email flows.",
+        icon: ChartBar,
+      },
+      {
+        title: "Content Marketing",
+        desc: "Engaging blog, video, and media strategies.",
+        icon: PenTool,
+      },
+      {
+        title: "Influencer Marketing",
+        desc: "Collaborate with trusted voices in your niche.",
+        icon: Users,
+      },
     ],
   },
   {
@@ -88,12 +160,36 @@ const TABS: Tab[] = [
     title: "Photography",
     icon: CameraIcon,
     items: [
-      { title: "Product Photography", desc: "High-quality product visuals for online stores.", icon: Camera },
-      { title: "Brand Shoots", desc: "Professional shoots that tell your brand’s story.", icon: ImageIcon },
-      { title: "Event Coverage", desc: "Capture events with precision and creativity.", icon: CameraIcon },
-      { title: "Video Production", desc: "Full-scale promotional and brand videos.", icon: Video },
-      { title: "Editing & Retouching", desc: "Expert editing for stunning final results.", icon: Aperture },
-      { title: "Drone Photography", desc: "Aerial shots with cinematic quality.", icon: Camera },
+      {
+        title: "Product Photography",
+        desc: "High-quality product visuals for online stores.",
+        icon: Camera,
+      },
+      {
+        title: "Brand Shoots",
+        desc: "Professional shoots that tell your brand’s story.",
+        icon: ImageIcon,
+      },
+      {
+        title: "Event Coverage",
+        desc: "Capture events with precision and creativity.",
+        icon: CameraIcon,
+      },
+      {
+        title: "Video Production",
+        desc: "Full-scale promotional and brand videos.",
+        icon: Video,
+      },
+      {
+        title: "Editing & Retouching",
+        desc: "Expert editing for stunning final results.",
+        icon: Aperture,
+      },
+      {
+        title: "Drone Photography",
+        desc: "Aerial shots with cinematic quality.",
+        icon: Camera,
+      },
     ],
   },
   {
@@ -133,7 +229,6 @@ const TABS: Tab[] = [
       },
     ],
   },
-
 ];
 
 export default function Services(): JSX.Element {
@@ -146,11 +241,14 @@ export default function Services(): JSX.Element {
     design: "/images/Designing.png",
     marketing: "/images/Marketing.png",
     photography: "/images/Photography.png",
-    ai: "/images/Photography.png",
+    // ai: "/images/Photography.png",
   };
 
   return (
-    <section id="services" className="relative py-20 px-6 lg:px-16 bg-[#F4F7FE] overflow-hidden">
+    <section
+      id="services"
+      className="relative py-20 px-6 lg:px-16 bg-[#F4F7FE] overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto">
         {/* ====== Section Heading ====== */}
         <motion.div
@@ -164,23 +262,29 @@ export default function Services(): JSX.Element {
             Our <span className="text-[#231F20]">Services</span>
           </h2>
           <p className="mt-4 text-lg text-[#231F20]/80 max-w-2xl mx-auto">
-            Business Smart Hub (BSH) provides future-ready solutions to help businesses design, develop, market, and scale in the digital age.
+            Business Smart Hub (BSH) provides future-ready solutions to help
+            businesses design, develop, market, and scale in the digital age.
           </p>
         </motion.div>
 
         {/* ====== Tabs ====== */}
         <div className="mt-10">
-          <div className="flex gap-3 flex-wrap justify-center" role="tablist" aria-label="Services tabs">
+          <div
+            className="flex gap-3 flex-wrap justify-center"
+            role="tablist"
+            aria-label="Services tabs"
+          >
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 role="tab"
                 aria-selected={active === tab.id}
                 onClick={() => setActive(tab.id)}
-                className={`flex items-center gap-3 px-5 py-3 rounded-2xl focus:outline-none transition-all ${active === tab.id
+                className={`flex items-center gap-3 px-5 py-3 rounded-2xl focus:outline-none transition-all ${
+                  active === tab.id
                     ? "bg-white shadow-lg text-[#1A14A5]"
                     : "bg-white/60 hover:bg-white/90 text-[#231F20]"
-                  }`}
+                }`}
               >
                 <tab.icon className="w-5 h-5" />
                 <span className="font-semibold">{tab.title}</span>
@@ -229,24 +333,29 @@ export default function Services(): JSX.Element {
                 </div>
 
                 <p className="text-white/95 mb-6 text-sm sm:text-base md:text-lg max-w-2xl drop-shadow-[0_0_10px_rgba(0,0,0,0.7)]">
-                  Explore our {activeTab.title.toLowerCase()} services and discover how we can bring your vision to life with quality and innovation.
+                  Explore our {activeTab.title.toLowerCase()} services and
+                  discover how we can bring your vision to life with quality and
+                  innovation.
                 </p>
 
                 <Button
                   size="lg"
                   className="bg-[#1A14A5] text-white font-semibold hover:bg-black px-8 py-4 rounded-xl transition-all duration-300 w-fit shadow-lg"
                   onClick={() => {
-                    if (active === "development") router.push("/Services/development#development-form");
-                    else if (active === "design") router.push("/Services/designing#designing-form");
-                    else if (active === "marketing") router.push("/Services/marketing#marketing-form");
-                    else if (active === "photography") router.push("/Services/photography#photography-form");
-                    else if (active === "ai") router.push("/Services/ai#ai-form");
-
+                    if (active === "development")
+                      router.push("/Services/development#development-form");
+                    else if (active === "design")
+                      router.push("/Services/designing#designing-form");
+                    else if (active === "marketing")
+                      router.push("/Services/marketing#marketing-form");
+                    else if (active === "photography")
+                      router.push("/Services/photography#photography-form");
+                    else if (active === "ai")
+                      router.push("/Services/ai#ai-form");
                   }}
                 >
                   Get a Quote
                 </Button>
-
               </div>
             </motion.div>
 
@@ -263,18 +372,28 @@ export default function Services(): JSX.Element {
                 >
                   <div>
                     <item.icon className="w-12 h-12 text-[#1A14A5] mb-4 mx-auto" />
-                    <h4 className="text-xl font-semibold text-[#231F20] mb-2">{item.title}</h4>
-                    <p className="text-sm text-[#231F20]/75 mb-6">{item.desc}</p>
+                    <h4 className="text-xl font-semibold text-[#231F20] mb-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-[#231F20]/75 mb-6">
+                      {item.desc}
+                    </p>
                   </div>
 
                   {/* Learn More Button → dynamic link */}
                   <Button
                     onClick={() => {
-                      const slug = item.title.toLowerCase().replace(/\s+/g, "-");
-                      if (active === "development") router.push(`/Services/development#${slug}`);
-                      else if (active === "design") router.push(`/Services/designing#${slug}`);
-                      else if (active === "marketing") router.push(`/Services/marketing#${slug}`);
-                      else if (active === "photography") router.push(`/Services/photography#${slug}`);
+                      const slug = item.title
+                        .toLowerCase()
+                        .replace(/\s+/g, "-");
+                      if (active === "development")
+                        router.push(`/Services/development#${slug}`);
+                      else if (active === "design")
+                        router.push(`/Services/designing#${slug}`);
+                      else if (active === "marketing")
+                        router.push(`/Services/marketing#${slug}`);
+                      else if (active === "photography")
+                        router.push(`/Services/photography#${slug}`);
                     }}
                     className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto transition-all"
                   >
