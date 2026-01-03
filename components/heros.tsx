@@ -6,6 +6,7 @@ import { motion, MotionProps } from "framer-motion";
 import HeroLogo from "./HeroLogo";
 import Image from "next/image";
 import TypedHeading from "@/components/TypedHeading";
+import Link from "next/link";
 
 // Common floating animation config
 const floatingAnimation: MotionProps = {
@@ -19,9 +20,9 @@ const floatingAnimation: MotionProps = {
 };
 const Heros: React.FC = () => {
   return (
-    <section className="relative min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-10 lg:px-16 bg-[#F4F7FE] overflow-hidden pt-20 lg:pt-32 pb-20">
+    <section className="relative w-full overflow-hidden min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-10 lg:px-16 bg-[#F4F7FE] overflow-hidden pt-20 lg:pt-32 pb-20">
       {/* Left Content */}
-    
+
       <div className="max-w-2xl text-center lg:text-left space-y-6 relative z-10 mt-12 lg:mt-0">
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
@@ -29,7 +30,7 @@ const Heros: React.FC = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#1A14A5] drop-shadow-sm tracking-tight"
         >
-           <TypedHeading />
+          <TypedHeading />
         </motion.h1>
 
         <motion.h2
@@ -68,9 +69,14 @@ const Heros: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          <Button className="relative bg-[#1A14A5] hover:bg-[#0e0a7a] text-white px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-lg rounded-2xl shadow-lg hover:shadow-2xl transition group overflow-hidden">
-            <span className="relative z-10">🚀 Get Started</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-[#1A14A5] to-[#231F20] opacity-0 group-hover:opacity-100 transition duration-300 rounded-2xl"></span>
+          <Button
+            asChild
+            className="relative bg-[#1A14A5] hover:bg-[#0e0a7a] text-white px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-lg rounded-2xl shadow-lg hover:shadow-2xl transition group overflow-hidden"
+          >
+            <Link href="/contact">
+              <span className="relative z-10">🚀 Get Started</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-[#1A14A5] to-[#231F20] opacity-0 group-hover:opacity-100 transition duration-300 rounded-2xl" />
+            </Link>
           </Button>
         </motion.div>
       </div>
@@ -82,7 +88,12 @@ const Heros: React.FC = () => {
           {...floatingAnimation}
           className="absolute -top-6 sm:-top-10 -right-6 sm:-right-10 w-24 sm:w-36 lg:w-48 h-24 sm:h-36 lg:h-48 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/1.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/1.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         <motion.div
@@ -90,7 +101,12 @@ const Heros: React.FC = () => {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/4 -right-10 sm:-right-16 w-20 sm:w-32 lg:w-40 h-20 sm:h-32 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/2.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/2.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         <motion.div
@@ -98,7 +114,12 @@ const Heros: React.FC = () => {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-10 right-0 w-20 sm:w-36 lg:w-44 h-20 sm:h-36 lg:h-44 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/3.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/3.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         <motion.div
@@ -106,7 +127,12 @@ const Heros: React.FC = () => {
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -bottom-10 left-6 sm:left-10 w-20 sm:w-32 lg:w-44 h-20 sm:h-32 lg:h-44 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/4.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/4.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         <motion.div
@@ -114,7 +140,12 @@ const Heros: React.FC = () => {
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-0 left-10 sm:left-20 w-16 sm:w-28 lg:w-40 h-16 sm:h-28 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/5.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/5.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         <motion.div
@@ -122,7 +153,12 @@ const Heros: React.FC = () => {
           transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-20 left-0 w-16 sm:w-28 lg:w-40 h-16 sm:h-28 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
         >
-          <Image src="/images/6.png" alt="Hero" fill className="object-contain" />
+          <Image
+            src="/images/6.png"
+            alt="Hero"
+            fill
+            className="object-contain"
+          />
         </motion.div>
 
         {/* Center Logo */}

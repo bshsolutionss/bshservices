@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import React from "react"
-import Image from "next/image"
-import { motion } from "framer-motion"
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 const About = () => {
   return (
@@ -20,7 +20,7 @@ const About = () => {
         >
           <div className="relative w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] md:w-[480px] md:h-[480px] lg:w-[500px] lg:h-[500px] overflow-hidden">
             {/* Background Blue Glow */}
-            <div className="absolute inset-0 -z-10 rounded-full"></div>
+            <div className="absolute inset-0 w-full -z-10 rounded-full"></div>
 
             {/* Image fills entire glass background */}
             <Image
@@ -45,7 +45,9 @@ const About = () => {
           </h2>
 
           <p className="text-base sm:text-lg text-[#231F20]/80 leading-relaxed">
-            <strong>Business Smart Hub – A hub for all business tech needs.</strong>{" "}
+            <strong>
+              Business Smart Hub – A hub for all business tech needs.
+            </strong>{" "}
             At BSH Solutions, we aim to be the ultimate technology partner for
             businesses, providing everything from{" "}
             <span className="font-semibold">design and marketing</span> to{" "}
@@ -80,7 +82,9 @@ const About = () => {
                 key={index}
                 className="p-6 bg-white/60 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-xl transition"
               >
-                <h3 className="text-xl font-bold text-[#1A14A5]">{box.title}</h3>
+                <h3 className="text-xl font-bold text-[#1A14A5]">
+                  {box.title}
+                </h3>
                 <p className="mt-2 text-sm text-[#231F20]/80">{box.text}</p>
               </div>
             ))}
@@ -95,7 +99,7 @@ const About = () => {
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default About
+export default About;

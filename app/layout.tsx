@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -20,20 +28,18 @@ export const metadata: Metadata = {
     template: "%s | BSH Solutions",
   },
   description:
-    "Business Smart Hub – A hub for all business tech needs. BSH Solutions provides top-notch digital, software, and IT solutions to empower businesses for the modern era.",
+    "Business Smart Hub – A hub for all business tech needs. BSH Solutions provides scalable digital, software, and IT solutions for modern businesses.",
   keywords: [
     "BSH Solutions",
     "Business Smart Hub",
-    "IT Company",
+    "IT Company Pakistan",
     "Software Development",
-    "Digital Solutions",
     "Web Development",
     "Mobile App Development",
+    "Digital Marketing",
     "Tech Services",
   ],
-  other: {
-    "google-site-verification": "mftol86q7hauVyXwfTJDkzh6lEIO_NfdlDqR24A6y_4",
-  },
+  authors: [{ name: "BSH Solutions", url: "https://bshsolutionss.com" }],
   robots: {
     index: true,
     follow: true,
@@ -42,11 +48,13 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
-  authors: [{ name: "BSH Solutions", url: "https://bshsolutionss.com" }],
+  alternates: {
+    canonical: "https://bshsolutionss.com",
+  },
   openGraph: {
     title: "BSH Solutions | Business Smart Hub",
     description:
-      "A hub for all business tech needs — innovative, scalable, and smart IT solutions for your business.",
+      "Smart, scalable, and future-ready digital solutions for growing businesses.",
     url: "https://bshsolutionss.com",
     siteName: "BSH Solutions",
     images: [
@@ -54,7 +62,7 @@ export const metadata: Metadata = {
         url: "https://bshsolutionss.com/android-chrome-512x512.png",
         width: 1200,
         height: 630,
-        alt: "BSH Solutions - Business Smart Hub",
+        alt: "BSH Solutions – Business Smart Hub",
       },
     ],
     locale: "en_US",
@@ -70,34 +78,40 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/android-chrome-192x192.png", sizes: "192x192" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512" },
+      { url: "/favicon.ico", type: "image/x-icon" },
       { url: "/favicon-16x16.png", sizes: "16x16" },
       { url: "/favicon-32x32.png", sizes: "32x32" },
-      { url: "/favicon.ico", type: "image/x-icon" },
-      { url: "/apple-touch-icon.png" },
+      { url: "/android-chrome-192x192.png", sizes: "192x192" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512" },
     ],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
   manifest: "/site.webmanifest",
-
-  alternates: {
-    canonical: "https://bshsolutionss.com",
-  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-white text-[#231F20]`}
       >
-        {children}
+        {/* Client-side smooth scroll only */}
+        <SmoothScrollProvider>
+          {/* Fixed header spacing handled here */}
+          <Header />
+          <main className="overflow-x-hidden">{children}</main>
+          <Footer />
+        </SmoothScrollProvider>
+
+        {/* Analytics */}
         <Analytics />
         <SpeedInsights />
 
+        {/* Structured Data – Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

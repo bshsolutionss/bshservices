@@ -192,43 +192,43 @@ const TABS: Tab[] = [
       },
     ],
   },
-  {
-    id: "ai",
-    title: "AI Services",
-    icon: Cpu,
-    items: [
-      {
-        title: "AI Automation",
-        desc: "Automate workflows, customer service, and operations using AI.",
-        icon: SlidersHorizontal,
-      },
-      {
-        title: "AI Chatbots",
-        desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
-        icon: MessageSquare,
-      },
-      {
-        title: "AI Website Integration",
-        desc: "Integrate AI search, chatbot, personalization & automation.",
-        icon: Monitor,
-      },
-      {
-        title: "AI Social Media Automation",
-        desc: "AI-driven content creation, scheduling & auto-replies.",
-        icon: Megaphone,
-      },
-      {
-        title: "AI Video Automation",
-        desc: "Auto-generated ads, reels & product videos using AI tools.",
-        icon: Video,
-      },
-      {
-        title: "AEO (AI SEO Optimization)",
-        desc: "AI-powered SEO, content generation & search ranking improvement.",
-        icon: BarChart3,
-      },
-    ],
-  },
+  // {
+  //   id: "ai",
+  //   title: "AI Services",
+  //   icon: Cpu,
+  //   items: [
+  //     {
+  //       title: "AI Automation",
+  //       desc: "Automate workflows, customer service, and operations using AI.",
+  //       icon: SlidersHorizontal,
+  //     },
+  //     {
+  //       title: "AI Chatbots",
+  //       desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
+  //       icon: MessageSquare,
+  //     },
+  //     {
+  //       title: "AI Website Integration",
+  //       desc: "Integrate AI search, chatbot, personalization & automation.",
+  //       icon: Monitor,
+  //     },
+  //     {
+  //       title: "AI Social Media Automation",
+  //       desc: "AI-driven content creation, scheduling & auto-replies.",
+  //       icon: Megaphone,
+  //     },
+  //     {
+  //       title: "AI Video Automation",
+  //       desc: "Auto-generated ads, reels & product videos using AI tools.",
+  //       icon: Video,
+  //     },
+  //     {
+  //       title: "AEO (AI SEO Optimization)",
+  //       desc: "AI-powered SEO, content generation & search ranking improvement.",
+  //       icon: BarChart3,
+  //     },
+  //   ],
+  // },
 ];
 
 export default function Services(): JSX.Element {
