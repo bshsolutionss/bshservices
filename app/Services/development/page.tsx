@@ -1,6 +1,4 @@
 "use client";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
@@ -36,8 +34,6 @@ import { FaJava, FaAws, FaTools } from "react-icons/fa";
 export default function DevelopmentPage() {
   return (
     <>
-      <Header />
-
       <Hero
         title="Web Development Services"
         subtitle="We craft fast, scalable, and beautiful web experiences tailored to your business."
@@ -177,8 +173,6 @@ export default function DevelopmentPage() {
       <section id="development-form">
         <Form serviceName="Development" />
       </section>
-
-      <Footer />
     </>
   );
 }

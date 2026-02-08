@@ -1,6 +1,3 @@
-import React from "react";
-import Header from "@/components/header";
-
 import Heros from "@/components/heros";
 import Services from "@/components/services";
 // import Testimonial from "@/components/testimonial";
@@ -18,7 +15,6 @@ import OurTechnologies from "@/components/Ourtechnologies";
 const page = () => {
   return (
     <div>
-      <Header />
       <Heros />
       <StatCounter />
       <MovingText />

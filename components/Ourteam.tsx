@@ -27,10 +27,7 @@ export default function OurTeamSection({
   cvLink = "#",
 }: TeamProps) {
   return (
-    <section
-      id={id}
-      className="py-20 bg-background border-b border-border"
-    >
+    <section id={id} className="py-20 bg-background border-b border-border">
       <div
         className={`max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6 ${
           reverse ? "md:flex-row-reverse" : ""
@@ -63,13 +60,9 @@ export default function OurTeamSection({
         >
           <h2 className="text-4xl font-bold mb-2">{name}</h2>
 
-          <p className="text-lg text-[#1A14A5] font-semibold mb-4">
-            {role}
-          </p>
+          <p className="text-lg text-[#1A14A5] font-semibold mb-4">{role}</p>
 
-          <p className="text-muted-foreground mb-6 leading-relaxed">
-            {about}
-          </p>
+          <p className="text-muted-foreground mb-6 leading-relaxed">{about}</p>
 
           {/* ==== CV BUTTON ==== */}
           <a

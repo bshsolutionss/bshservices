@@ -1,6 +1,4 @@
 "use client";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
@@ -31,8 +29,6 @@ import { FaSearchengin, FaUserFriends, FaGoogle } from "react-icons/fa";
 export default function MarketingPage() {
   return (
     <>
-      <Header />
-
       <Hero
         title="Digital Marketing Services"
         subtitle="We help your brand grow, engage, and convert through data-driven digital marketing strategies."
@@ -58,7 +54,10 @@ export default function MarketingPage() {
             { name: "Google Ads", icon: <SiGoogleads color="#4285F4" /> },
             { name: "Meta Ads", icon: <SiMeta color="#1877F2" /> },
             { name: "LinkedIn Ads", icon: <SiLinkedin color="#0A66C2" /> },
-            { name: "Google Analytics", icon: <SiGoogleanalytics color="#F9AB00" /> },
+            {
+              name: "Google Analytics",
+              icon: <SiGoogleanalytics color="#F9AB00" />,
+            },
           ]}
           image="/images/Marketing/1.png"
         />
@@ -99,7 +98,10 @@ export default function MarketingPage() {
           ]}
           tech={[
             { name: "Semrush", icon: <SiSemrush color="#FF6B00" /> },
-            { name: "Google Search Console", icon: <FaSearchengin color="#34A853" /> },
+            {
+              name: "Google Search Console",
+              icon: <FaSearchengin color="#34A853" />,
+            },
             { name: "Yoast SEO", icon: <SiYoast color="#A4286A" /> },
             { name: "Google", icon: <FaGoogle color="#4285F4" /> },
           ]}
@@ -163,7 +165,10 @@ export default function MarketingPage() {
           ]}
           tech={[
             { name: "Upwork", icon: <SiUpwork color="#6FDA44" /> },
-            { name: "Community Tools", icon: <FaUserFriends color="#9333EA" /> },
+            {
+              name: "Community Tools",
+              icon: <FaUserFriends color="#9333EA" />,
+            },
             { name: "Instagram", icon: <SiInstagram color="#E4405F" /> },
             { name: "TikTok", icon: <SiTiktok color="#010101" /> },
           ]}
@@ -175,8 +180,6 @@ export default function MarketingPage() {
       <section id="marketing-form">
         <Form serviceName="Marketing" />
       </section>
-
-      <Footer />
     </>
   );
 }

@@ -1,6 +1,4 @@
 "use client";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
@@ -26,8 +24,6 @@ import { FaBoxOpen } from "react-icons/fa";
 export default function DesigningPage() {
   return (
     <>
-      <Header />
-
       <Hero
         title="Creative Design Services"
         subtitle="We transform your vision into visually stunning designs that inspire, engage, and connect with your audience."
@@ -50,8 +46,14 @@ export default function DesigningPage() {
           "Consistent visual identity design",
         ]}
         tech={[
-          { name: "Adobe Illustrator", icon: <SiAdobeillustrator color="#FF9A00" /> },
-          { name: "Adobe Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
+          {
+            name: "Adobe Illustrator",
+            icon: <SiAdobeillustrator color="#FF9A00" />,
+          },
+          {
+            name: "Adobe Photoshop",
+            icon: <SiAdobephotoshop color="#31A8FF" />,
+          },
           { name: "Figma", icon: <SiFigma color="#F24E1E" /> },
           { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
         ]}
@@ -111,8 +113,14 @@ export default function DesigningPage() {
           "Brand alignment and scalability",
         ]}
         tech={[
-          { name: "Adobe Illustrator", icon: <SiAdobeillustrator color="#FF9A00" /> },
-          { name: "Affinity Designer", icon: <SiAffinitydesigner color="#7E4DD2" /> },
+          {
+            name: "Adobe Illustrator",
+            icon: <SiAdobeillustrator color="#FF9A00" />,
+          },
+          {
+            name: "Affinity Designer",
+            icon: <SiAffinitydesigner color="#7E4DD2" />,
+          },
           { name: "Figma", icon: <SiFigma color="#F24E1E" /> },
           { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
         ]}
@@ -132,8 +140,14 @@ export default function DesigningPage() {
           "Cinematic transitions & effects",
         ]}
         tech={[
-          { name: "After Effects", icon: <SiAdobeaftereffects color="#9999FF" /> },
-          { name: "Premiere Pro", icon: <SiAdobepremierepro color="#9999FF" /> },
+          {
+            name: "After Effects",
+            icon: <SiAdobeaftereffects color="#9999FF" />,
+          },
+          {
+            name: "Premiere Pro",
+            icon: <SiAdobepremierepro color="#9999FF" />,
+          },
           { name: "Blender", icon: <SiBlender color="#F5792A" /> },
           { name: "Cinema 4D", icon: <SiCinema4D color="#011A6A" /> },
         ]}
@@ -152,8 +166,14 @@ export default function DesigningPage() {
           "Material and color guidance",
         ]}
         tech={[
-          { name: "Adobe Illustrator", icon: <SiAdobeillustrator color="#FF9A00" /> },
-          { name: "Adobe Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
+          {
+            name: "Adobe Illustrator",
+            icon: <SiAdobeillustrator color="#FF9A00" />,
+          },
+          {
+            name: "Adobe Photoshop",
+            icon: <SiAdobephotoshop color="#31A8FF" />,
+          },
           { name: "Blender", icon: <SiBlender color="#F5792A" /> },
           { name: "3D Mockup", icon: <FaBoxOpen color="#00AEEF" /> },
         ]}
@@ -161,12 +181,9 @@ export default function DesigningPage() {
         reverse
       />
 
-      
-      
-            <section id="designing-form">
-      <Form serviceName="Designing" />
-            </section>
-      <Footer />
+      <section id="designing-form">
+        <Form serviceName="Designing" />
+      </section>
     </>
   );
 }

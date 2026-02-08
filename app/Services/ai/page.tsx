@@ -1,6 +1,4 @@
 "use client";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
@@ -13,8 +11,6 @@ import { MdIntegrationInstructions } from "react-icons/md";
 export default function AIServicesPage() {
   return (
     <>
-      <Header />
-
       <Hero
         title="AI-Powered Business Services"
         subtitle="We help businesses automate, scale, and grow using modern AI solutions that deliver real, measurable results."
@@ -151,8 +147,6 @@ export default function AIServicesPage() {
       <section id="AI-form">
         <Form serviceName="AI Services" />
       </section>
-
-      <Footer />
     </>
   );
 }

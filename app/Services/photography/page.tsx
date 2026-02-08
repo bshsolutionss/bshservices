@@ -1,7 +1,5 @@
 "use client";
 
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
@@ -27,8 +25,6 @@ import { TbDrone, TbCameraSelfie } from "react-icons/tb";
 export default function PhotographyPage() {
   return (
     <>
-      <Header />
-
       <Hero
         title="Photography & Videography Services"
         subtitle="We capture moments, products, and stories with a perfect blend of creativity, precision, and professional artistry."
@@ -73,7 +69,10 @@ export default function PhotographyPage() {
           ]}
           tech={[
             { name: "Camera Setup", icon: <FaPhotoVideo color="#111" /> },
-            { name: "Tripod & Lighting", icon: <TbCameraSelfie color="#666" /> },
+            {
+              name: "Tripod & Lighting",
+              icon: <TbCameraSelfie color="#666" />,
+            },
             { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
             { name: "Lightroom", icon: <SiAdobelightroom color="#31A8FF" /> },
           ]}
@@ -96,8 +95,14 @@ export default function PhotographyPage() {
           tech={[
             { name: "Camera", icon: <FaCamera color="#333" /> },
             { name: "Microphone", icon: <FaMicrophoneAlt color="#999" /> },
-            { name: "Premiere Pro", icon: <SiAdobepremierepro color="#9999FF" /> },
-            { name: "DaVinci Resolve", icon: <SiDavinciresolve color="#223FFF" /> },
+            {
+              name: "Premiere Pro",
+              icon: <SiAdobepremierepro color="#9999FF" />,
+            },
+            {
+              name: "DaVinci Resolve",
+              icon: <SiDavinciresolve color="#223FFF" />,
+            },
           ]}
           image="/images/Photography/3.png"
         />
@@ -116,9 +121,18 @@ export default function PhotographyPage() {
           ]}
           tech={[
             { name: "Filming", icon: <FaVideo color="#000" /> },
-            { name: "Premiere Pro", icon: <SiAdobepremierepro color="#9999FF" /> },
-            { name: "After Effects", icon: <SiAdobeaftereffects color="#D291FF" /> },
-            { name: "DaVinci Resolve", icon: <SiDavinciresolve color="#223FFF" /> },
+            {
+              name: "Premiere Pro",
+              icon: <SiAdobepremierepro color="#9999FF" />,
+            },
+            {
+              name: "After Effects",
+              icon: <SiAdobeaftereffects color="#D291FF" />,
+            },
+            {
+              name: "DaVinci Resolve",
+              icon: <SiDavinciresolve color="#223FFF" />,
+            },
           ]}
           image="/images/Photography/4.png"
           reverse
@@ -139,8 +153,14 @@ export default function PhotographyPage() {
           tech={[
             { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
             { name: "Lightroom", icon: <SiAdobelightroom color="#31A8FF" /> },
-            { name: "After Effects", icon: <SiAdobeaftereffects color="#D291FF" /> },
-            { name: "Color Tools", icon: <MdOutlineColorLens color="#F5B041" /> },
+            {
+              name: "After Effects",
+              icon: <SiAdobeaftereffects color="#D291FF" />,
+            },
+            {
+              name: "Color Tools",
+              icon: <MdOutlineColorLens color="#F5B041" />,
+            },
           ]}
           image="/images/Photography/5.png"
         />
@@ -160,8 +180,14 @@ export default function PhotographyPage() {
           tech={[
             { name: "Drone", icon: <TbDrone color="#111" /> },
             { name: "Camera", icon: <FaCamera color="#444" /> },
-            { name: "Premiere Pro", icon: <SiAdobepremierepro color="#9999FF" /> },
-            { name: "DaVinci Resolve", icon: <SiDavinciresolve color="#223FFF" /> },
+            {
+              name: "Premiere Pro",
+              icon: <SiAdobepremierepro color="#9999FF" />,
+            },
+            {
+              name: "DaVinci Resolve",
+              icon: <SiDavinciresolve color="#223FFF" />,
+            },
           ]}
           image="/images/Photography/6.png"
           reverse
@@ -171,8 +197,6 @@ export default function PhotographyPage() {
       <section id="photography-form">
         <Form serviceName="Photography" />
       </section>
-
-      <Footer />
     </>
   );
 }

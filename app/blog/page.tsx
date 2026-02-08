@@ -1,16 +1,7 @@
-
-import React from 'react'
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import React from "react";
 
 const page = () => {
-  return (
-    <>
-   <Header />
-    
-    <Footer />
-    </>
-  )
-}
+  return <>{/* Blog content will go here */}</>;
+};
 
-export default page
+export default page;
