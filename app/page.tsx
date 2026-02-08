@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "@/components/header";
-import Footer from "@/components/footer";
+
 import Heros from "@/components/heros";
 import Services from "@/components/services";
 // import Testimonial from "@/components/testimonial";
@@ -31,8 +31,6 @@ const page = () => {
       {/* <Testimonial /> */}
       <Faq />
       <Contactform />
-
-      <Footer />
     </div>
   );
 };
