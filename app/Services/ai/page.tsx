@@ -1,5 +1,6 @@
 "use client";
 import Hero from "@/components/services/Hero";
+import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 
@@ -144,7 +145,8 @@ export default function AIServicesPage() {
         reverse
       />
 
-      <section id="AI-form">
+      <Testimonial />
+      <section id="ai-form">
         <Form serviceName="AI Services" />
       </section>
     </>

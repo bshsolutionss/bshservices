@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   Monitor,
   ShoppingCart,
@@ -19,9 +20,22 @@ import {
   ImageIcon,
   CameraIcon,
   Aperture,
+  MessageSquare,
 } from "lucide-react";
 import "./movingtext.css";
 const services = [
+  {
+    id: "ai",
+    title: "AI Services",
+    items: [
+      { title: "AI Automation", icon: SlidersHorizontal },
+      { title: "AI Chatbots", icon: MessageSquare },
+      { title: "AI Website Integration", icon: Monitor },
+      { title: "AI Social Media Automation", icon: Megaphone },
+      { title: "AI Video Automation", icon: Video },
+      { title: "AEO", icon: ChartBar },
+    ],
+  },
   {
     id: "development",
     title: "Development",
@@ -91,17 +105,33 @@ const MovingText: React.FC = () => {
           >
             {category.items.map((item, i) => {
               const Icon = item.icon;
+              const slug = item.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+
+              const pageMap: Record<string, string> = {
+                development: "development",
+                design: "designing",
+                marketing: "marketing",
+                photography: "photography",
+                ai: "ai",
+              };
+
+              const href = `/Services/${pageMap[category.id]}#${slug}`;
+
               return (
-                <div
+                <Link
                   key={i}
+                  href={href}
                   className="flex items-center gap-3 bg-white/10 dark:bg-white/5 px-6 py-3 rounded-full shadow-lg 
-                             hover:scale-105 hover:bg-[#0ef]/10 transition-transform duration-300 cursor-default"
+                             hover:scale-105 hover:bg-[#0ef]/10 transition-transform duration-300 cursor-pointer"
                 >
-                  <Icon className="w-6 h-6 text-[#0ef] icon-glow" />
+                  <Icon className="w-6 h-6 text-[#1A14A5] icon-glow" />
                   <h1 className="text-[2vw] font-semibold whitespace-nowrap text-[#1A14A5] dark:text-[#0ef]">
                     {item.title}
                   </h1>
-                </div>
+                </Link>
               );
             })}
           </div>

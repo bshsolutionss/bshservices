@@ -1,5 +1,6 @@
 "use client";
 import Hero from "@/components/services/Hero";
+import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 
@@ -177,6 +178,7 @@ export default function MarketingPage() {
         />
       </section>
 
+      <Testimonial />
       <section id="marketing-form">
         <Form serviceName="Marketing" />
       </section>

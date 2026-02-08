@@ -1,5 +1,5 @@
 import Services from "@/components/services";
-// import Testimonial from "@/components/testimonial";
+import Testimonial from "@/components/testimonial";
 import Faq from "@/components/faq";
 
 import Contactform from "@/components/contactform";
@@ -17,7 +17,7 @@ const page = () => {
       <ProcessFlow />
       <OurTechnologies />
       {/* <Portfolio /> */}
-      {/* <Testimonial /> */}
+      <Testimonial />
       <Faq />
       <Contactform />
     </div>

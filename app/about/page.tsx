@@ -6,6 +6,7 @@ import ProcessFlow from "@/components/ProcessFlow";
 import Faq from "@/components/faq";
 import Contactform from "@/components/contactform";
 import OurTeamSection from "@/components/Ourteam";
+import Testimonial from "@/components/testimonial";
 
 // ==== ICONS IMPORTS ====
 import {
@@ -63,6 +64,7 @@ const page = () => {
         ]}
       />
 
+      <Testimonial />
       <ProcessFlow />
       <Faq />
       <Contactform />

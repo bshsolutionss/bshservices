@@ -12,11 +12,21 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, Phone, Code, Palette, Camera, Megaphone } from "lucide-react";
+import {
+  Menu,
+  Phone,
+  Code,
+  Palette,
+  Camera,
+  Megaphone,
+  ChevronDown,
+  Cpu,
+} from "lucide-react";
 // import Lenis from "@studio-freight/lenis";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   // Enable Lenis Smooth Scroll
   // useEffect(() => {
@@ -125,18 +135,20 @@ const Header = () => {
                         </p>
                       </div>
                     </Link>
-                    {/* <Link
-        href="/Services/ai"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Camera className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Ai</h4>
-          <p className="text-sm text-gray-600">
-            Stunning visuals to capture your brand story.
-          </p>
-        </div>
-      </Link> */}
+                    <Link
+                      href="/Services/ai"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Cpu className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          AI Services
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Automate and scale with smart AI solutions.
+                        </p>
+                      </div>
+                    </Link>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -197,31 +209,59 @@ const Header = () => {
           </Link>
 
           <div>
-            <p className="font-semibold text-[#231F20] mb-2">Services</p>
-            <div className="space-y-2 pl-3">
+            <button
+              onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+              className="flex items-center justify-between w-full font-semibold text-[#231F20] mb-2 hover:text-[#1A14A5] transition"
+            >
+              Services
+              <ChevronDown
+                size={18}
+                className={`transition-transform duration-300 ${
+                  mobileServicesOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            <div
+              className={`space-y-2 pl-4 overflow-hidden transition-all duration-300 ${
+                mobileServicesOpen
+                  ? "max-h-60 opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
+            >
               <Link
                 href="/Services/development"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Development
               </Link>
               <Link
                 href="/Services/designing"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Designing
               </Link>
               <Link
                 href="/Services/marketing"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Marketing
               </Link>
               <Link
                 href="/Services/photography"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Photography
+              </Link>
+              <Link
+                href="/Services/ai"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                AI Services
               </Link>
             </div>
           </div>

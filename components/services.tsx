@@ -192,43 +192,43 @@ const TABS: Tab[] = [
       },
     ],
   },
-  // {
-  //   id: "ai",
-  //   title: "AI Services",
-  //   icon: Cpu,
-  //   items: [
-  //     {
-  //       title: "AI Automation",
-  //       desc: "Automate workflows, customer service, and operations using AI.",
-  //       icon: SlidersHorizontal,
-  //     },
-  //     {
-  //       title: "AI Chatbots",
-  //       desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
-  //       icon: MessageSquare,
-  //     },
-  //     {
-  //       title: "AI Website Integration",
-  //       desc: "Integrate AI search, chatbot, personalization & automation.",
-  //       icon: Monitor,
-  //     },
-  //     {
-  //       title: "AI Social Media Automation",
-  //       desc: "AI-driven content creation, scheduling & auto-replies.",
-  //       icon: Megaphone,
-  //     },
-  //     {
-  //       title: "AI Video Automation",
-  //       desc: "Auto-generated ads, reels & product videos using AI tools.",
-  //       icon: Video,
-  //     },
-  //     {
-  //       title: "AEO (AI SEO Optimization)",
-  //       desc: "AI-powered SEO, content generation & search ranking improvement.",
-  //       icon: BarChart3,
-  //     },
-  //   ],
-  // },
+  {
+    id: "ai",
+    title: "AI Services",
+    icon: Cpu,
+    items: [
+      {
+        title: "AI Automation",
+        desc: "Automate workflows, customer service, and operations using AI.",
+        icon: SlidersHorizontal,
+      },
+      {
+        title: "AI Chatbots",
+        desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
+        icon: MessageSquare,
+      },
+      {
+        title: "AI Website Integration",
+        desc: "Integrate AI search, chatbot, personalization & automation.",
+        icon: Monitor,
+      },
+      {
+        title: "AI Social Media Automation",
+        desc: "AI-driven content creation, scheduling & auto-replies.",
+        icon: Megaphone,
+      },
+      {
+        title: "AI Video Automation",
+        desc: "Auto-generated ads, reels & product videos using AI tools.",
+        icon: Video,
+      },
+      {
+        title: "AEO",
+        desc: "AI-powered SEO, content generation & search ranking improvement.",
+        icon: BarChart3,
+      },
+    ],
+  },
 ];
 
 export default function Services(): JSX.Element {
@@ -241,7 +241,7 @@ export default function Services(): JSX.Element {
     design: "/images/Designing.png",
     marketing: "/images/Marketing.png",
     photography: "/images/Photography.png",
-    // ai: "/images/Photography.png",
+    ai: "/images/ai/ai.png",
   };
 
   return (
@@ -385,7 +385,8 @@ export default function Services(): JSX.Element {
                     onClick={() => {
                       const slug = item.title
                         .toLowerCase()
-                        .replace(/\s+/g, "-");
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-+|-+$/g, "");
                       if (active === "development")
                         router.push(`/Services/development#${slug}`);
                       else if (active === "design")
@@ -394,6 +395,8 @@ export default function Services(): JSX.Element {
                         router.push(`/Services/marketing#${slug}`);
                       else if (active === "photography")
                         router.push(`/Services/photography#${slug}`);
+                      else if (active === "ai")
+                        router.push(`/Services/ai#${slug}`);
                     }}
                     className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto transition-all"
                   >

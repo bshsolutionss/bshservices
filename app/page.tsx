@@ -1,6 +1,6 @@
 import Heros from "@/components/heros";
 import Services from "@/components/services";
-// import Testimonial from "@/components/testimonial";
+import Testimonial from "@/components/testimonial";
 import Faq from "@/components/faq";
 import About from "@/components/about";
 import Contactform from "@/components/contactform";
@@ -11,6 +11,7 @@ import "./globals.css";
 
 import { StatCounter } from "@/components/stat-counter";
 import OurTechnologies from "@/components/Ourtechnologies";
+import InstagramReels from "@/components/InstagramReels";
 
 const page = () => {
   return (
@@ -23,8 +24,8 @@ const page = () => {
       <Services />
       <ProcessFlow />
       <OurTechnologies />
-      {/* <Portfolio /> */}
-      {/* <Testimonial /> */}
+      <InstagramReels />
+      <Testimonial />
       <Faq />
       <Contactform />
     </div>

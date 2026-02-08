@@ -1,5 +1,6 @@
 "use client";
 import Hero from "@/components/services/Hero";
+import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 
@@ -69,7 +70,7 @@ export default function DevelopmentPage() {
 
       {/* ===== 2. E-commerce Development ===== */}
       <ServiceSection
-        id="ecommerce-development"
+        id="e-commerce"
         title="E-Commerce Development"
         description="Launch your custom online store with secure payment gateways and effortless management."
         features={[
@@ -91,7 +92,7 @@ export default function DevelopmentPage() {
 
       {/* ===== 3. Mobile App Development ===== */}
       <ServiceSection
-        id="mobile-app-development"
+        id="mobile-apps"
         title="Mobile App Development"
         description="We design and build high-performance mobile apps that deliver seamless experiences across all devices."
         features={[
@@ -111,7 +112,7 @@ export default function DevelopmentPage() {
 
       {/* ===== 4. Custom Software Development ===== */}
       <ServiceSection
-        id="custom-software-development"
+        id="custom-software"
         title="Custom Software Development"
         description="Tailored business software to automate your workflows, boost efficiency, and reduce costs."
         features={[
@@ -170,6 +171,7 @@ export default function DevelopmentPage() {
         image="/images/development/6.png"
         reverse
       />
+      <Testimonial />
       <section id="development-form">
         <Form serviceName="Development" />
       </section>

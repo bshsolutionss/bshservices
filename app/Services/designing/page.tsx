@@ -1,5 +1,6 @@
 "use client";
 import Hero from "@/components/services/Hero";
+import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 
@@ -62,7 +63,7 @@ export default function DesigningPage() {
 
       {/* ===== 2. UI / UX Design ===== */}
       <ServiceSection
-        id="ui-ux-design"
+        id="ui-ux"
         title="UI / UX Design"
         description="We design user interfaces that are intuitive, accessible, and delightful — enhancing usability and conversion rates."
         features={[
@@ -181,6 +182,7 @@ export default function DesigningPage() {
         reverse
       />
 
+      <Testimonial />
       <section id="designing-form">
         <Form serviceName="Designing" />
       </section>

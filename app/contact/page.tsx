@@ -1,6 +1,7 @@
 "use client";
 
 import Hero from "@/components/services/Hero";
+import Testimonial from "@/components/testimonial";
 
 import Faq from "@/components/faq";
 import Contactform from "@/components/contactform";
@@ -21,6 +22,7 @@ const page = () => {
         <GoogleMap />
       </div>
 
+      <Testimonial />
       <Faq />
     </>
   );
