@@ -11,7 +11,7 @@ import "./globals.css";
 
 import { StatCounter } from "@/components/stat-counter";
 import OurTechnologies from "@/components/Ourtechnologies";
-import InstagramReels from "@/components/InstagramReels";
+
 
 const page = () => {
   return (
@@ -24,7 +24,7 @@ const page = () => {
       <Services />
       <ProcessFlow />
       <OurTechnologies />
-      <InstagramReels />
+    
       <Testimonial />
       <Faq />
       <Contactform />
