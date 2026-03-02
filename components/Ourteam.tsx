@@ -46,7 +46,9 @@ export default function OurTeamSection({
             alt={name}
             width={600}
             height={500}
-            className="object-cover"
+            className="object-cover rounded-3xl border border-[#0072ff]/20 
+                       shadow-[0_0_40px_rgba(0,114,255,0.2)] hover:shadow-[0_0_60px_rgba(0,114,255,0.4)] 
+                       transition-all duration-500"
           />
         </motion.div>
 
