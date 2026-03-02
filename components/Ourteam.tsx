@@ -44,9 +44,9 @@ export default function OurTeamSection({
           <Image
             src={image}
             alt={name}
-            width={600}
+            width={500}
             height={500}
-            className="object-cover rounded-3xl border border-[#0072ff]/20 
+            className="object-cover rounded-full aspect-square w-full max-w-[450px] mx-auto border border-[#0072ff]/20 
                        shadow-[0_0_40px_rgba(0,114,255,0.2)] hover:shadow-[0_0_60px_rgba(0,114,255,0.4)] 
                        transition-all duration-500"
           />
