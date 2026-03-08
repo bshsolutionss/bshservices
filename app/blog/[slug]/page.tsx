@@ -20,10 +20,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Strip HTML tags for description
   const description = post.excerpt.rendered.replace(/<[^>]+>/g, "").trim();
+  const title = `${post.title.rendered.replace(/<[^>]+>/g, "")} | BSH Solutions`;
+  const url = `https://bshsolutionss.com/blog/${post.slug}`;
+  const featuredImg = getFeaturedImage(post);
 
   return {
-    title: `${post.title.rendered.replace(/<[^>]+>/g, "")} | BSH Solutions`,
+    title,
     description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      siteName: "BSH Solutions",
+      publishedTime: post.date,
+      ...(featuredImg && {
+        images: [
+          {
+            url: featuredImg,
+            alt: title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(featuredImg && {
+        images: [featuredImg],
+      }),
+    },
   };
 }
 
@@ -81,6 +111,41 @@ export default async function Post({ params }: Props) {
           <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
         </article>
       </div>
+
+      {/* JSON-LD Structured Data for Blog Post */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title.rendered.replace(/<[^>]+>/g, ""),
+            description: post.excerpt.rendered.replace(/<[^>]+>/g, "").trim(),
+            image: featuredImg ? [featuredImg] : [],
+            datePublished: post.date,
+            dateModified: post.date,
+            author: [
+              {
+                "@type": "Organization",
+                name: "BSH Solutions",
+                url: "https://bshsolutionss.com",
+              },
+            ],
+            publisher: {
+              "@type": "Organization",
+              name: "BSH Solutions",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://bshsolutionss.com/android-chrome-512x512.png",
+              },
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://bshsolutionss.com/blog/${post.slug}`,
+            },
+          }),
+        }}
+      />
     </div>
   );
 }

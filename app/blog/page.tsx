@@ -7,6 +7,23 @@ export const metadata: Metadata = {
   title: "Blog | BSH Solutions",
   description:
     "Read the latest insights, news, and articles from BSH Solutions.",
+  alternates: {
+    canonical: "https://bshsolutionss.com/blog",
+  },
+  openGraph: {
+    title: "Blog | BSH Solutions",
+    description:
+      "Read the latest insights, news, and articles from BSH Solutions.",
+    url: "https://bshsolutionss.com/blog",
+    siteName: "BSH Solutions",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | BSH Solutions",
+    description:
+      "Read the latest insights, news, and articles from BSH Solutions.",
+  },
 };
 
 export default async function BlogPage() {

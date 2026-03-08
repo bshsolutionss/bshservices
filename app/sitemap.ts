@@ -1,6 +1,14 @@
 import { MetadataRoute } from "next";
+import { getPosts } from "@/lib/wp";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getPosts(1, 100);
+
+  const blogPostsEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `https://bshsolutionss.com/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+  }));
+
   return [
     {
       url: "https://bshsolutionss.com",
@@ -30,5 +38,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://bshsolutionss.com/Services/photography",
       lastModified: new Date(),
     },
+    {
+      url: "https://bshsolutionss.com/blog",
+      lastModified: new Date(),
+    },
+    ...blogPostsEntries,
   ];
 }
