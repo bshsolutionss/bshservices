@@ -161,11 +161,14 @@ const Header = () => {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              {/* <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
-                  <Link href="/Blog">Blog</Link>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
+                  <Link href="/blog">Blog</Link>
                 </NavigationMenuLink>
-              </NavigationMenuItem> */}
+              </NavigationMenuItem>
 
               {/* <NavigationMenuItem>
                 <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
