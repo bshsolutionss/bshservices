@@ -7,7 +7,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "blog.bshsolutionss.com",
+        hostname: "darkgrey-pelican-916395.hostingersite.com",
         pathname: "/**",
       },
       {

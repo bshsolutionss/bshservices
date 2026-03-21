@@ -1,4 +1,5 @@
-const API_URL = "https://blog.bshsolutionss.com/wp-json/wp/v2";
+const API_URL =
+  process.env.WORDPRESS_API_URL || "https://darkgrey-pelican-916395.hostingersite.com/wp-json/wp/v2";
 
 export interface WPPost {
   id: number;
