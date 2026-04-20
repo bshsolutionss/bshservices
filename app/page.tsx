@@ -9,6 +9,7 @@ import ProcessFlow from "@/components/ProcessFlow";
 import "./globals.css";
 import { headers } from "next/headers";
 import PricingSection from "@/components/pricing-section";
+import Portfolio from "@/components/portfolio";
 
 import { StatCounter } from "@/components/stat-counter";
 import OurTechnologies from "@/components/Ourtechnologies";
@@ -27,6 +28,7 @@ const page = async () => {
       <About />
       <Services />
       <PricingSection region={region} />
+      <Portfolio />
       <ProcessFlow />
       <OurTechnologies />
     

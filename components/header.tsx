@@ -152,6 +152,16 @@ const Header = () => {
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
+                  <Link href="/portfolio">Portfolio</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
@@ -209,6 +219,9 @@ const Header = () => {
         <div className="md:hidden bg-white/95 backdrop-blur-lg shadow-xl p-6 space-y-4">
           <Link href="/" className="block hover:text-[#1A14A5]">
             Home
+          </Link>
+          <Link href="/portfolio" className="block hover:text-[#1A14A5]">
+            Portfolio
           </Link>
 
           <div>
