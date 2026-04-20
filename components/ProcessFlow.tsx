@@ -87,7 +87,7 @@ const ProcessFlow = () => {
               trigger: el,
               start: "top 85%",
             },
-          }
+          },
         );
       });
 
@@ -97,14 +97,14 @@ const ProcessFlow = () => {
         { height: 0 },
         {
           height: "100%",
-          duration: 3,
+          ease: "none",
           scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
+            trigger: ".steps-container",
+            start: "top 100%",
+            end: "bottom 100%",
             scrub: 1,
           },
-        }
+        },
       );
     }, containerRef);
 
@@ -127,11 +127,13 @@ const ProcessFlow = () => {
         Our Work Process
       </motion.h2>
 
-      {/* Center Vertical Timeline Line */}
-      <div className="absolute left-1/2 top-35 w-[4px] h-full bg-gradient-to-b from-[#1A14A5] to-[#4b35ff] rounded-full timeline-line shadow-[0_0_25px_rgba(26,20,165,0.4)]"></div>
+      {/* Steps Container */}
+      <div className="relative z-10 flex flex-col gap-24 mt-10 w-full max-w-5xl steps-container">
+        {/* Center Vertical Timeline Line (Inside container to align with steps) */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-12 w-[4px] bg-zinc-300/20 rounded-full overflow-hidden">
+          <div className="w-full h-0 bg-gradient-to-b from-[#1A14A5] to-[#4b35ff] timeline-line shadow-[0_0_20px_rgba(26,20,165,0.6)]"></div>
+        </div>
 
-      {/* Steps */}
-      <div className="relative z-10 flex flex-col gap-24 mt-10 w-full max-w-5xl">
         {steps.map((step, index) => (
           <motion.div
             key={index}
@@ -144,17 +146,16 @@ const ProcessFlow = () => {
             {/* Connecting Dot */}
             <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-gradient-to-r from-[#1A14A5] to-[#4b35ff] rounded-full border-4 border-white shadow-[0_0_20px_rgba(26,20,165,0.5)] z-10"></div>
 
-        {/* Horizontal Connector Line (Box edge → Dot) */}
-<div
-  className={`absolute top-1/2 h-[2px] bg-gradient-to-r from-[#1A14A5] to-[#4b35ff] shadow-[0_0_15px_rgba(74,58,255,0.6)]`}
-  style={{
-    left: index % 2 === 0 ? "auto" : "10%", // left box: start from right edge
-    right: index % 2 === 0 ? "10%" : "auto", // right box: start from left edge
-    transform: index % 2 === 0 ? "translateX(0)" : "translateX(0)",
-    width: "calc(40% - 12px)", // dynamic width: dot is centered, box edge to dot
-  }}
-></div>
-
+            {/* Horizontal Connector Line (Box edge → Dot) */}
+            <div
+              className={`absolute top-1/2 h-[2px] bg-gradient-to-r from-[#1A14A5] to-[#4b35ff] shadow-[0_0_15px_rgba(74,58,255,0.6)]`}
+              style={{
+                left: index % 2 === 0 ? "50%" : "auto",
+                right: index % 2 === 0 ? "auto" : "50%",
+                width: "calc(5% + 12px)", // Correctly spans the gap between 45% box and 50% dot
+                transform: index % 2 === 0 ? "translateX(0)" : "translateX(0)",
+              }}
+            ></div>
 
             {/* Step Box */}
             <div

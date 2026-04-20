@@ -7,13 +7,17 @@ import Contactform from "@/components/contactform";
 import MovingText from "@/components/MovingText";
 import ProcessFlow from "@/components/ProcessFlow";
 import "./globals.css";
-// import Portfolio from "@/components/portfolio";
+import { headers } from "next/headers";
+import PricingSection from "@/components/pricing-section";
 
 import { StatCounter } from "@/components/stat-counter";
 import OurTechnologies from "@/components/Ourtechnologies";
 
 
-const page = () => {
+const page = async () => {
+  const headerList = await headers();
+  const region = (headerList.get("x-user-region") as "GLOBAL" | "PK") || "GLOBAL";
+
   return (
     <div>
       <Heros />
@@ -22,6 +26,7 @@ const page = () => {
 
       <About />
       <Services />
+      <PricingSection region={region} />
       <ProcessFlow />
       <OurTechnologies />
     

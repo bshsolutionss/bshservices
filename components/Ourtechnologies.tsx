@@ -134,25 +134,103 @@ const techStack = [
 ];
 
 export default function OurTechnologies() {
+  // Categorizing the tech stack for better visual flow
+  const devStack = techStack.filter((t) =>
+    [
+      "JavaScript",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Node.js",
+      "Python",
+      ".NET",
+      "Supabase",
+      "Firebase",
+      "Prisma",
+      "GitHub",
+      "Docker",
+      "Angular",
+      "PHP",
+      "Three.js",
+    ].includes(t.name)
+  );
+
+  const designStack = techStack.filter((t) =>
+    [
+      "Figma",
+      "Photoshop",
+      "Illustrator",
+      "After Effects",
+      "Premiere Pro",
+      "Adobe XD",
+      "Sketch",
+      "InVision",
+      "Canva",
+      "iOS",
+      "Android",
+      "Flutter",
+      "Shopify",
+      "WordPress",
+      "WooCommerce",
+    ].includes(t.name)
+  );
+
+  const toolStack = techStack.filter(
+    (t) => !devStack.some(d => d.name === t.name) && !designStack.some(d => d.name === t.name)
+  );
+
+  const MarqueeRow = ({
+    items,
+    reverse = false,
+    duration = "40s",
+  }: {
+    items: typeof techStack;
+    reverse?: boolean;
+    duration?: string;
+  }) => (
+    <div
+      className="group flex overflow-hidden py-4 select-none pause-on-hover"
+      style={{ "--duration": duration } as React.CSSProperties}
+    >
+      <div className={reverse ? "animate-marquee-reverse" : "animate-marquee"}>
+        {[...items, ...items].map((tech, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-4 mx-4 px-6 py-4 bg-white/5 backdrop-blur-md border border-zinc-200 rounded-2xl transition-all duration-300 hover:bg-white/10 hover:border-zinc-300 hover:scale-105 group/item"
+          >
+            <div className="text-3xl md:text-4xl grayscale group-hover/item:grayscale-0 transition-all duration-300">
+              {tech.icon}
+            </div>
+            <span className="text-sm md:text-base font-medium text-slate-700 whitespace-nowrap">
+              {tech.name}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
-    <section className="w-full py-16 text-white">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-[#0f0b7a]">
+    <section className="w-full py-24 bg-gradient-to-b from-zinc-100 via-white to-zinc-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
+        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-[#1A14A5] to-[#4b35ff] bg-clip-text text-transparent">
           Our Technologies
         </h2>
+        <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
+          We leverage the most advanced and modern tools to build scalable, 
+          high-performance solutions for your business.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 place-items-center">
-          {techStack.map((tech, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center justify-center space-y-2 hover:scale-110 transition-transform duration-300"
-            >
-              <div className="text-4xl md:text-5xl">{tech.icon}</div>
-              <p className="text-xs md:text-sm font-medium text-[#0f0b7a]">
-                {tech.name}
-              </p>
-            </div>
-          ))}
+      <div className="relative">
+        {/* Gradient Overlays for smooth edges */}
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-100 to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-100 to-transparent z-10 pointer-events-none"></div>
+
+        <div className="flex flex-col gap-2">
+          <MarqueeRow items={devStack} duration="50s" />
+          <MarqueeRow items={designStack} reverse duration="60s" />
+          <MarqueeRow items={toolStack} duration="55s" />
         </div>
       </div>
     </section>

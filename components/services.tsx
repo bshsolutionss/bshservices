@@ -321,18 +321,18 @@ export default function Services(): JSX.Element {
               </div>
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/80 to-transparent group-hover:from-black/50 group-hover:via-black/30 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/60 group-hover:from-black/70 group-hover:via-black/30 group-hover:to-black/70 transition-all duration-500" />
 
               {/* Centered Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6 sm:p-10">
-                <div className="flex flex-col items-center gap-3 mb-4">
-                  <activeTab.icon className="w-12 h-12 text-[#1A14A5] drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                  <h3 className="text-[#1A14A5] text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.6)]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6 sm:p-10 z-20">
+                <div className="flex flex-col items-center gap-3 mb-4 px-8 py-6 rounded-3xl bg-black/10 backdrop-blur-[2px] border border-white/10">
+                  <activeTab.icon className="w-12 h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                  <h3 className="text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-md">
                     {activeTab.title}
                   </h3>
                 </div>
 
-                <p className="text-white/95 mb-6 text-sm sm:text-base md:text-lg max-w-2xl drop-shadow-[0_0_10px_rgba(0,0,0,0.7)]">
+                <p className="text-white/90 mb-8 text-sm sm:text-base md:text-lg max-w-2xl drop-shadow-sm font-medium">
                   Explore our {activeTab.title.toLowerCase()} services and
                   discover how we can bring your vision to life with quality and
                   innovation.
