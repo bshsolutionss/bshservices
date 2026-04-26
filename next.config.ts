@@ -15,6 +15,11 @@ const nextConfig = {
         hostname: "secure.gravatar.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        pathname: "/**",
+      },
     ],
   },
 };

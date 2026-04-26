@@ -247,7 +247,7 @@ export const PRICING_DATA: PricingData = {
     RETAINER: [
       {
         name: "BASIC PACKAGE",
-        price: "PKR 35,000",
+        price: "PKR 17,500",
         period: "month",
         description: "Best for small local businesses",
         features: [
@@ -262,7 +262,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "STANDARD PACKAGE",
-        price: "PKR 70,000",
+        price: "PKR 35,000",
         period: "month",
         description: "Best for growing businesses",
         isPopular: true,
@@ -280,7 +280,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "PREMIUM PACKAGE",
-        price: "PKR 120,000",
+        price: "PKR 60,000",
         period: "month",
         description: "Best for serious brands & eCommerce",
         features: [
@@ -300,7 +300,7 @@ export const PRICING_DATA: PricingData = {
     WORDPRESS: [
       {
         name: "WORDPRESS STARTER",
-        price: "PKR 85,000",
+        price: "PKR 42,500",
         period: "one-time",
         description: "5 PAGES - Business & Portfolio sites.",
         idealFor: "Freelancers, local startups",
@@ -318,7 +318,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "WORDPRESS BUSINESS",
-        price: "PKR 135,000",
+        price: "PKR 67,500",
         period: "one-time",
         description: "8 PAGES - Custom brand colors & lead capture.",
         isPopular: true,
@@ -337,7 +337,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "WORDPRESS PROFESSIONAL",
-        price: "PKR 185,000",
+        price: "PKR 92,500",
         period: "one-time",
         description: "10 PAGES - Fully custom local agency site.",
         idealFor: "Established brands, multi-service firms",
@@ -357,7 +357,7 @@ export const PRICING_DATA: PricingData = {
     ECOMMERCE: [
       {
         name: "ECOMMERCE STARTER",
-        price: "PKR 110,000",
+        price: "PKR 55,000",
         period: "one-time",
         description: "UP TO 5 PRODUCTS - Local shop online.",
         idealFor: "Local shops, small product lines",
@@ -375,7 +375,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "ECOMMERCE BUSINESS",
-        price: "PKR 160,000",
+        price: "PKR 80,000",
         period: "one-time",
         description: "UP TO 8 PRODUCTS - Growing local brands.",
         isPopular: true,
@@ -394,7 +394,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "ECOMMERCE ADVANCED",
-        price: "PKR 210,000",
+        price: "PKR 105,000",
         period: "one-time",
         description: "UP TO 10 PRODUCTS - Large-scale store.",
         idealFor: "Established local eCommerce brands",
@@ -414,7 +414,7 @@ export const PRICING_DATA: PricingData = {
     CUSTOM: [
       {
         name: "CUSTOM CODE STARTER",
-        price: "PKR 175,000",
+        price: "PKR 87,500",
         period: "one-time",
         description: "5 PAGES - Next.js / React performance.",
         idealFor: "Local tech startups, SaaS",
@@ -432,7 +432,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "CUSTOM CODE BUSINESS",
-        price: "PKR 275,000",
+        price: "PKR 137,500",
         period: "one-time",
         description: "8 PAGES - Advanced UI & CMS.",
         isPopular: true,
@@ -451,7 +451,7 @@ export const PRICING_DATA: PricingData = {
       },
       {
         name: "CUSTOM CODE PRO",
-        price: "PKR 375,000",
+        price: "PKR 187,500",
         period: "one-time",
         description: "10 PAGES - High-performance platform.",
         idealFor: "Established tech firms, complex platforms",
