@@ -5,8 +5,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 const geistSans = Geist({
@@ -104,10 +103,8 @@ export default function RootLayout({
       >
         {/* Client-side smooth scroll only */}
         <SmoothScrollProvider>
-          {/* Fixed header spacing handled here */}
-          <Header />
-          <main className="overflow-x-hidden">{children}</main>
-          <Footer />
+          {/* Public Header/Footer — hidden on /admin, which renders its own shell */}
+          <SiteChrome>{children}</SiteChrome>
         </SmoothScrollProvider>
 
         {/* Analytics */}

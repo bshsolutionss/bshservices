@@ -2,13 +2,16 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin } from "lucide-react"
 import { Facebook, Instagram, Linkedin, } from "lucide-react"
 import Link from "next/link"
+
 const Contactform = () => {
+  const pathname = usePathname()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,6 +19,7 @@ const Contactform = () => {
     business: "",
     time: "",
     message: "",
+    company_website: "", // honeypot — left blank by real users
   })
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
@@ -28,32 +32,29 @@ const Contactform = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus("loading")
 
-    // WhatsApp number (remove leading 0 → add 92 for Pakistan)
-    const phoneNumber = "923128994968"
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "contact_form",
+          page_path: pathname,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          business: formData.business,
+          best_time: formData.time,
+          message: formData.message,
+          company_website: formData.company_website,
+        }),
+      })
 
-    // Format message for WhatsApp
-    const message = `*New Contact Form Submission* 👋
-    
-*Name:* ${formData.name}
-*Email:* ${formData.email}
-*Phone Number:* ${formData.phone}
-*Business Name:* ${formData.business}
-*Best Time To Connect:* ${formData.time}
-*Message:* ${formData.message}`
+      if (!res.ok) throw new Error("Request failed")
 
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`
-
-    // Open WhatsApp
-    window.open(whatsappURL, "_blank")
-
-    // Simulate success
-    setTimeout(() => {
       setStatus("success")
       setFormData({
         name: "",
@@ -62,8 +63,11 @@ const Contactform = () => {
         business: "",
         time: "",
         message: "",
+        company_website: "",
       })
-    }, 1000)
+    } catch {
+      setStatus("error")
+    }
   }
 
   return (
@@ -85,7 +89,7 @@ const Contactform = () => {
           </h2>
           <p className="text-lg text-[#231F20]/80">
             Have a project in mind or want to collaborate? Fill out the form and
-            we’ll contact you on WhatsApp 🚀
+            we’ll get back to you by email 📩
           </p>
 
           <div className="space-y-4">
@@ -108,7 +112,7 @@ const Contactform = () => {
             <Link href="https://www.instagram.com/bshsolutions_/" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
               <Instagram className="text-[#1A14A5]" />
             </Link>
-            
+
             <Link href="https://www.linkedin.com/company/bsh-solutionss/" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
               <Linkedin className="text-[#1A14A5]" />
             </Link>
@@ -172,22 +176,34 @@ const Contactform = () => {
             required
           />
 
+          {/* Honeypot — hidden from real users, bots tend to fill every field */}
+          <input
+            type="text"
+            name="company_website"
+            value={formData.company_website}
+            onChange={handleChange}
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden"
+            aria-hidden="true"
+          />
+
           <Button
             type="submit"
             className="w-full bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-2xl py-6 text-lg shadow-lg hover:shadow-xl transition"
             disabled={status === "loading"}
           >
-            {status === "loading" ? "Sending..." : "Send on WhatsApp"}
+            {status === "loading" ? "Sending..." : "Send Message"}
           </Button>
 
           {status === "success" && (
             <p className="text-green-600 text-center">
-              ✅ WhatsApp message opened successfully!
+              ✅ Message sent! Check your email for confirmation.
             </p>
           )}
           {status === "error" && (
             <p className="text-red-600 text-center">
-              ❌ Something went wrong. Try again.
+              ❌ Something went wrong. Please try again.
             </p>
           )}
         </motion.form>

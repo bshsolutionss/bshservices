@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
 
 export async function proxy(request: NextRequest) {
   // 1. Check for manual override via cookie
@@ -11,7 +12,7 @@ export async function proxy(request: NextRequest) {
   } else {
     // 2. Check Vercel Header
     const country = request.headers.get('x-vercel-ip-country');
-    
+
     if (country === 'PK') {
       detectedRegion = 'PK';
     } else if (!country && process.env.NODE_ENV === 'development') {
@@ -29,19 +30,26 @@ export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-user-region', detectedRegion);
 
-  // Create response with modified request headers
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-  
+  // Supabase session refresh — builds on `requestHeaders` so the region
+  // header forwarding survives even when Supabase needs to rebuild the
+  // response to attach refreshed auth cookies.
+  const { response, user } = await updateSession(request, requestHeaders);
+
   // Set cookie for persistence
   response.cookies.set('user-region', detectedRegion, {
     path: '/',
     maxAge: 60 * 60 * 24 * 7, // 1 week
     sameSite: 'lax',
   });
+
+  // Admin route guard — redirect unauthenticated requests to the login page.
+  // (Admin mutation API routes independently re-check auth themselves too;
+  // this is the fast, page-level guard.)
+  const { pathname } = request.nextUrl;
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !user) {
+    const loginUrl = new URL('/admin/login', request.url);
+    return NextResponse.redirect(loginUrl);
+  }
 
   return response;
 }
