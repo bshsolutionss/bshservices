@@ -6,7 +6,7 @@ import Contactform from "@/components/contactform";
 
 import ProcessFlow from "@/components/ProcessFlow";
 
-// import Portfolio from "@/components/portfolio";
+import { OurPortfolio } from "@/components/our-portfolio";
 
 import OurTechnologies from "@/components/Ourtechnologies";
 
@@ -16,7 +16,7 @@ const page = () => {
       <Services />
       <ProcessFlow />
       <OurTechnologies />
-      {/* <Portfolio /> */}
+      <OurPortfolio limit={6} showViewAll={true} />
       <Testimonial />
       <Faq />
       <Contactform />
