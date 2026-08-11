@@ -5,12 +5,12 @@ import Contactform from "@/components/contactform";
 import { OurPortfolio } from "@/components/our-portfolio";
 
 export const metadata = {
-  title: "Case Studies | Business Smart Hub",
+  title: "Our Portfolio | Business Smart Hub",
   description:
-    "Explore case studies and real client results achieved by Business Smart Hub.",
+    "Browse our portfolio of digital projects, web development, UI/UX design, and marketing case studies.",
 };
 
-const CaseStudiesPage = () => {
+const PortfolioPage = () => {
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
       <Header />
@@ -23,4 +23,4 @@ const CaseStudiesPage = () => {
   );
 };
 
-export default CaseStudiesPage;
+export default PortfolioPage;

@@ -121,3 +121,4 @@ const HoverExpand_001 = ({
 };
 
 export { HoverExpand_001 };
+export { OurPortfolio } from "./our-portfolio";

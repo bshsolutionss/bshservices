@@ -127,6 +127,12 @@ const Header = () => {
 
               <NavigationMenuItem>
                 <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
+                  <Link href="/portfolio">Portfolio</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
                   <Link href="/Blog">Blog</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -200,6 +206,9 @@ const Header = () => {
               </Link>
             </div>
           </div>
+          <Link href="/portfolio" className="block hover:text-[#1A14A5]">
+            Portfolio
+          </Link>
           <Link href="/Blog" className="block hover:text-[#1A14A5]">
             Blog
           </Link>
