@@ -1,44 +1,39 @@
-import React from "react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Heros from "@/components/heros";
 import Services from "@/components/services";
 import Testimonial from "@/components/testimonial";
 import Faq from "@/components/faq";
 import About from "@/components/about";
 import Contactform from "@/components/contactform";
+import MovingText from "@/components/MovingText";
+import ProcessFlow from "@/components/ProcessFlow";
+import "./globals.css";
+import { headers } from "next/headers";
+import PricingSection from "@/components/pricing-section";
 import { OurPortfolio } from "@/components/our-portfolio";
-// import { StickyCard002 } from "@/components/StickyCard";
-import { StatCounter } from "@/components/stat-counter"
 
+import { StatCounter } from "@/components/stat-counter";
+import OurTechnologies from "@/components/Ourtechnologies";
 
-const page = () => {
+const page = async () => {
+  const headerList = await headers();
+  const region = (headerList.get("x-user-region") as "GLOBAL" | "PK") || "GLOBAL";
+
   return (
     <div>
-      <Header />
       <Heros />
-        <StatCounter />
+      <StatCounter />
+      <MovingText />
+
       <About />
       <Services />
+      <PricingSection region={region} />
       <OurPortfolio limit={6} showViewAll={true} />
-
-        {/* <div className="h-screen w-full bg-gray-900">
-      <StickyCard002
-        cards={cards}
-        className="bg-gradient-to-br from-gray-900 to-black"
-        containerClassName="rounded-2xl shadow-2xl"
-        imageClassName="object-cover"
-      />
-    </div> */}
-    
-
-      
+      <ProcessFlow />
+      <OurTechnologies />
 
       <Testimonial />
       <Faq />
       <Contactform />
-
-      <Footer />
     </div>
   );
 };

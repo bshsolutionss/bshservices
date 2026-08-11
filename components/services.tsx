@@ -2,6 +2,7 @@
 
 import React, { useState, JSX } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   Globe,
   BarChart3,
@@ -24,6 +25,8 @@ import {
   SlidersHorizontal,
   Aperture,
 } from "lucide-react";
+import { MessageSquare } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -46,12 +49,36 @@ const TABS: Tab[] = [
     title: "Development",
     icon: Globe,
     items: [
-      { title: "Website Development", desc: "Fast, secure, and scalable web solutions.", icon: Monitor },
-      { title: "E-commerce", desc: "Custom online stores with secure payment gateways.", icon: ShoppingCart },
-      { title: "Mobile Apps", desc: "Cross-platform apps built for performance.", icon: Smartphone },
-      { title: "Custom Software", desc: "Tailored systems to automate and optimize business.", icon: Cpu },
-      { title: "Web Applications", desc: "Dynamic, API-integrated web apps.", icon: ChartBar },
-      { title: "Maintenance & Support", desc: "Ongoing updates, fixes, and technical support.", icon: SlidersHorizontal },
+      {
+        title: "Website Development",
+        desc: "Fast, secure, and scalable web solutions.",
+        icon: Monitor,
+      },
+      {
+        title: "E-commerce",
+        desc: "Custom online stores with secure payment gateways.",
+        icon: ShoppingCart,
+      },
+      {
+        title: "Mobile Apps",
+        desc: "Cross-platform apps built for performance.",
+        icon: Smartphone,
+      },
+      {
+        title: "Custom Software",
+        desc: "Tailored systems to automate and optimize business.",
+        icon: Cpu,
+      },
+      {
+        title: "Web Applications",
+        desc: "Dynamic, API-integrated web apps.",
+        icon: ChartBar,
+      },
+      {
+        title: "Maintenance & Support",
+        desc: "Ongoing updates, fixes, and technical support.",
+        icon: SlidersHorizontal,
+      },
     ],
   },
   {
@@ -59,12 +86,36 @@ const TABS: Tab[] = [
     title: "Designing",
     icon: Brush,
     items: [
-      { title: "Branding", desc: "Complete visual identity design.", icon: Paintbrush },
-      { title: "UI / UX", desc: "Designs that delight and convert.", icon: Monitor },
-      { title: "Graphic Design", desc: "Creative visuals for print and digital.", icon: Palette },
-      { title: "Logo Design", desc: "Unique, memorable brand marks.", icon: PenTool },
-      { title: "Motion Graphics", desc: "Animated visuals and video graphics.", icon: Video },
-      { title: "Packaging Design", desc: "Professional product packaging designs.", icon: ChartBar },
+      {
+        title: "Branding",
+        desc: "Complete visual identity design.",
+        icon: Paintbrush,
+      },
+      {
+        title: "UI / UX",
+        desc: "Designs that delight and convert.",
+        icon: Monitor,
+      },
+      {
+        title: "Graphic Design",
+        desc: "Creative visuals for print and digital.",
+        icon: Palette,
+      },
+      {
+        title: "Logo Design",
+        desc: "Unique, memorable brand marks.",
+        icon: PenTool,
+      },
+      {
+        title: "Motion Graphics",
+        desc: "Animated visuals and video graphics.",
+        icon: Video,
+      },
+      {
+        title: "Packaging Design",
+        desc: "Professional product packaging designs.",
+        icon: ChartBar,
+      },
     ],
   },
   {
@@ -72,12 +123,36 @@ const TABS: Tab[] = [
     title: "Marketing",
     icon: BarChart3,
     items: [
-      { title: "PPC Advertising", desc: "Targeted paid ad campaigns for high ROI.", icon: DollarSign },
-      { title: "Social Media Marketing", desc: "Growth through creative social campaigns.", icon: Users },
-      { title: "SEO Optimization", desc: "Rank higher with data-driven SEO.", icon: Megaphone },
-      { title: "Email Marketing", desc: "Automated and personalized email flows.", icon: ChartBar },
-      { title: "Content Marketing", desc: "Engaging blog, video, and media strategies.", icon: PenTool },
-      { title: "Influencer Marketing", desc: "Collaborate with trusted voices in your niche.", icon: Users },
+      {
+        title: "PPC Advertising",
+        desc: "Targeted paid ad campaigns for high ROI.",
+        icon: DollarSign,
+      },
+      {
+        title: "Social Media Marketing",
+        desc: "Growth through creative social campaigns.",
+        icon: Users,
+      },
+      {
+        title: "SEO Optimization",
+        desc: "Rank higher with data-driven SEO.",
+        icon: Megaphone,
+      },
+      {
+        title: "Email Marketing",
+        desc: "Automated and personalized email flows.",
+        icon: ChartBar,
+      },
+      {
+        title: "Content Marketing",
+        desc: "Engaging blog, video, and media strategies.",
+        icon: PenTool,
+      },
+      {
+        title: "Influencer Marketing",
+        desc: "Collaborate with trusted voices in your niche.",
+        icon: Users,
+      },
     ],
   },
   {
@@ -85,12 +160,73 @@ const TABS: Tab[] = [
     title: "Photography",
     icon: CameraIcon,
     items: [
-      { title: "Product Photography", desc: "High-quality product visuals for online stores.", icon: Camera },
-      { title: "Brand Shoots", desc: "Professional shoots that tell your brand’s story.", icon: ImageIcon },
-      { title: "Event Coverage", desc: "Capture events with precision and creativity.", icon: CameraIcon },
-      { title: "Video Production", desc: "Full-scale promotional and brand videos.", icon: Video },
-      { title: "Editing & Retouching", desc: "Expert editing for stunning final results.", icon: Aperture },
-      { title: "Drone Photography", desc: "Aerial shots with cinematic quality.", icon: Camera },
+      {
+        title: "Product Photography",
+        desc: "High-quality product visuals for online stores.",
+        icon: Camera,
+      },
+      {
+        title: "Brand Shoots",
+        desc: "Professional shoots that tell your brand’s story.",
+        icon: ImageIcon,
+      },
+      {
+        title: "Event Coverage",
+        desc: "Capture events with precision and creativity.",
+        icon: CameraIcon,
+      },
+      {
+        title: "Video Production",
+        desc: "Full-scale promotional and brand videos.",
+        icon: Video,
+      },
+      {
+        title: "Editing & Retouching",
+        desc: "Expert editing for stunning final results.",
+        icon: Aperture,
+      },
+      {
+        title: "Drone Photography",
+        desc: "Aerial shots with cinematic quality.",
+        icon: Camera,
+      },
+    ],
+  },
+  {
+    id: "ai",
+    title: "AI Services",
+    icon: Cpu,
+    items: [
+      {
+        title: "AI Automation",
+        desc: "Automate workflows, customer service, and operations using AI.",
+        icon: SlidersHorizontal,
+      },
+      {
+        title: "AI Chatbots",
+        desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
+        icon: MessageSquare,
+      },
+      {
+        title: "AI Website Integration",
+        desc: "Integrate AI search, chatbot, personalization & automation.",
+        icon: Monitor,
+      },
+      {
+        title: "AI Social Media Automation",
+        desc: "AI-driven content creation, scheduling & auto-replies.",
+        icon: Megaphone,
+      },
+      {
+        title: "AI Video Automation",
+        desc: "Auto-generated ads, reels & product videos using AI tools.",
+        icon: Video,
+      },
+      {
+        title: "AEO",
+        desc: "AI-powered SEO, content generation & search ranking improvement.",
+        icon: BarChart3,
+      },
     ],
   },
 ];
@@ -98,13 +234,14 @@ const TABS: Tab[] = [
 export default function Services(): JSX.Element {
   const [active, setActive] = useState<string>(TABS[0].id);
   const activeTab = TABS.find((t) => t.id === active) ?? TABS[0];
+  const router = useRouter();
 
-  // Map tab id to corresponding image filename
   const imageMap: Record<string, string> = {
-    development: "/images/1.png",
-    design: "/images/2.png",
-    marketing: "/images/3.png",
-    photography: "/images/4.png",
+    development: "/images/Development.png",
+    design: "/images/Designing.png",
+    marketing: "/images/Marketing.png",
+    photography: "/images/Photography.png",
+    ai: "/images/ai/ai.png",
   };
 
   return (
@@ -169,41 +306,53 @@ export default function Services(): JSX.Element {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl shadow-2xl group w-full h-[400px] sm:h-[500px] md:h-[550px]"
+              className="relative overflow-hidden rounded-3xl shadow-2xl group w-full h-[400px] sm:h-[500px] md:h-[550px] perspective-1000"
             >
-              {/* Dynamic Background Image */}
-              <div className="relative w-full h-full">
+              {/* Background Image */}
+              <div className="relative w-full h-full transform-gpu group-hover:scale-[1.04] transition-transform duration-700 ease-out">
                 <Image
                   src={imageMap[active]}
                   alt={`${activeTab.title} service illustration`}
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover"
                 />
               </div>
 
-              {/* Overlay Content */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#1A14A5]/80 via-[#1A14A5]/70 to-black/70 flex flex-col justify-end p-8 sm:p-12 text-white">
-                <div className="flex items-center gap-3 mb-4">
-                  <activeTab.icon className="w-10 h-10 text-white" />
-                  <h3 className="text-3xl sm:text-4xl font-extrabold">
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/60 group-hover:from-black/70 group-hover:via-black/30 group-hover:to-black/70 transition-all duration-500" />
+
+              {/* Centered Content */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6 sm:p-10 z-20">
+                <div className="flex flex-col items-center gap-3 mb-4 px-8 py-6 rounded-3xl bg-black/10 backdrop-blur-[2px] border border-white/10">
+                  <activeTab.icon className="w-12 h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                  <h3 className="text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-md">
                     {activeTab.title}
                   </h3>
                 </div>
-                <p className="text-white/90 mb-6 text-sm sm:text-base max-w-2xl">
+
+                <p className="text-white/90 mb-8 text-sm sm:text-base md:text-lg max-w-2xl drop-shadow-sm font-medium">
                   Explore our {activeTab.title.toLowerCase()} services and
                   discover how we can bring your vision to life with quality and
                   innovation.
                 </p>
+
                 <Button
                   size="lg"
-                  className="bg-white text-[#1A14A5] font-semibold hover:bg-gray-100 px-8 py-4 rounded-xl transition-all w-fit"
-                  onClick={() =>
-                    document
-                      .getElementById("contact")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
+                  className="bg-[#1A14A5] text-white font-semibold hover:bg-black px-8 py-4 rounded-xl transition-all duration-300 w-fit shadow-lg"
+                  onClick={() => {
+                    if (active === "development")
+                      router.push("/Services/development#development-form");
+                    else if (active === "design")
+                      router.push("/Services/designing#designing-form");
+                    else if (active === "marketing")
+                      router.push("/Services/marketing#marketing-form");
+                    else if (active === "photography")
+                      router.push("/Services/photography#photography-form");
+                    else if (active === "ai")
+                      router.push("/Services/ai#ai-form");
+                  }}
                 >
                   Get a Quote
                 </Button>
@@ -230,7 +379,27 @@ export default function Services(): JSX.Element {
                       {item.desc}
                     </p>
                   </div>
-                  <Button className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto">
+
+                  {/* Learn More Button → dynamic link */}
+                  <Button
+                    onClick={() => {
+                      const slug = item.title
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-+|-+$/g, "");
+                      if (active === "development")
+                        router.push(`/Services/development#${slug}`);
+                      else if (active === "design")
+                        router.push(`/Services/designing#${slug}`);
+                      else if (active === "marketing")
+                        router.push(`/Services/marketing#${slug}`);
+                      else if (active === "photography")
+                        router.push(`/Services/photography#${slug}`);
+                      else if (active === "ai")
+                        router.push(`/Services/ai#${slug}`);
+                    }}
+                    className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto transition-all"
+                  >
                     Learn More
                   </Button>
                 </motion.div>
@@ -252,11 +421,7 @@ export default function Services(): JSX.Element {
           <Button
             size="lg"
             className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white px-10 py-6 text-lg rounded-2xl shadow-lg hover:shadow-xl transition"
-            onClick={() =>
-              document
-                .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => router.push("/contact")}
           >
             Contact Us
           </Button>

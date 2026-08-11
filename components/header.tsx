@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,26 +11,36 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { Menu, Phone, Code, Palette, Camera, Megaphone } from "lucide-react"
-import Lenis from "@studio-freight/lenis"
+} from "@/components/ui/navigation-menu";
+import {
+  Menu,
+  Phone,
+  Code,
+  Palette,
+  Camera,
+  Megaphone,
+  ChevronDown,
+  Cpu,
+} from "lucide-react";
+// import Lenis from "@studio-freight/lenis";
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   // Enable Lenis Smooth Scroll
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      smoothWheel: true,
-    })
+  // useEffect(() => {
+  //   const lenis = new Lenis({
+  //     duration: 1.2,
+  //     smoothWheel: true,
+  //   });
 
-    function raf(time: number) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
-    requestAnimationFrame(raf)
-  }, [])
+  //   function raf(time: number) {
+  //     lenis.raf(time);
+  //     requestAnimationFrame(raf);
+  //   }
+  //   requestAnimationFrame(raf);
+  // }, []);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-[#F4F7FE]/80 backdrop-blur-xl shadow-lg border-b border-white/20">
@@ -38,7 +48,7 @@ const Header = () => {
         {/* Left - Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/noghlogo.png"
+            src="/images/3dlogobgrewtx.png"
             alt="logo"
             width={60}
             height={60}
@@ -51,111 +61,148 @@ const Header = () => {
           <NavigationMenu>
             <NavigationMenuList className="flex items-center space-x-6 text-[#231F20] font-medium">
               <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
                   <Link href="/">Home</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
+              {/* Mega Dropdown for Services */}
               <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
-                  <Link href="/About">About</Link>
-                </NavigationMenuLink>
+                <NavigationMenuTrigger className="hover:text-[#1A14A5] transition">
+                  Services
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid grid-cols-2 gap-6 p-6 w-[500px] bg-white/95 backdrop-blur-lg shadow-xl rounded-2xl">
+                    <Link
+                      href="/Services/development"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Code className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Development
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Web & mobile solutions tailored for your needs.
+                        </p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/Services/designing"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Palette className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Designing
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          UI/UX that blends creativity and usability.
+                        </p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/Services/marketing"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Megaphone className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Marketing
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Strategies that help your brand grow faster.
+                        </p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/Services/photography"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Camera className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          Photography
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Stunning visuals to capture your brand story.
+                        </p>
+                      </div>
+                    </Link>
+                    <Link
+                      href="/Services/ai"
+                      className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
+                    >
+                      <Cpu className="text-[#1A14A5]" size={20} />
+                      <div>
+                        <h4 className="font-semibold text-[#231F20]">
+                          AI Services
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Automate and scale with smart AI solutions.
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* Mega Dropdown for Services */}
-            <NavigationMenuItem>
-  <NavigationMenuTrigger className="hover:text-[#1A14A5] transition">
-    Services
-  </NavigationMenuTrigger>
-  <NavigationMenuContent>
-    <div className="grid grid-cols-2 gap-6 p-6 w-[500px] bg-white/95 backdrop-blur-lg shadow-xl rounded-2xl">
-      <Link
-        href="/Services/development"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Code className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Development</h4>
-          <p className="text-sm text-gray-600">
-            Web & mobile solutions tailored for your needs.
-          </p>
-        </div>
-      </Link>
-
-      <Link
-        href="/Services/designing"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Palette className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Designing</h4>
-          <p className="text-sm text-gray-600">
-            UI/UX that blends creativity and usability.
-          </p>
-        </div>
-      </Link>
-
-      <Link
-        href="/Services/marketing"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Megaphone className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Marketing</h4>
-          <p className="text-sm text-gray-600">
-            Strategies that help your brand grow faster.
-          </p>
-        </div>
-      </Link>
-
-      <Link
-        href="/Services/photography"
-        className="flex items-start space-x-3 p-3 rounded-xl hover:bg-[#F4F7FE] transition"
-      >
-        <Camera className="text-[#1A14A5]" size={20} />
-        <div>
-          <h4 className="font-semibold text-[#231F20]">Photography</h4>
-          <p className="text-sm text-gray-600">
-            Stunning visuals to capture your brand story.
-          </p>
-        </div>
-      </Link>
-    </div>
-  </NavigationMenuContent>
-</NavigationMenuItem>
-
-
               <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
                   <Link href="/portfolio">Portfolio</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
-                  <Link href="/Blog">Blog</Link>
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
+                  <Link href="/about">About</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
+
               <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className="hover:text-[#1A14A5] transition"
+                >
+                  <Link href="/blog">Blog</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              {/* <NavigationMenuItem>
                 <NavigationMenuLink asChild className="hover:text-[#1A14A5] transition">
                   <Link href="/Casestudies">Case Studies</Link>
                 </NavigationMenuLink>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
         {/* Right - Buttons */}
         <div className="hidden md:flex space-x-3">
-          <Button className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl px-5" asChild>
-            <Link href="/Contact">Contact</Link>
+          <Button
+            className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl px-5"
+            asChild
+          >
+            <Link href="/contact">Contact</Link>
           </Button>
           <Button
             variant="outline"
             className="border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl px-5"
           >
-            <Phone className="w-4 h-4 mr-2" /> 0335-3165603
+            <Phone className="w-4 h-4 mr-2" /> +92 312 8994968
           </Button>
         </div>
 
@@ -174,62 +221,89 @@ const Header = () => {
           <Link href="/" className="block hover:text-[#1A14A5]">
             Home
           </Link>
-          <Link href="/About" className="block hover:text-[#1A14A5]">
-            About
+          <Link href="/portfolio" className="block hover:text-[#1A14A5]">
+            Portfolio
           </Link>
+
           <div>
-            <p className="font-semibold text-[#231F20] mb-2">Services</p>
-            <div className="space-y-2 pl-3">
+            <button
+              onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+              className="flex items-center justify-between w-full font-semibold text-[#231F20] mb-2 hover:text-[#1A14A5] transition"
+            >
+              Services
+              <ChevronDown
+                size={18}
+                className={`transition-transform duration-300 ${mobileServicesOpen ? "rotate-180" : ""
+                  }`}
+              />
+            </button>
+            <div
+              className={`space-y-2 pl-4 overflow-hidden transition-all duration-300 ${mobileServicesOpen
+                  ? "max-h-60 opacity-100"
+                  : "max-h-0 opacity-0"
+                }`}
+            >
               <Link
                 href="/Services/development"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Development
               </Link>
               <Link
                 href="/Services/designing"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Designing
               </Link>
               <Link
                 href="/Services/marketing"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Marketing
               </Link>
               <Link
                 href="/Services/photography"
-                className="block hover:text-[#1A14A5]"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Photography
+              </Link>
+              <Link
+                href="/Services/ai"
+                className="block hover:text-[#1A14A5] text-gray-600 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                AI Services
               </Link>
             </div>
           </div>
           <Link href="/portfolio" className="block hover:text-[#1A14A5]">
             Portfolio
           </Link>
-          <Link href="/Blog" className="block hover:text-[#1A14A5]">
-            Blog
-          </Link>
-          <Link href="/Casestudies" className="block hover:text-[#1A14A5]">
-            Case Studies
+          <Link href="/about" className="block hover:text-[#1A14A5]">
+            About
           </Link>
           <div className="flex flex-col gap-3 pt-4">
-            <Button className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl" asChild>
-              <Link href="/Contact">Contact</Link>
+            <Button
+              className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl"
+              asChild
+            >
+              <Link href="/contact">Contact</Link>
             </Button>
             <Button
               variant="outline"
               className="border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl"
             >
-              <Phone className="w-4 h-4 mr-2" /> 0335-3165603
+              <Phone className="w-4 h-4 mr-2" /> +92 312 8994968
             </Button>
           </div>
         </div>
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

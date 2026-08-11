@@ -53,11 +53,11 @@ const HeroLogo = () => {
         
       >
         <Image
-          src="/images/3dlogobgre.png"
+          src="/images/3dlogobgrewtx.png"
           alt="hero"
           width={480}
           height={480}
-          className="rounded-full object-cover drop-shadow-2xl"
+          className="object-cover drop-shadow-2xl"
         />
       </motion.div>
 

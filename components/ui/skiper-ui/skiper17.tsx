@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ReactLenis from "lenis/react";
 import { useRef } from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -112,10 +113,11 @@ const StickyCard002 = ({
           )}
         >
           {cards.map((card, i) => (
-            <img
+            <Image
               key={card.id}
               src={card.image}
               alt={card.alt || ""}
+              
               className={cn(
                 "rounded-4xl absolute h-full w-full object-cover",
                 imageClassName,

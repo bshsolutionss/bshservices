@@ -12,20 +12,27 @@
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.3",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.4.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@vercel/analytics": "^1.6.1",
+    "@vercel/speed-insights": "^1.3.1",
     "class-variance-authority": "^0.7.1",
     "gsap": "^3.13.0",
     "lenis": "^1.3.11",
     "lucide-react": "^0.543.0",
-    "next": "15.5.2",
+    "next": "^16.0.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
     "swiper": "^12.0.2",
     "tailwind-variants": "^3.1.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.180.0",
+    "typed.js": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -41,5 +48,21 @@
     "tailwindcss": "^4.1.14",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/B-JCoder/bshservices.git"
+  },
+  "bugs": {
+    "url": "https://github.com/B-JCoder/bshservices/issues"
+  },
+  "homepage": "https://github.com/B-JCoder/bshservices#readme"
 }

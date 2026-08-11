@@ -17,6 +17,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const Skiper47 = () => {
   const images = [
@@ -131,7 +132,7 @@ const Carousel_001 = ({
       >
         {images.map((image, index) => (
           <SwiperSlide key={index} className="!h-[320px] w-full border">
-            <img
+            <Image
               className="h-full w-full object-cover"
               src={image.src}
               alt={image.alt}

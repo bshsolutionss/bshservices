@@ -7,6 +7,7 @@ import ReactLenis from "lenis/react";
 import { useRef } from "react";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface CardData {
   id: number | string;
@@ -112,7 +113,7 @@ const StickyCard002 = ({
           )}
         >
           {cards.map((card, i) => (
-            <img
+            <Image
               key={card.id}
               src={card.image}
               alt={card.alt || ""}

@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin } from "lucide-react"
-
+import { Facebook, Instagram, Linkedin, } from "lucide-react"
+import Link from "next/link"
 const Contactform = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
+    business: "",
+    time: "",
     message: "",
   })
 
@@ -18,23 +22,48 @@ const Contactform = () => {
     "idle"
   )
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setStatus("loading")
 
-    try {
-      // Backend ki zaroorat nahi (sirf demo)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+    // WhatsApp number (remove leading 0 → add 92 for Pakistan)
+    const phoneNumber = "923128994968"
 
+    // Format message for WhatsApp
+    const message = `*New Contact Form Submission* 👋
+    
+*Name:* ${formData.name}
+*Email:* ${formData.email}
+*Phone Number:* ${formData.phone}
+*Business Name:* ${formData.business}
+*Best Time To Connect:* ${formData.time}
+*Message:* ${formData.message}`
+
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`
+
+    // Open WhatsApp
+    window.open(whatsappURL, "_blank")
+
+    // Simulate success
+    setTimeout(() => {
       setStatus("success")
-      setFormData({ name: "", email: "", message: "" })
-    } catch (_) {
-      setStatus("error")
-    }
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        business: "",
+        time: "",
+        message: "",
+      })
+    }, 1000)
   }
 
   return (
@@ -56,22 +85,34 @@ const Contactform = () => {
           </h2>
           <p className="text-lg text-[#231F20]/80">
             Have a project in mind or want to collaborate? Fill out the form and
-            we’ll get back to you within 24 hours 🚀
+            we’ll contact you on WhatsApp 🚀
           </p>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3 text-[#231F20]/90">
               <Mail className="text-[#1A14A5] w-6 h-6" />
-              <span>support@bshsolutions.com</span>
+              <span>bshsolutionss@gmail.com</span>
             </div>
             <div className="flex items-center gap-3 text-[#231F20]/90">
               <Phone className="text-[#1A14A5] w-6 h-6" />
-              <span>+92 335 3165603</span>
+              <span>+92 312 8994968</span>
             </div>
             <div className="flex items-center gap-3 text-[#231F20]/90">
               <MapPin className="text-[#1A14A5] w-6 h-6" />
               <span>Karachi, Pakistan</span>
             </div>
+                <div className="flex gap-5 mt-4">
+            <Link href="https://www.facebook.com/people/BSH-Solutions/61582682037084/" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
+              <Facebook className="text-[#1A14A5]" />
+            </Link>
+            <Link href="https://www.instagram.com/bshsolutions_/" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
+              <Instagram className="text-[#1A14A5]" />
+            </Link>
+            
+            <Link href="https://www.linkedin.com/company/bsh-solutionss/" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
+              <Linkedin className="text-[#1A14A5]" />
+            </Link>
+          </div>
           </div>
         </motion.div>
 
@@ -100,13 +141,35 @@ const Contactform = () => {
             onChange={handleChange}
             required
           />
+          <Input
+            type="text"
+            name="phone"
+            placeholder="Your Phone Number"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="text"
+            name="business"
+            placeholder="Your Business Name"
+            value={formData.business}
+            onChange={handleChange}
+          />
+          <Input
+            type="text"
+            name="time"
+            placeholder="Best Time To Connect"
+            value={formData.time}
+            onChange={handleChange}
+          />
           <Textarea
             name="message"
             placeholder="Your Message"
             value={formData.message}
             onChange={handleChange}
-            required
             rows={5}
+            required
           />
 
           <Button
@@ -114,12 +177,12 @@ const Contactform = () => {
             className="w-full bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-2xl py-6 text-lg shadow-lg hover:shadow-xl transition"
             disabled={status === "loading"}
           >
-            {status === "loading" ? "Sending..." : "Send Message"}
+            {status === "loading" ? "Sending..." : "Send on WhatsApp"}
           </Button>
 
           {status === "success" && (
             <p className="text-green-600 text-center">
-              ✅ Message sent successfully!
+              ✅ WhatsApp message opened successfully!
             </p>
           )}
           {status === "error" && (
