@@ -52,6 +52,7 @@ export default function DesigningPage() {
       {/* ===== 1. Branding ===== */}
       <ServiceSection
         id="branding"
+        learnMoreHref="/Services/designing/brand-identity-design"
         title="Branding"
         description="We create cohesive brand identities that reflect your business values, build trust, and make a lasting impression."
         features={[
@@ -78,6 +79,7 @@ export default function DesigningPage() {
       {/* ===== 2. UI / UX Design ===== */}
       <ServiceSection
         id="ui-ux"
+        learnMoreHref="/Services/designing/ui-ux-design"
         title="UI / UX Design"
         description="We design user interfaces that are intuitive, accessible, and delightful — enhancing usability and conversion rates."
         features={[
@@ -99,6 +101,7 @@ export default function DesigningPage() {
       {/* ===== 3. Graphic Design ===== */}
       <ServiceSection
         id="graphic-design"
+        learnMoreHref="/Services/designing/graphic-design"
         title="Graphic Design"
         description="Our creative team crafts stunning visuals for digital and print that communicate your message effectively."
         features={[
@@ -119,6 +122,7 @@ export default function DesigningPage() {
       {/* ===== 4. Logo Design ===== */}
       <ServiceSection
         id="logo-design"
+        learnMoreHref="/Services/designing/logo-design"
         title="Logo Design"
         description="We design unique, memorable logos that capture your brand’s personality and create instant recognition."
         features={[
@@ -146,6 +150,7 @@ export default function DesigningPage() {
       {/* ===== 5. Motion Graphics ===== */}
       <ServiceSection
         id="motion-graphics"
+        learnMoreHref="/Services/designing/motion-graphics-design"
         title="Motion Graphics"
         description="We bring your ideas to life with smooth, engaging motion visuals — perfect for ads, explainers, and branding videos."
         features={[
@@ -172,6 +177,7 @@ export default function DesigningPage() {
       {/* ===== 6. Packaging Design ===== */}
       <ServiceSection
         id="packaging-design"
+        learnMoreHref="/Services/designing/packaging-design"
         title="Packaging Design"
         description="We design professional product packaging that stands out on shelves and tells your brand story at first glance."
         features={[

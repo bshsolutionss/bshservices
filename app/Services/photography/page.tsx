@@ -56,6 +56,7 @@ export default function PhotographyPage() {
       <section id="product-photography">
         <ServiceSection
           title="Product Photography"
+          learnMoreHref="/Services/photography/product-photography"
           description="Showcase your products in their best light with high-quality, detail-oriented photography designed to boost engagement and sales."
           features={[
             "E-commerce and catalog photography",
@@ -77,6 +78,7 @@ export default function PhotographyPage() {
       <section id="brand-shoots">
         <ServiceSection
           title="Brand Shoots"
+          learnMoreHref="/Services/photography/brand-shoots"
           description="We help brands visually communicate their story through conceptual photography that connects emotionally with their audience."
           features={[
             "Creative direction and planning",
@@ -102,6 +104,7 @@ export default function PhotographyPage() {
       <section id="event-coverage">
         <ServiceSection
           title="Event Coverage"
+          learnMoreHref="/Services/photography/event-coverage"
           description="From corporate events to personal celebrations, we capture every key moment with a creative and journalistic eye."
           features={[
             "Professional event photography team",
@@ -129,6 +132,7 @@ export default function PhotographyPage() {
       <section id="video-production">
         <ServiceSection
           title="Video Production"
+          learnMoreHref="/Services/photography/video-production"
           description="Full-scale video production services — from concept to final edit — delivering cinematic visuals that tell powerful stories."
           features={[
             "Concept, scripting, and storyboarding",
@@ -160,6 +164,7 @@ export default function PhotographyPage() {
       <section id="editing-retouching">
         <ServiceSection
           title="Editing & Retouching"
+          learnMoreHref="/Services/photography/photo-editing-retouching"
           description="Bring every shot to perfection with expert color correction, compositing, and digital retouching that enhances natural beauty."
           features={[
             "High-end retouching",
@@ -187,6 +192,7 @@ export default function PhotographyPage() {
       <section id="drone-photography">
         <ServiceSection
           title="Drone Photography"
+          learnMoreHref="/Services/photography/drone-photography"
           description="Aerial imagery that adds cinematic perspectives to your visuals — perfect for real estate, events, and creative brand films."
           features={[
             "4K aerial photo and video",

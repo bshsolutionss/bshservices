@@ -45,6 +45,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="ai-automation"
         title="AI Automation"
+        learnMoreHref="/Services/ai/ai-automation"
         description="We automate workflows using AI agents, APIs, and automation platforms — helping you save hours every week."
         features={[
           "Process automation with AI agents",
@@ -65,6 +66,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="social-media-automation"
         title="Social Media Automation"
+        learnMoreHref="/Services/ai/social-media-automation"
         description="Automated posting, AI content creation, engagement tools, and smart scheduling that keeps you active 24/7."
         features={[
           "Auto-posting systems",
@@ -86,6 +88,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="ai-chatbots"
         title="AI Chatbots"
+        learnMoreHref="/Services/ai/ai-chatbots"
         description="AI chatbots for websites, WhatsApp, Facebook, and CRM systems — trained on your business data."
         features={[
           "WhatsApp AI chatbots",
@@ -106,6 +109,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="ai-website-integration"
         title="AI Integration for Websites"
+        learnMoreHref="/Services/ai/ai-website-integration"
         description="Embed AI tools such as chat assistants, recommendations, personalized content, and advanced search."
         features={[
           "AI chat widget",
@@ -127,6 +131,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="aeo"
         title="AEO – AI Enablement"
+        learnMoreHref="/Services/ai/aeo-ai-enablement"
         description="We analyze your business and provide a complete AI roadmap to increase efficiency and revenue."
         features={[
           "AI audit for your business",
@@ -147,6 +152,7 @@ export default function AIServicesPage() {
       <ServiceSection
         id="ai-video-automation"
         title="AI Video Automation"
+        learnMoreHref="/Services/ai/ai-video-automation"
         description="Bulk video creation using AI—script, voiceover, editing, and publishing workflows."
         features={[
           "Bulk video generation",

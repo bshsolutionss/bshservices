@@ -63,6 +63,7 @@ export default function MarketingPage() {
       <section id="ppc-advertising">
         <ServiceSection
           title="PPC Advertising"
+          learnMoreHref="/Services/marketing/ppc-advertising"
           description="Maximize your ROI with performance-driven Pay-Per-Click advertising. We create and manage high-converting ad campaigns that bring measurable results."
           features={[
             "Keyword and audience research",
@@ -87,6 +88,7 @@ export default function MarketingPage() {
       <section id="social-media-marketing">
         <ServiceSection
           title="Social Media Marketing"
+          learnMoreHref="/Services/marketing/social-media-marketing"
           description="We help brands grow through engaging social media content and targeted campaigns that connect with your audience on every platform."
           features={[
             "Social media strategy & management",
@@ -109,6 +111,7 @@ export default function MarketingPage() {
       <section id="seo-optimization">
         <ServiceSection
           title="SEO Optimization"
+          learnMoreHref="/Services/marketing/seo-optimization"
           description="Boost your organic visibility and climb search rankings with our comprehensive SEO strategies tailored to your business goals."
           features={[
             "On-page & technical SEO",
@@ -133,6 +136,7 @@ export default function MarketingPage() {
       <section id="email-marketing">
         <ServiceSection
           title="Email Marketing"
+          learnMoreHref="/Services/marketing/email-marketing"
           description="Deliver the right message to the right audience with personalized, automated email campaigns that convert and retain customers."
           features={[
             "Automated drip campaigns",
@@ -155,6 +159,7 @@ export default function MarketingPage() {
       <section id="content-marketing">
         <ServiceSection
           title="Content Marketing"
+          learnMoreHref="/Services/marketing/content-marketing"
           description="We create impactful content strategies that educate, inspire, and convert — from blog posts to videos and social media campaigns."
           features={[
             "Blog writing and SEO content",
@@ -176,6 +181,7 @@ export default function MarketingPage() {
       <section id="influencer-marketing">
         <ServiceSection
           title="Influencer Marketing"
+          learnMoreHref="/Services/marketing/influencer-marketing"
           description="Amplify your brand’s reach by partnering with trusted influencers and creators who align with your vision and audience."
           features={[
             "Influencer research and outreach",

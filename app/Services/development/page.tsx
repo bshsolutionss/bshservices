@@ -67,6 +67,7 @@ export default function DevelopmentPage() {
       {/* ===== 1. Website Development ===== */}
       <ServiceSection
         id="website-development"
+        learnMoreHref="/Services/development/website-development"
         title="Website Development"
         description="We build responsive, SEO-friendly, and visually appealing websites that elevate your online presence."
         features={[
@@ -90,6 +91,7 @@ export default function DevelopmentPage() {
       {/* ===== 2. E-commerce Development ===== */}
       <ServiceSection
         id="e-commerce"
+        learnMoreHref="/Services/development/ecommerce-development"
         title="E-Commerce Development"
         description="Launch your custom online store with secure payment gateways and effortless management."
         features={[
@@ -112,6 +114,7 @@ export default function DevelopmentPage() {
       {/* ===== 3. Mobile App Development ===== */}
       <ServiceSection
         id="mobile-apps"
+        learnMoreHref="/Services/development/mobile-app-development"
         title="Mobile App Development"
         description="We design and build high-performance mobile apps that deliver seamless experiences across all devices."
         features={[
@@ -132,6 +135,7 @@ export default function DevelopmentPage() {
       {/* ===== 4. Custom Software Development ===== */}
       <ServiceSection
         id="custom-software"
+        learnMoreHref="/Services/development/custom-software-development"
         title="Custom Software Development"
         description="Tailored business software to automate your workflows, boost efficiency, and reduce costs."
         features={[
@@ -153,6 +157,7 @@ export default function DevelopmentPage() {
       {/* ===== 5. Web Applications ===== */}
       <ServiceSection
         id="web-applications"
+        learnMoreHref="/Services/development/web-application-development"
         title="Web Applications"
         description="Interactive, API-driven web apps built with cutting-edge technology to deliver exceptional performance."
         features={[
@@ -173,6 +178,7 @@ export default function DevelopmentPage() {
       {/* ===== 6. Maintenance & Support ===== */}
       <ServiceSection
         id="maintenance-support"
+        learnMoreHref="/Services/development/website-maintenance-support"
         title="Maintenance & Support"
         description="We ensure your systems stay updated, secure, and running at top performance round the clock."
         features={[

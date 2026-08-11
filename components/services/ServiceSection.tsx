@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import React from "react"; // 👈 required for React.ReactNode
 
 interface ServiceSectionProps {
@@ -14,6 +15,8 @@ interface ServiceSectionProps {
   image: string;
   reverse?: boolean;
   cta?: string;
+  /** When set, renders a secondary "View Full Details" link to the service's own page. */
+  learnMoreHref?: string;
 }
 
 export default function ServiceSection({
@@ -25,6 +28,7 @@ export default function ServiceSection({
   image,
   reverse = false,
   cta = "Get Started",
+  learnMoreHref,
 }: ServiceSectionProps) {
   return (
     <section id={id} className="py-20 bg-background border-b border-border"> {/* ✅ Applied id */}
@@ -73,13 +77,23 @@ export default function ServiceSection({
             ))}
           </ul>
 
-          {/* ===== CTA BUTTON ===== */}
-          <a
-            href="#contact"
-            className="inline-block bg-[#1A14A5] hover:bg-[#0f0b7a] text-white px-6 py-3 rounded-lg font-medium transition"
-          >
-            {cta}
-          </a>
+          {/* ===== CTA BUTTONS ===== */}
+          <div className="flex flex-wrap items-center gap-4">
+            <a
+              href="#contact"
+              className="inline-block bg-[#1A14A5] hover:bg-[#0f0b7a] text-white px-6 py-3 rounded-lg font-medium transition"
+            >
+              {cta}
+            </a>
+            {learnMoreHref && (
+              <Link
+                href={learnMoreHref}
+                className="inline-flex items-center gap-1.5 text-[#1A14A5] font-medium hover:gap-2.5 transition-all"
+              >
+                View Full Details <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+          </div>
         </motion.div>
       </div>
 
