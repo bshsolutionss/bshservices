@@ -13,25 +13,18 @@ import {
   SiWoocommerce,
   SiStripe,
   SiPaypal,
- 
   SiFlutter,
   SiApple,
   SiAndroid,
   SiNodedotjs,
   SiPython,
-    SiDotnet,
+  SiDotnet,
   SiSupabase,
   SiFirebase,
   SiPrisma,
-
   SiGithub,
   SiDocker,
-
-  SiAdobephotoshop,
-  SiAdobeillustrator,
-
-  SiAdobeaftereffects,
-  SiAdobepremierepro,
+  SiAdobe,
   SiFigma,
   SiCanva,
   SiAdobexd,
@@ -41,21 +34,12 @@ import {
   SiGrammarly,
   SiGoogledocs,
   SiMailchimp,
-
-
-  
- 
   SiSemrush,
   SiGoogle,
   SiMeta,
   SiBuffer,
   SiHootsuite,
-
-
-
-
-
-   SiOpenai,
+  SiOpenai,
   SiTensorflow,
   SiPytorch,
   SiHuggingface,
@@ -63,7 +47,6 @@ import {
   SiScikitlearn,
   SiAmazon,
   SiGooglecloud,
- 
 } from "react-icons/si";
 
 const techStack = [
@@ -94,10 +77,10 @@ const techStack = [
   { name: "GitHub", icon: <SiGithub color="#000" /> },
   { name: "Docker", icon: <SiDocker color="#2496ED" /> },
 
-  { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
-  { name: "Illustrator", icon: <SiAdobeillustrator color="#FF9A00" /> },
-  { name: "After Effects", icon: <SiAdobeaftereffects color="#9999FF" /> },
-  { name: "Premiere Pro", icon: <SiAdobepremierepro color="#9999FF" /> },
+  { name: "Photoshop", icon: <SiAdobe color="#31A8FF" /> },
+  { name: "Illustrator", icon: <SiAdobe color="#FF9A00" /> },
+  { name: "After Effects", icon: <SiAdobe color="#9999FF" /> },
+  { name: "Premiere Pro", icon: <SiAdobe color="#9999FF" /> },
   { name: "Figma", icon: <SiFigma color="#F24E1E" /> },
   { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
   { name: "Adobe XD", icon: <SiAdobexd color="#FF61F6" /> },
@@ -108,21 +91,13 @@ const techStack = [
   { name: "Google Docs", icon: <SiGoogledocs color="#4285F4" /> },
   { name: "Mailchimp", icon: <SiMailchimp color="#FFE01B" /> },
   
-  
-  
-  
   { name: "Semrush", icon: <SiSemrush color="#FF642D" /> },
   { name: "Google Search Console", icon: <SiGoogle color="#4285F4" /> },
   { name: "Meta Business Suite", icon: <SiMeta color="#0866FF" /> },
   { name: "Buffer", icon: <SiBuffer color="#000000" /> },
   { name: "Hootsuite", icon: <SiHootsuite color="#1D9BF0" /> },
 
-
-
-
-
-
-    { name: "OpenAI", icon: <SiOpenai color="#412991" /> },
+  { name: "OpenAI", icon: <SiOpenai color="#412991" /> },
   { name: "TensorFlow", icon: <SiTensorflow color="#FF6F00" /> },
   { name: "PyTorch", icon: <SiPytorch color="#EE4C2C" /> },
   { name: "Hugging Face", icon: <SiHuggingface color="#FFCC4D" /> },
@@ -130,7 +105,6 @@ const techStack = [
   { name: "Scikit-Learn", icon: <SiScikitlearn color="#F7931E" /> },
   { name: "AWS AI", icon: <SiAmazon color="#FF9900" /> },
   { name: "Google Cloud AI", icon: <SiGooglecloud color="#4285F4" /> },
- 
 ];
 
 export default function OurTechnologies() {

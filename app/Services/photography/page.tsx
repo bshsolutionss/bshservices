@@ -14,11 +14,8 @@ import {
 } from "react-icons/fa";
 import { MdOutlineColorLens } from "react-icons/md";
 import {
-  SiAdobephotoshop,
-  SiAdobelightroom,
-  SiAdobepremierepro,
+  SiAdobe,
   SiDavinciresolve,
-  SiAdobeaftereffects,
   SiCanva,
 } from "react-icons/si";
 import { TbDrone, TbCameraSelfie } from "react-icons/tb";
@@ -49,8 +46,8 @@ export default function PhotographyPage() {
           ]}
           tech={[
             { name: "Camera", icon: <FaCamera color="#222" /> },
-            { name: "Lightroom", icon: <SiAdobelightroom color="#31A8FF" /> },
-            { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
+            { name: "Lightroom", icon: <SiAdobe color="#31A8FF" /> },
+            { name: "Photoshop", icon: <SiAdobe color="#31A8FF" /> },
             { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
           ]}
           image="/images/Photography/1.png"
@@ -74,8 +71,8 @@ export default function PhotographyPage() {
               name: "Tripod & Lighting",
               icon: <TbCameraSelfie color="#666" />,
             },
-            { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
-            { name: "Lightroom", icon: <SiAdobelightroom color="#31A8FF" /> },
+            { name: "Photoshop", icon: <SiAdobe color="#31A8FF" /> },
+            { name: "Lightroom", icon: <SiAdobe color="#31A8FF" /> },
           ]}
           image="/images/Photography/2.png"
           reverse
@@ -98,7 +95,7 @@ export default function PhotographyPage() {
             { name: "Microphone", icon: <FaMicrophoneAlt color="#999" /> },
             {
               name: "Premiere Pro",
-              icon: <SiAdobepremierepro color="#9999FF" />,
+              icon: <SiAdobe color="#9999FF" />,
             },
             {
               name: "DaVinci Resolve",
@@ -124,11 +121,11 @@ export default function PhotographyPage() {
             { name: "Filming", icon: <FaVideo color="#000" /> },
             {
               name: "Premiere Pro",
-              icon: <SiAdobepremierepro color="#9999FF" />,
+              icon: <SiAdobe color="#9999FF" />,
             },
             {
               name: "After Effects",
-              icon: <SiAdobeaftereffects color="#D291FF" />,
+              icon: <SiAdobe color="#D291FF" />,
             },
             {
               name: "DaVinci Resolve",
@@ -152,11 +149,11 @@ export default function PhotographyPage() {
             "Batch export for web & print",
           ]}
           tech={[
-            { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
-            { name: "Lightroom", icon: <SiAdobelightroom color="#31A8FF" /> },
+            { name: "Photoshop", icon: <SiAdobe color="#31A8FF" /> },
+            { name: "Lightroom", icon: <SiAdobe color="#31A8FF" /> },
             {
               name: "After Effects",
-              icon: <SiAdobeaftereffects color="#D291FF" />,
+              icon: <SiAdobe color="#D291FF" />,
             },
             {
               name: "Color Tools",
@@ -183,7 +180,7 @@ export default function PhotographyPage() {
             { name: "Camera", icon: <FaCamera color="#444" /> },
             {
               name: "Premiere Pro",
-              icon: <SiAdobepremierepro color="#9999FF" />,
+              icon: <SiAdobe color="#9999FF" />,
             },
             {
               name: "DaVinci Resolve",

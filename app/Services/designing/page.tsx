@@ -6,17 +6,12 @@ import Form from "@/components/services/Form";
 
 // 🎨 React Icons Imports
 import {
-  SiAdobeillustrator,
-  SiAdobephotoshop,
+  SiAdobe,
   SiFigma,
   SiCanva,
   SiAdobexd,
   SiSketch,
   SiInvision,
-  SiCoreldraw,
-  SiAffinitydesigner,
-  SiAdobepremierepro,
-  SiAdobeaftereffects,
   SiBlender,
   SiCinema4D,
 } from "react-icons/si";
@@ -49,11 +44,11 @@ export default function DesigningPage() {
         tech={[
           {
             name: "Adobe Illustrator",
-            icon: <SiAdobeillustrator color="#FF9A00" />,
+            icon: <SiAdobe color="#FF9A00" />,
           },
           {
             name: "Adobe Photoshop",
-            icon: <SiAdobephotoshop color="#31A8FF" />,
+            icon: <SiAdobe color="#31A8FF" />,
           },
           { name: "Figma", icon: <SiFigma color="#F24E1E" /> },
           { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
@@ -94,9 +89,9 @@ export default function DesigningPage() {
           "Ad banners and marketing visuals",
         ]}
         tech={[
-          { name: "Photoshop", icon: <SiAdobephotoshop color="#31A8FF" /> },
-          { name: "Illustrator", icon: <SiAdobeillustrator color="#FF9A00" /> },
-          { name: "CorelDRAW", icon: <SiCoreldraw color="#00A550" /> },
+          { name: "Photoshop", icon: <SiAdobe color="#31A8FF" /> },
+          { name: "Illustrator", icon: <SiAdobe color="#FF9A00" /> },
+          { name: "CorelDRAW", icon: <SiAdobe color="#00A550" /> },
           { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
         ]}
         image="/images/Designing/3.png"
@@ -116,11 +111,11 @@ export default function DesigningPage() {
         tech={[
           {
             name: "Adobe Illustrator",
-            icon: <SiAdobeillustrator color="#FF9A00" />,
+            icon: <SiAdobe color="#FF9A00" />,
           },
           {
             name: "Affinity Designer",
-            icon: <SiAffinitydesigner color="#7E4DD2" />,
+            icon: <SiAdobe color="#7E4DD2" />,
           },
           { name: "Figma", icon: <SiFigma color="#F24E1E" /> },
           { name: "Canva", icon: <SiCanva color="#00C4CC" /> },
@@ -143,11 +138,11 @@ export default function DesigningPage() {
         tech={[
           {
             name: "After Effects",
-            icon: <SiAdobeaftereffects color="#9999FF" />,
+            icon: <SiAdobe color="#9999FF" />,
           },
           {
             name: "Premiere Pro",
-            icon: <SiAdobepremierepro color="#9999FF" />,
+            icon: <SiAdobe color="#9999FF" />,
           },
           { name: "Blender", icon: <SiBlender color="#F5792A" /> },
           { name: "Cinema 4D", icon: <SiCinema4D color="#011A6A" /> },
@@ -169,11 +164,11 @@ export default function DesigningPage() {
         tech={[
           {
             name: "Adobe Illustrator",
-            icon: <SiAdobeillustrator color="#FF9A00" />,
+            icon: <SiAdobe color="#FF9A00" />,
           },
           {
             name: "Adobe Photoshop",
-            icon: <SiAdobephotoshop color="#31A8FF" />,
+            icon: <SiAdobe color="#31A8FF" />,
           },
           { name: "Blender", icon: <SiBlender color="#F5792A" /> },
           { name: "3D Mockup", icon: <FaBoxOpen color="#00AEEF" /> },

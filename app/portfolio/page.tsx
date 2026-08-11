@@ -60,7 +60,7 @@ const REAL_CLIENT_PROJECTS = [
   },
   {
     title: "Golden Shiruh LLC",
-    image: "/portfolio/goldenshiruhllc.png",
+    image: "/portfolio/migrationrepublic.png",
     category: "Agency Website",
     link: "https://goldenshiruhllc.com/",
     views: "1.7K",

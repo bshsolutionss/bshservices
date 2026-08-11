@@ -6,7 +6,7 @@ import Form from "@/components/services/Form";
 
 // Icons
 import { FaRobot, FaCogs, FaVideo, FaSearch } from "react-icons/fa";
-import { SiGooglecloud, SiChatbot, SiZapier, SiOpenai } from "react-icons/si";
+import { SiGooglecloud, SiZapier, SiOpenai } from "react-icons/si";
 import { MdIntegrationInstructions } from "react-icons/md";
 
 export default function AIServicesPage() {
@@ -75,7 +75,7 @@ export default function AIServicesPage() {
           "CRM-integrated support agents",
         ]}
         tech={[
-          { name: "Botpress", icon: <SiChatbot color="#00B8D9" /> },
+          { name: "Botpress", icon: <FaRobot color="#00B8D9" /> },
           { name: "OpenAI GPT", icon: <SiOpenai color="#15AABF" /> },
           { name: "Meta AI", icon: <FaRobot color="#000" /> },
           { name: "Dialogflow", icon: <SiGooglecloud color="#4285F4" /> },
