@@ -1,4 +1,4 @@
-"use client";
+import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -16,6 +16,25 @@ import {
   SiCinema4D,
 } from "react-icons/si";
 import { FaBoxOpen } from "react-icons/fa";
+
+export const metadata: Metadata = {
+  title: "Creative Design Services",
+  description:
+    "BSH Solutions transforms your vision into visually stunning designs — branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
+  keywords: [
+    "creative design services",
+    "branding agency",
+    "UI/UX design",
+    "graphic design services",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/Services/designing" },
+  openGraph: {
+    title: "Creative Design Services | BSH Solutions",
+    description:
+      "Branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
+    url: "https://bshsolutionss.com/Services/designing",
+  },
+};
 
 export default function DesigningPage() {
   return (

@@ -1,4 +1,4 @@
-"use client";
+import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -31,6 +31,25 @@ import {
 } from "react-icons/si";
 
 import { FaJava, FaAws, FaTools } from "react-icons/fa";
+
+export const metadata: Metadata = {
+  title: "Web Development Services",
+  description:
+    "BSH Solutions crafts fast, scalable, and beautiful web experiences — custom websites, eCommerce, and software development tailored to your business.",
+  keywords: [
+    "web development services",
+    "custom software development",
+    "eCommerce development",
+    "Next.js development agency",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/Services/development" },
+  openGraph: {
+    title: "Web Development Services | BSH Solutions",
+    description:
+      "Fast, scalable, and beautiful web experiences tailored to your business.",
+    url: "https://bshsolutionss.com/Services/development",
+  },
+};
 
 export default function DevelopmentPage() {
   return (

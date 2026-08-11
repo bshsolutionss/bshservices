@@ -23,6 +23,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
+      url: "https://bshsolutionss.com/portfolio",
+      lastModified: new Date(),
+    },
+    {
+      url: "https://bshsolutionss.com/Services",
+      lastModified: new Date(),
+    },
+    {
       url: "https://bshsolutionss.com/Services/development",
       lastModified: new Date(),
     },
@@ -36,6 +44,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: "https://bshsolutionss.com/Services/photography",
+      lastModified: new Date(),
+    },
+    {
+      url: "https://bshsolutionss.com/Services/ai",
       lastModified: new Date(),
     },
     {

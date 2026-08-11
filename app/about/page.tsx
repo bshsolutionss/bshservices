@@ -1,5 +1,4 @@
-"use client";
-
+import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import About from "@/components/about";
 import ProcessFlow from "@/components/ProcessFlow";
@@ -19,6 +18,25 @@ import {
   SiMeta,
   SiGoogleanalytics,
 } from "react-icons/si";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Meet BSH Solutions — Business Smart Hub. Learn about our team and mission to deliver smart, scalable digital, software, and IT solutions for growing businesses.",
+  keywords: [
+    "About BSH Solutions",
+    "Business Smart Hub team",
+    "IT company Pakistan",
+    "software development team",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/about" },
+  openGraph: {
+    title: "About BSH Solutions",
+    description:
+      "Meet the team behind BSH Solutions and our mission to build smart, scalable, future-ready digital solutions.",
+    url: "https://bshsolutionss.com/about",
+  },
+};
 
 const page = () => {
   return (

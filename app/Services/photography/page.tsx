@@ -1,4 +1,4 @@
-"use client";
+import type { Metadata } from "next";
 
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
@@ -19,6 +19,25 @@ import {
   SiCanva,
 } from "react-icons/si";
 import { TbDrone, TbCameraSelfie } from "react-icons/tb";
+
+export const metadata: Metadata = {
+  title: "Photography & Videography Services",
+  description:
+    "BSH Solutions captures moments, products, and stories with a blend of creativity, precision, and professional artistry — product photography, brand shoots, and video.",
+  keywords: [
+    "photography services",
+    "videography services",
+    "product photography",
+    "brand shoots",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/Services/photography" },
+  openGraph: {
+    title: "Photography & Videography Services | BSH Solutions",
+    description:
+      "We capture moments, products, and stories with creativity, precision, and professional artistry.",
+    url: "https://bshsolutionss.com/Services/photography",
+  },
+};
 
 export default function PhotographyPage() {
   return (

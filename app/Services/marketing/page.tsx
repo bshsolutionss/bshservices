@@ -1,4 +1,4 @@
-"use client";
+import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -26,6 +26,25 @@ import {
 } from "react-icons/si";
 
 import { FaSearchengin, FaUserFriends, FaGoogle } from "react-icons/fa";
+
+export const metadata: Metadata = {
+  title: "Digital Marketing Services",
+  description:
+    "BSH Solutions helps your brand grow, engage, and convert through data-driven digital marketing — SEO, PPC, social media marketing, and analytics.",
+  keywords: [
+    "digital marketing services",
+    "SEO agency",
+    "PPC advertising",
+    "social media marketing",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/Services/marketing" },
+  openGraph: {
+    title: "Digital Marketing Services | BSH Solutions",
+    description:
+      "Grow, engage, and convert through data-driven digital marketing strategies.",
+    url: "https://bshsolutionss.com/Services/marketing",
+  },
+};
 
 export default function MarketingPage() {
   return (

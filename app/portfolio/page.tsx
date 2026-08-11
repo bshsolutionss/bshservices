@@ -1,11 +1,27 @@
-"use client";
-
-import React from "react";
+import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Contactform from "@/components/contactform";
 import { OurPortfolio } from "@/components/our-portfolio";
-import { motion } from "framer-motion";
+
+export const metadata: Metadata = {
+  title: "Portfolio",
+  description:
+    "Explore real, live client projects by BSH Solutions — websites, dashboards, eCommerce stores, and SaaS platforms built for businesses worldwide.",
+  keywords: [
+    "BSH Solutions portfolio",
+    "web development projects",
+    "client case studies",
+    "live websites",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/portfolio" },
+  openGraph: {
+    title: "Portfolio | BSH Solutions",
+    description:
+      "Real, live client projects — websites, dashboards, eCommerce stores, and SaaS platforms built by BSH Solutions.",
+    url: "https://bshsolutionss.com/portfolio",
+  },
+};
 
 export default function PortfolioPage() {
   return (
@@ -15,23 +31,14 @@ export default function PortfolioPage() {
         {/* Page heading */}
         <section className="px-6 lg:px-12 pt-8 pb-4">
           <div className="max-w-7xl mx-auto">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl lg:text-6xl font-extrabold tracking-tight text-[#1A14A5]"
-            >
+            <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight text-[#1A14A5]">
               Our Client <span className="text-[#231F20]">Projects</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[#231F20]/70 text-lg mt-4 max-w-2xl leading-relaxed"
-            >
+            <p className="text-[#231F20]/70 text-lg mt-4 max-w-2xl leading-relaxed">
               Real live websites, dashboards, SaaS platforms, and scalable digital
               experiences crafted for our clients worldwide.
-            </motion.p>
+            </p>
           </div>
         </section>
 

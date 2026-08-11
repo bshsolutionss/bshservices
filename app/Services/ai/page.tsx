@@ -1,4 +1,4 @@
-"use client";
+import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -8,6 +8,25 @@ import Form from "@/components/services/Form";
 import { FaRobot, FaCogs, FaVideo, FaSearch } from "react-icons/fa";
 import { SiGooglecloud, SiZapier, SiOpenai } from "react-icons/si";
 import { MdIntegrationInstructions } from "react-icons/md";
+
+export const metadata: Metadata = {
+  title: "AI-Powered Business Services",
+  description:
+    "Automate, scale, and grow your business with BSH Solutions' AI services — workflow automation, AI chatbots, video automation, and AI website integration.",
+  keywords: [
+    "AI automation services",
+    "AI chatbots",
+    "business AI solutions",
+    "AI website integration",
+  ],
+  alternates: { canonical: "https://bshsolutionss.com/Services/ai" },
+  openGraph: {
+    title: "AI-Powered Business Services | BSH Solutions",
+    description:
+      "AI automation, chatbots, video automation, and AI website integration for modern businesses.",
+    url: "https://bshsolutionss.com/Services/ai",
+  },
+};
 
 export default function AIServicesPage() {
   return (
