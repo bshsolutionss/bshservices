@@ -2,8 +2,12 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL =
   process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+// Prefer the new sb_secret_... key format first: this project's legacy
+// SUPABASE_SERVICE_ROLE_KEY JWT is stale/rotated (shorter than the anon JWT,
+// which a real service_role JWT never is, and Supabase rejected it with
+// "Invalid API key"), while SUPABASE_SECRET_KEY is the current valid key.
 const SUPABASE_SERVICE_ROLE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || "";
+  process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 /**
  * Privileged, server-only Supabase client using the service_role key, which

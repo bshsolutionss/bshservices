@@ -4,10 +4,14 @@ import type { User } from "@supabase/supabase-js";
 
 const SUPABASE_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
+// Prefer the new sb_publishable_... key format first — see the comment in
+// lib/supabase/service.ts: this project's legacy *_ANON_KEY JWTs are the
+// same vintage as the confirmed-stale legacy service_role JWT.
 const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.SUPABASE_PUBLISHABLE_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.SUPABASE_ANON_KEY ||
-  process.env.SUPABASE_PUBLISHABLE_KEY ||
   "";
 
 /**
