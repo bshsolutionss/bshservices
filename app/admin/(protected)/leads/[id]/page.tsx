@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import type { Lead, LeadStatus } from "@/lib/leads";
+import type { Lead, LeadStatus, LeadPriority, LeadLostReason } from "@/lib/leads";
 import LeadStatusControl from "@/components/admin/LeadStatusControl";
+import ActivityTimeline from "@/components/admin/ActivityTimeline";
 
 export const dynamic = "force-dynamic";
 
@@ -46,56 +47,71 @@ export default async function AdminLeadDetailPage({
           {lead.source === "contact_form" ? "Contact Form" : "Service Form"}
           {lead.page_path ? ` (${lead.page_path})` : ""}
         </p>
+        {lead.client_id && (
+          <Link
+            href={`/admin/clients/${lead.client_id}`}
+            className="inline-block mt-2 text-sm font-medium text-[#1A14A5] hover:underline"
+          >
+            View linked Client →
+          </Link>
+        )}
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
-          <h2 className="font-bold text-[#231F20] mb-4">Submission Details</h2>
-          <dl className="grid sm:grid-cols-2 gap-4 text-sm">
-            <Field label="Name" value={lead.name} />
-            <Field label="Email" value={lead.email} />
-            <Field label="Phone" value={lead.phone} />
-            <Field label="Business" value={lead.business} />
-            <Field label="Best time to connect" value={lead.best_time} />
-            <Field label="Service category" value={lead.service_category} />
-            <Field label="Selected service" value={lead.selected_service} />
-            <Field label="Business type" value={lead.business_type} />
-          </dl>
-          {lead.message && (
-            <div className="mt-4 pt-4 border-t border-[#1A14A5]/10">
-              <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Message</dt>
-              <dd className="text-[#231F20] mt-1 whitespace-pre-wrap">{lead.message}</dd>
-            </div>
-          )}
+        <div className="md:col-span-2 space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
+            <h2 className="font-bold text-[#231F20] mb-4">Submission Details</h2>
+            <dl className="grid sm:grid-cols-2 gap-4 text-sm">
+              <Field label="Name" value={lead.name} />
+              <Field label="Email" value={lead.email} />
+              <Field label="Phone" value={lead.phone} />
+              <Field label="Business" value={lead.business} />
+              <Field label="Best time to connect" value={lead.best_time} />
+              <Field label="Service category" value={lead.service_category} />
+              <Field label="Selected service" value={lead.selected_service} />
+              <Field label="Business type" value={lead.business_type} />
+            </dl>
+            {lead.message && (
+              <div className="mt-4 pt-4 border-t border-[#1A14A5]/10">
+                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Message</dt>
+                <dd className="text-[#231F20] mt-1 whitespace-pre-wrap">{lead.message}</dd>
+              </div>
+            )}
 
-          <div className="mt-6 pt-4 border-t border-[#1A14A5]/10 text-xs text-[#231F20]/50 space-y-1">
-            <p>
-              Client confirmation email:{" "}
-              {lead.client_confirmation_sent_at
-                ? `sent ${new Date(lead.client_confirmation_sent_at).toLocaleString()}`
-                : "not sent"}
-            </p>
-            <p>
-              Admin notification email:{" "}
-              {lead.admin_notified_at ? `sent ${new Date(lead.admin_notified_at).toLocaleString()}` : "not sent"}
-            </p>
-            <p>
-              Follow-up sequence:{" "}
-              {lead.follow_up_completed
-                ? "complete"
-                : `stage ${lead.follow_up_stage} of 3${
-                    lead.next_follow_up_at
-                      ? `, next due ${new Date(lead.next_follow_up_at).toLocaleDateString()}`
-                      : ""
-                  }`}
-            </p>
+            <div className="mt-6 pt-4 border-t border-[#1A14A5]/10 text-xs text-[#231F20]/50 space-y-1">
+              <p>
+                Client confirmation email:{" "}
+                {lead.client_confirmation_sent_at
+                  ? `sent ${new Date(lead.client_confirmation_sent_at).toLocaleString()}`
+                  : "not sent"}
+              </p>
+              <p>
+                Admin notification email:{" "}
+                {lead.admin_notified_at ? `sent ${new Date(lead.admin_notified_at).toLocaleString()}` : "not sent"}
+              </p>
+              <p>
+                Follow-up sequence:{" "}
+                {lead.follow_up_completed
+                  ? "complete"
+                  : `stage ${lead.follow_up_stage} of 3${
+                      lead.next_follow_up_at
+                        ? `, next due ${new Date(lead.next_follow_up_at).toLocaleDateString()}`
+                        : ""
+                    }`}
+              </p>
+            </div>
           </div>
+
+          <ActivityTimeline entityType="lead" entityId={lead.id} />
         </div>
 
         <LeadStatusControl
           leadId={lead.id}
           initialStatus={lead.status as LeadStatus}
           initialNotes={lead.notes}
+          initialPriority={lead.priority as LeadPriority}
+          initialExpectedValue={lead.expected_value}
+          initialLostReason={lead.lost_reason as LeadLostReason | null}
         />
       </div>
     </div>
