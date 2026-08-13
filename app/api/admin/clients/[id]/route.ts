@@ -58,3 +58,36 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireAdminUser();
+  if (auth.unauthorized) return auth.unauthorized;
+
+  const { id } = await params;
+  const service = createServiceRoleClient();
+  const { error } = await service.from("clients").delete().eq("id", id);
+
+  if (error) {
+    // 23503 = Postgres foreign-key violation — projects.client_id and
+    // invoices.client_id are both ON DELETE RESTRICT, so a client with any
+    // projects or invoices can't be deleted outright. Surface that clearly
+    // instead of a generic 500.
+    if (error.code === "23503") {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "This client has projects or invoices attached. Remove those first, or archive the projects instead of deleting the client.",
+        },
+        { status: 409 }
+      );
+    }
+
+    console.error("[api/admin/clients] delete failed:", error);
+    return NextResponse.json({ ok: false, error: "Could not delete client." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

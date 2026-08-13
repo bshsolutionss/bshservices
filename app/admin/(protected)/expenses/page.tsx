@@ -1,8 +1,8 @@
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { EXPENSE_CATEGORY_COLORS, type Expense, type ExpenseCategory } from "@/lib/expenses";
-import { formatMoney, formatByCurrency } from "@/lib/invoices";
+import type { Expense } from "@/lib/expenses";
+import { formatByCurrency } from "@/lib/invoices";
 import NewExpenseInlineForm from "@/components/admin/NewExpenseInlineForm";
-import DeleteExpenseButton from "@/components/admin/DeleteExpenseButton";
+import ExpenseRow from "@/components/admin/ExpenseRow";
 
 export const dynamic = "force-dynamic";
 
@@ -56,33 +56,7 @@ export default async function AdminExpensesPage() {
               </tr>
             )}
             {expenses.map((expense) => (
-              <tr key={expense.id} className="hover:bg-[#F4F7FE] transition">
-                <td className="px-6 py-4 text-[#231F20]/70 whitespace-nowrap">
-                  {new Date(expense.expense_date + "T00:00:00Z").toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    timeZone: "UTC",
-                  })}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
-                    style={{
-                      background: EXPENSE_CATEGORY_COLORS[expense.category as ExpenseCategory].bg,
-                      color: EXPENSE_CATEGORY_COLORS[expense.category as ExpenseCategory].text,
-                    }}
-                  >
-                    {expense.category}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/70">{expense.vendor || "—"}</td>
-                <td className="px-6 py-4 text-[#231F20]/70">{expense.description || "—"}</td>
-                <td className="px-6 py-4 font-medium text-[#231F20]">{formatMoney(expense.amount, expense.currency)}</td>
-                <td className="px-6 py-4">
-                  <DeleteExpenseButton id={expense.id} />
-                </td>
-              </tr>
+              <ExpenseRow key={expense.id} expense={expense} />
             ))}
           </tbody>
         </table>

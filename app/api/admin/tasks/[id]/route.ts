@@ -65,3 +65,24 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireAdminUser();
+  if (auth.unauthorized) return auth.unauthorized;
+
+  const { id } = await params;
+  const service = createServiceRoleClient();
+
+  // Nothing else references tasks — safe unconditionally.
+  const { error } = await service.from("tasks").delete().eq("id", id);
+
+  if (error) {
+    console.error("[api/admin/tasks] delete failed:", error);
+    return NextResponse.json({ ok: false, error: "Could not delete task." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

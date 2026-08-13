@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Employee, EmployeeStatus } from "@/lib/employees";
 import EmployeeEditControl from "@/components/admin/EmployeeEditControl";
+import DeleteEmployeeButton from "@/components/admin/DeleteEmployeeButton";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,7 @@ export default async function AdminEmployeeDetailPage({
         {employee.role && <p className="text-[#231F20]/60 text-sm">{employee.role}</p>}
       </div>
 
-      <div className="max-w-xl">
+      <div className="max-w-xl space-y-6">
         <EmployeeEditControl
           employeeId={employee.id}
           initial={{
@@ -44,6 +45,7 @@ export default async function AdminEmployeeDetailPage({
             notes: employee.notes,
           }}
         />
+        <DeleteEmployeeButton employeeId={employee.id} />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import type { Client } from "@/lib/clients";
 import { PROJECT_STAGE_LABELS, PROJECT_STAGE_COLORS, type Project, type ProjectStage } from "@/lib/projects";
 import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS, formatMoney, type Invoice, type InvoiceStatus } from "@/lib/invoices";
 import ClientEditControl from "@/components/admin/ClientEditControl";
+import DeleteClientButton from "@/components/admin/DeleteClientButton";
 import NewProjectInlineForm from "@/components/admin/NewProjectInlineForm";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 
@@ -101,18 +102,21 @@ export default async function AdminClientDetailPage({
           <ActivityTimeline entityType="client" entityId={client.id} />
         </div>
 
-        <ClientEditControl
-          clientId={client.id}
-          initial={{
-            company_name: client.company_name,
-            contact_name: client.contact_name,
-            contact_email: client.contact_email,
-            contact_phone: client.contact_phone,
-            industry: client.industry,
-            account_manager: client.account_manager,
-            notes: client.notes,
-          }}
-        />
+        <div className="space-y-6">
+          <ClientEditControl
+            clientId={client.id}
+            initial={{
+              company_name: client.company_name,
+              contact_name: client.contact_name,
+              contact_email: client.contact_email,
+              contact_phone: client.contact_phone,
+              industry: client.industry,
+              account_manager: client.account_manager,
+              notes: client.notes,
+            }}
+          />
+          <DeleteClientButton clientId={client.id} />
+        </div>
       </div>
     </div>
   );

@@ -16,6 +16,9 @@ import { Button } from "@/components/ui/button";
 import MarkSentButton from "@/components/admin/MarkSentButton";
 import RecordPaymentForm from "@/components/admin/RecordPaymentForm";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
+import InvoiceEditControl from "@/components/admin/InvoiceEditControl";
+import DeleteInvoiceButton from "@/components/admin/DeleteInvoiceButton";
+import DeletePaymentButton from "@/components/admin/DeletePaymentButton";
 
 export const dynamic = "force-dynamic";
 
@@ -70,44 +73,26 @@ export default async function AdminInvoiceDetailPage({
         <div className="md:col-span-2 space-y-6">
           <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
             <h2 className="font-bold text-[#231F20] mb-4">Invoice Details</h2>
-            <dl className="grid sm:grid-cols-2 gap-4 text-sm mb-4">
-              <div>
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Currency</dt>
-                <dd className="text-[#231F20] mt-0.5">{invoice.currency}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Amount</dt>
-                <dd className="text-[#231F20] mt-0.5">{formatMoney(invoice.amount, invoice.currency)}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Tax</dt>
-                <dd className="text-[#231F20] mt-0.5">{formatMoney(invoice.tax, invoice.currency)}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Discount</dt>
-                <dd className="text-[#231F20] mt-0.5">{formatMoney(invoice.discount, invoice.currency)}</dd>
-              </div>
+            <InvoiceEditControl
+              invoiceId={invoice.id}
+              initialAmount={invoice.amount}
+              initialTax={invoice.tax}
+              initialDiscount={invoice.discount}
+              initialCurrency={invoice.currency}
+              initialDueDate={invoice.due_date}
+              initialNotes={invoice.notes}
+              hasPayments={payments.length > 0}
+            />
+            <dl className="grid sm:grid-cols-2 gap-4 text-sm mt-4 pt-4 border-t border-[#1A14A5]/10">
               <div>
                 <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Total</dt>
                 <dd className="text-[#231F20] font-bold mt-0.5">{formatMoney(invoice.total, invoice.currency)}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Due Date</dt>
-                <dd className="text-[#231F20] mt-0.5">
-                  {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : "—"}
-                </dd>
               </div>
               <div>
                 <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Balance Due</dt>
                 <dd className="text-[#231F20] font-bold mt-0.5">{formatMoney(remainingBalance, invoice.currency)}</dd>
               </div>
             </dl>
-            {invoice.notes && (
-              <div className="pt-4 border-t border-[#1A14A5]/10">
-                <dt className="text-xs font-medium text-[#231F20]/50 uppercase tracking-wide">Notes</dt>
-                <dd className="text-[#231F20] mt-1 whitespace-pre-wrap">{invoice.notes}</dd>
-              </div>
-            )}
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
@@ -126,7 +111,10 @@ export default async function AdminInvoiceDetailPage({
                         {payment.reference ? ` (${payment.reference})` : ""}
                       </span>
                     </div>
-                    <span className="text-xs text-[#231F20]/40">{new Date(payment.paid_on).toLocaleDateString()}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-[#231F20]/40">{new Date(payment.paid_on).toLocaleDateString()}</span>
+                      <DeletePaymentButton invoiceId={invoice.id} paymentId={payment.id} />
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -147,6 +135,8 @@ export default async function AdminInvoiceDetailPage({
             </Button>
             {invoice.status === "draft" && <MarkSentButton invoiceId={invoice.id} />}
           </div>
+
+          <DeleteInvoiceButton invoiceId={invoice.id} paymentCount={payments.length} />
         </div>
       </div>
     </div>

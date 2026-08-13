@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
-import { PAYMENT_METHODS, type PaymentMethod, type InvoiceBalance } from "@/lib/invoices";
+import { recomputeInvoiceStatus } from "@/lib/admin/recompute-invoice-status";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/invoices";
 
 interface CreatePayload {
   amount: number;
@@ -49,21 +50,7 @@ export async function POST(
     return NextResponse.json({ ok: false, error: "Could not record payment." }, { status: 500 });
   }
 
-  // Recompute status from invoice_balances (single source of truth for
-  // paid/total) rather than re-deriving the math here — idempotent even if
-  // called again for the same invoice.
-  const { data: balance } = await service
-    .from("invoice_balances")
-    .select("total, paid")
-    .eq("invoice_id", invoiceId)
-    .single<Pick<InvoiceBalance, "total" | "paid">>();
-
-  if (balance) {
-    const newStatus = balance.paid >= balance.total ? "paid" : balance.paid > 0 ? "partially_paid" : undefined;
-    if (newStatus) {
-      await service.from("invoices").update({ status: newStatus }).eq("id", invoiceId);
-    }
-  }
+  await recomputeInvoiceStatus(service, invoiceId);
 
   await logActivity({
     entityType: "invoice",

@@ -22,6 +22,7 @@ interface ProjectEditControlProps {
   initialServiceCategory: ProjectServiceCategory | null;
   initialDescription: string | null;
   initialArchived: boolean;
+  taskCount?: number;
 }
 
 export default function ProjectEditControl({
@@ -33,6 +34,7 @@ export default function ProjectEditControl({
   initialServiceCategory,
   initialDescription,
   initialArchived,
+  taskCount = 0,
 }: ProjectEditControlProps) {
   const router = useRouter();
   const [stage, setStage] = useState<ProjectStage>(initialStage);
@@ -44,6 +46,7 @@ export default function ProjectEditControl({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [archiving, setArchiving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSave = async () => {
@@ -92,6 +95,23 @@ export default function ProjectEditControl({
       setError("Failed to update archive status.");
     } finally {
       setArchiving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    const taskWarning = taskCount > 0 ? ` This will also delete its ${taskCount} task${taskCount === 1 ? "" : "s"}.` : "";
+    if (!confirm(`Delete this project permanently?${taskWarning} This cannot be undone.`)) return;
+
+    setDeleting(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/projects/${projectId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete.");
+      router.push("/admin/projects");
+      router.refresh();
+    } catch {
+      setError("Failed to delete project.");
+      setDeleting(false);
     }
   };
 
@@ -169,14 +189,22 @@ export default function ProjectEditControl({
       </div>
       {error && <p className="text-sm text-red-600">❌ {error}</p>}
 
-      <div className="pt-3 border-t border-[#1A14A5]/10">
+      <div className="pt-3 border-t border-[#1A14A5]/10 space-y-2">
         <Button
           onClick={handleArchiveToggle}
           disabled={archiving}
           variant="outline"
-          className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50"
+          className="w-full rounded-xl border-[#1A14A5]/20 text-[#1A14A5]"
         >
           {archiving ? "Updating..." : initialArchived ? "Unarchive Project" : "Archive Project"}
+        </Button>
+        <Button
+          onClick={handleDelete}
+          disabled={deleting}
+          variant="outline"
+          className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50"
+        >
+          {deleting ? "Deleting..." : "Delete Project"}
         </Button>
       </div>
     </div>

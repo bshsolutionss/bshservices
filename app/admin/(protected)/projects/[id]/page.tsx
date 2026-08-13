@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Client } from "@/lib/clients";
 import type { Project, ProjectStage, ProjectServiceCategory } from "@/lib/projects";
-import { TASK_PRIORITY_LABELS, type Task, type TaskStatus, type TaskPriority } from "@/lib/tasks";
+import type { Task } from "@/lib/tasks";
 import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS, formatMoney, type Invoice, type InvoiceStatus } from "@/lib/invoices";
 import ProjectEditControl from "@/components/admin/ProjectEditControl";
 import NewTaskInlineForm from "@/components/admin/NewTaskInlineForm";
-import TaskStatusInlineControl from "@/components/admin/TaskStatusInlineControl";
+import TaskRow from "@/components/admin/TaskRow";
 import NewInvoiceInlineForm from "@/components/admin/NewInvoiceInlineForm";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 
@@ -82,16 +82,7 @@ export default async function AdminProjectDetailPage({
             ) : (
               <ul className="divide-y divide-[#1A14A5]/5">
                 {tasks.map((task) => (
-                  <li key={task.id} className="py-3 flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-medium text-[#231F20] truncate">{task.title}</p>
-                      <p className="text-xs text-[#231F20]/50">
-                        {task.assignee_name || "Unassigned"} &middot; {TASK_PRIORITY_LABELS[task.priority as TaskPriority]}
-                        {task.due_date ? ` · Due ${new Date(task.due_date).toLocaleDateString()}` : ""}
-                      </p>
-                    </div>
-                    <TaskStatusInlineControl taskId={task.id} initialStatus={task.status as TaskStatus} />
-                  </li>
+                  <TaskRow key={task.id} task={task} employeeNames={employeeNames} />
                 ))}
               </ul>
             )}
@@ -151,6 +142,7 @@ export default async function AdminProjectDetailPage({
           initialServiceCategory={project.service_category as ProjectServiceCategory | null}
           initialDescription={project.description}
           initialArchived={project.archived}
+          taskCount={tasks.length}
         />
       </div>
     </div>

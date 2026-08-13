@@ -1,16 +1,9 @@
 import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { cn } from "@/lib/utils";
-import {
-  TASK_STATUSES,
-  TASK_STATUS_LABELS,
-  TASK_PRIORITY_LABELS,
-  type Task,
-  type TaskStatus,
-  type TaskPriority,
-} from "@/lib/tasks";
+import { TASK_STATUSES, TASK_STATUS_LABELS, type Task, type TaskStatus } from "@/lib/tasks";
 import type { Project } from "@/lib/projects";
-import TaskStatusInlineControl from "@/components/admin/TaskStatusInlineControl";
+import TaskRow from "@/components/admin/TaskRow";
 
 export const dynamic = "force-dynamic";
 
@@ -31,13 +24,15 @@ export default async function AdminTasksPage({
   if (activeStatus) query = query.eq("status", activeStatus);
   if (projectParam) query = query.eq("project_id", projectParam);
 
-  const [{ data: tasksData }, { data: projectsData }] = await Promise.all([
+  const [{ data: tasksData }, { data: projectsData }, { data: employeesData }] = await Promise.all([
     query,
     supabase.from("projects").select("id, name"),
+    supabase.from("employees").select("name").eq("status", "active").order("name"),
   ]);
 
   const tasks = (tasksData ?? []) as Task[];
   const projectNames = new Map((projectsData ?? []).map((p: Pick<Project, "id" | "name">) => [p.id, p.name]));
+  const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
 
   return (
     <div className="space-y-6">
@@ -72,46 +67,23 @@ export default async function AdminTasksPage({
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#1A14A5]/10 text-left text-[#231F20]/50">
-              <th className="px-6 py-3 font-medium">Task</th>
-              <th className="px-6 py-3 font-medium">Project</th>
-              <th className="px-6 py-3 font-medium">Assignee</th>
-              <th className="px-6 py-3 font-medium">Priority</th>
-              <th className="px-6 py-3 font-medium">Due</th>
-              <th className="px-6 py-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#1A14A5]/5">
-            {tasks.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-[#231F20]/50">
-                  No tasks found. Add tasks from a project&apos;s detail page.
-                </td>
-              </tr>
-            )}
+      <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
+        {tasks.length === 0 ? (
+          <p className="text-sm text-[#231F20]/50 py-4 text-center">
+            No tasks found. Add tasks from a project&apos;s detail page.
+          </p>
+        ) : (
+          <ul className="divide-y divide-[#1A14A5]/5">
             {tasks.map((task) => (
-              <tr key={task.id} className="hover:bg-[#F4F7FE] transition">
-                <td className="px-6 py-4 font-medium text-[#231F20]">{task.title}</td>
-                <td className="px-6 py-4 text-[#231F20]/70">
-                  <Link href={`/admin/projects/${task.project_id}`} className="hover:text-[#1A14A5] hover:underline">
-                    {projectNames.get(task.project_id) || "—"}
-                  </Link>
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/70">{task.assignee_name || "—"}</td>
-                <td className="px-6 py-4 text-[#231F20]/70">{TASK_PRIORITY_LABELS[task.priority as TaskPriority]}</td>
-                <td className="px-6 py-4 text-[#231F20]/50 text-xs whitespace-nowrap">
-                  {task.due_date ? new Date(task.due_date).toLocaleDateString() : "—"}
-                </td>
-                <td className="px-6 py-4">
-                  <TaskStatusInlineControl taskId={task.id} initialStatus={task.status as TaskStatus} />
-                </td>
-              </tr>
+              <TaskRow
+                key={task.id}
+                task={task}
+                employeeNames={employeeNames}
+                projectName={projectNames.get(task.project_id) || "—"}
+              />
             ))}
-          </tbody>
-        </table>
+          </ul>
+        )}
       </div>
     </div>
   );

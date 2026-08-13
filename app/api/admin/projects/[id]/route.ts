@@ -104,3 +104,27 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireAdminUser();
+  if (auth.unauthorized) return auth.unauthorized;
+
+  const { id } = await params;
+  const service = createServiceRoleClient();
+
+  // Safe unconditionally: tasks.project_id cascades (its tasks go with it)
+  // and invoices.project_id is ON DELETE SET NULL (invoices survive, just
+  // lose the project link) — the client-side confirm dialog warns about
+  // the task cascade before this is ever called.
+  const { error } = await service.from("projects").delete().eq("id", id);
+
+  if (error) {
+    console.error("[api/admin/projects] delete failed:", error);
+    return NextResponse.json({ ok: false, error: "Could not delete project." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

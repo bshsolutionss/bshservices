@@ -4,6 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service";
 import { formatBookingDateTime, type Lead, type LeadStatus, type LeadPriority, type LeadLostReason, type LeadSource } from "@/lib/leads";
 import LeadStatusControl from "@/components/admin/LeadStatusControl";
 import BookingCancelButton from "@/components/admin/BookingCancelButton";
+import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 
 export const dynamic = "force-dynamic";
@@ -143,6 +144,8 @@ export default async function AdminLeadDetailPage({
             initialExpectedValue={lead.expected_value}
             initialLostReason={lead.lost_reason as LeadLostReason | null}
           />
+
+          <DeleteLeadButton leadId={lead.id} isBooking={isBooking} />
         </div>
       </div>
     </div>

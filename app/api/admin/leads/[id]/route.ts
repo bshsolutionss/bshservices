@@ -207,3 +207,27 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireAdminUser();
+  if (auth.unauthorized) return auth.unauthorized;
+
+  const { id } = await params;
+  const service = createServiceRoleClient();
+
+  // Safe unconditionally: clients.converted_from_lead_id and
+  // projects.lead_id both reference leads with ON DELETE SET NULL, so
+  // deleting a lead never fails on a foreign key — it just detaches the
+  // traceability link on any client/project it had produced.
+  const { error } = await service.from("leads").delete().eq("id", id);
+
+  if (error) {
+    console.error("[api/admin/leads] delete failed:", error);
+    return NextResponse.json({ ok: false, error: "Could not delete lead." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
