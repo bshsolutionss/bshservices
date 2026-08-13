@@ -12,7 +12,8 @@ export type ActivityType =
   | "stage_change"
   | "invoice_created"
   | "payment_received"
-  | "lost";
+  | "lost"
+  | "booking_cancelled";
 
 export interface Activity {
   id: string;

@@ -49,6 +49,9 @@ export default async function AdminLeadsPage({
     .select(
       "id, name, email, phone, status, source, selected_service, service_category, business, priority, expected_value, created_at"
     )
+    // Consultation bookings have their own dedicated page (/admin/bookings)
+    // — kept out of this list so the two lead types don't get mixed.
+    .neq("source", "consultation_booking")
     .order("created_at", { ascending: false })
     .limit(200);
 
@@ -65,8 +68,14 @@ export default async function AdminLeadsPage({
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#231F20]">Leads &amp; Deals</h1>
-          <p className="text-[#231F20]/60 text-sm mt-1">{leads.length} lead{leads.length === 1 ? "" : "s"}</p>
+          <h1 className="text-2xl font-extrabold text-[#231F20]">Leads</h1>
+          <p className="text-[#231F20]/60 text-sm mt-1">
+            {leads.length} contact lead{leads.length === 1 ? "" : "s"} — consultation bookings are on the{" "}
+            <Link href="/admin/bookings" className="text-[#1A14A5] hover:underline">
+              Bookings
+            </Link>{" "}
+            page
+          </p>
         </div>
 
         {/* List / Board toggle */}

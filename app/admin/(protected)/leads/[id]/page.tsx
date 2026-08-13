@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import type { Lead, LeadStatus, LeadPriority, LeadLostReason } from "@/lib/leads";
+import { formatBookingDateTime, type Lead, type LeadStatus, type LeadPriority, type LeadLostReason, type LeadSource } from "@/lib/leads";
 import LeadStatusControl from "@/components/admin/LeadStatusControl";
+import BookingCancelButton from "@/components/admin/BookingCancelButton";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 
 export const dynamic = "force-dynamic";
+
+const SOURCE_LABELS: Record<LeadSource, string> = {
+  contact_form: "Contact Form",
+  service_form: "Service Form",
+  consultation_booking: "Consultation Booking",
+};
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
   if (value === null || value === undefined || value === "") return null;
@@ -35,6 +42,8 @@ export default async function AdminLeadDetailPage({
     notFound();
   }
 
+  const isBooking = lead.source === "consultation_booking";
+
   return (
     <div className="space-y-6">
       <div>
@@ -43,8 +52,7 @@ export default async function AdminLeadDetailPage({
         </Link>
         <h1 className="text-2xl font-extrabold text-[#231F20] mt-2">{lead.name}</h1>
         <p className="text-[#231F20]/60 text-sm">
-          Submitted {new Date(lead.created_at).toLocaleString()} via{" "}
-          {lead.source === "contact_form" ? "Contact Form" : "Service Form"}
+          Submitted {new Date(lead.created_at).toLocaleString()} via {SOURCE_LABELS[lead.source] ?? lead.source}
           {lead.page_path ? ` (${lead.page_path})` : ""}
         </p>
         {lead.client_id && (
@@ -59,6 +67,25 @@ export default async function AdminLeadDetailPage({
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
+          {isBooking && (
+            <div
+              className={`rounded-2xl p-6 ${
+                lead.booking_status === "cancelled" ? "bg-gray-100" : "bg-[#1A14A5]"
+              }`}
+            >
+              <p
+                className={`text-xs font-bold uppercase tracking-wide mb-1 ${
+                  lead.booking_status === "cancelled" ? "text-gray-500" : "text-white/70"
+                }`}
+              >
+                {lead.booking_status === "cancelled" ? "Booking Cancelled" : "Consultation Booked"}
+              </p>
+              <p className={`text-xl font-bold ${lead.booking_status === "cancelled" ? "text-gray-600 line-through" : "text-white"}`}>
+                {formatBookingDateTime(lead)}
+              </p>
+            </div>
+          )}
+
           <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
             <h2 className="font-bold text-[#231F20] mb-4">Submission Details</h2>
             <dl className="grid sm:grid-cols-2 gap-4 text-sm">
@@ -105,14 +132,18 @@ export default async function AdminLeadDetailPage({
           <ActivityTimeline entityType="lead" entityId={lead.id} />
         </div>
 
-        <LeadStatusControl
-          leadId={lead.id}
-          initialStatus={lead.status as LeadStatus}
-          initialNotes={lead.notes}
-          initialPriority={lead.priority as LeadPriority}
-          initialExpectedValue={lead.expected_value}
-          initialLostReason={lead.lost_reason as LeadLostReason | null}
-        />
+        <div className="space-y-6">
+          {isBooking && lead.booking_status === "confirmed" && <BookingCancelButton leadId={lead.id} />}
+
+          <LeadStatusControl
+            leadId={lead.id}
+            initialStatus={lead.status as LeadStatus}
+            initialNotes={lead.notes}
+            initialPriority={lead.priority as LeadPriority}
+            initialExpectedValue={lead.expected_value}
+            initialLostReason={lead.lost_reason as LeadLostReason | null}
+          />
+        </div>
       </div>
     </div>
   );

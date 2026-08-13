@@ -19,6 +19,8 @@ interface UpdatePayload {
   expected_value?: number | null;
   priority?: LeadPriority;
   lost_reason?: LeadLostReason;
+  /** Only meaningful for source === "consultation_booking" — cancelling frees the slot back up. */
+  booking_status?: "cancelled";
 }
 
 export async function PATCH(
@@ -100,6 +102,23 @@ export async function PATCH(
     updates.lost_reason = payload.lost_reason;
   }
 
+  let bookingCancelled = false;
+  if (payload.booking_status !== undefined) {
+    if (payload.booking_status !== "cancelled") {
+      return NextResponse.json({ ok: false, error: "Invalid booking status." }, { status: 400 });
+    }
+    if (existingLead.source !== "consultation_booking") {
+      return NextResponse.json({ ok: false, error: "This lead has no booking to cancel." }, { status: 400 });
+    }
+    if (existingLead.booking_status !== "cancelled") {
+      bookingCancelled = true;
+      // The partial unique index on (booking_date, booking_time) only
+      // covers status='confirmed' rows, so this frees the slot back up
+      // for other visitors automatically.
+      updates.booking_status = "cancelled";
+    }
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ ok: false, error: "Nothing to update." }, { status: 400 });
   }
@@ -109,6 +128,15 @@ export async function PATCH(
   if (error) {
     console.error("[api/admin/leads] update failed:", error);
     return NextResponse.json({ ok: false, error: "Update failed." }, { status: 500 });
+  }
+
+  if (bookingCancelled) {
+    await logActivity({
+      entityType: "lead",
+      entityId: id,
+      type: "booking_cancelled",
+      description: `Consultation booking cancelled (was ${existingLead.booking_date} at ${existingLead.booking_time})`,
+    });
   }
 
   if (statusChanged) {

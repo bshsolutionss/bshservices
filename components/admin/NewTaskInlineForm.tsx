@@ -8,9 +8,11 @@ import { TASK_PRIORITIES, TASK_PRIORITY_LABELS, type TaskPriority } from "@/lib/
 
 interface NewTaskInlineFormProps {
   projectId: string;
+  /** Active employee names, for the assignee field's autocomplete — free text still works if empty/no match. */
+  employeeNames?: string[];
 }
 
-export default function NewTaskInlineForm({ projectId }: NewTaskInlineFormProps) {
+export default function NewTaskInlineForm({ projectId, employeeNames = [] }: NewTaskInlineFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [assignee, setAssignee] = useState("");
@@ -64,8 +66,16 @@ export default function NewTaskInlineForm({ projectId }: NewTaskInlineFormProps)
         placeholder="Assignee"
         value={assignee}
         onChange={(e) => setAssignee(e.target.value)}
+        list="task-assignee-suggestions"
         className="w-32"
       />
+      {employeeNames.length > 0 && (
+        <datalist id="task-assignee-suggestions">
+          {employeeNames.map((name) => (
+            <option key={name} value={name} />
+          ))}
+        </datalist>
+      )}
       <select
         value={priority}
         onChange={(e) => setPriority(e.target.value as TaskPriority)}

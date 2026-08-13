@@ -1,4 +1,4 @@
-import type { Lead } from "@/lib/leads";
+import { formatBookingDateTime, type Lead } from "@/lib/leads";
 
 const BRAND_BLUE = "#1A14A5";
 const BRAND_DARK = "#231F20";
@@ -96,6 +96,12 @@ function leadDetailRows(lead: Lead): string {
   ].join("");
 }
 
+const SOURCE_LABELS: Record<Lead["source"], string> = {
+  contact_form: "Contact Form",
+  service_form: "Service Form",
+  consultation_booking: "Consultation Booking",
+};
+
 export function clientConfirmationEmail(lead: Lead): { subject: string; html: string } {
   const firstName = lead.name.split(" ")[0] || lead.name;
 
@@ -125,7 +131,7 @@ export function adminNotificationEmail(lead: Lead): { subject: string; html: str
   const bodyHtml = `
     <h1 style="margin:0 0 4px;font-size:22px;color:${BRAND_DARK};">New lead 🎯</h1>
     <p style="margin:0 0 20px;font-size:13px;color:#6b6b6b;">
-      via ${escapeHtml(lead.source === "contact_form" ? "Contact Form" : "Service Form")}${lead.page_path ? ` &middot; ${escapeHtml(lead.page_path)}` : ""}
+      via ${escapeHtml(SOURCE_LABELS[lead.source] ?? lead.source)}${lead.page_path ? ` &middot; ${escapeHtml(lead.page_path)}` : ""}
     </p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BG};border-radius:12px;padding:16px 20px;margin-bottom:20px;">
       ${row("Name", lead.name)}
@@ -143,6 +149,76 @@ export function adminNotificationEmail(lead: Lead): { subject: string; html: str
     subject: `New lead: ${lead.name}${lead.selected_service ? ` — ${lead.selected_service}` : ""}`,
     html: wrapEmailLayout({
       preheader: `New lead from ${lead.name} (${lead.email})`,
+      bodyHtml,
+    }),
+  };
+}
+
+export function bookingClientConfirmationEmail(lead: Lead): { subject: string; html: string } {
+  const firstName = lead.name.split(" ")[0] || lead.name;
+  const when = formatBookingDateTime(lead);
+
+  const bodyHtml = `
+    <h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">You're booked, ${escapeHtml(firstName)}! 🎉</h1>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND_DARK};">
+      Your free consultation with BSH Solutions is confirmed. We're looking forward to it.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BLUE};border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+      <tr>
+        <td style="font-size:18px;font-weight:700;color:#ffffff;">${escapeHtml(when)}</td>
+      </tr>
+    </table>
+    ${
+      lead.message
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BG};border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+            ${row("Your message", lead.message)}
+            ${row("Phone", lead.phone)}
+          </table>`
+        : ""
+    }
+    <p style="margin:0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">
+      Need to change anything? Just reply to this email and we'll sort it out.
+    </p>`;
+
+  return {
+    subject: `Consultation confirmed — ${when || "BSH Solutions"}`,
+    html: wrapEmailLayout({
+      preheader: `Your free consultation is confirmed for ${when}.`,
+      bodyHtml,
+    }),
+  };
+}
+
+export function bookingAdminNotificationEmail(lead: Lead): { subject: string; html: string } {
+  const when = formatBookingDateTime(lead);
+
+  const bodyHtml = `
+    <h1 style="margin:0 0 4px;font-size:22px;color:${BRAND_DARK};">New consultation booked 📅</h1>
+    <p style="margin:0 0 20px;font-size:13px;color:#6b6b6b;">
+      ${lead.page_path ? escapeHtml(lead.page_path) : "Book a Consultation"}
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BLUE};border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+      <tr>
+        <td style="font-size:18px;font-weight:700;color:#ffffff;">${escapeHtml(when)}</td>
+      </tr>
+    </table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BG};border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+      ${row("Name", lead.name)}
+      ${row("Email", lead.email)}
+      ${row("Phone", lead.phone)}
+      ${row("Message", lead.message)}
+    </table>
+    <a href="${SITE_URL}/admin/leads/${lead.id}" style="display:inline-block;padding:12px 24px;background:${BRAND_BLUE};color:#ffffff;border-radius:9999px;text-decoration:none;font-size:14px;font-weight:700;">
+      View in Admin Panel
+    </a>
+    <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:#6b6b6b;">
+      Reply to this email to respond directly to ${escapeHtml(lead.name)}.
+    </p>`;
+
+  return {
+    subject: `New consultation: ${lead.name} — ${when}`,
+    html: wrapEmailLayout({
+      preheader: `${lead.name} booked a consultation for ${when}`,
       bodyHtml,
     }),
   };

@@ -9,9 +9,10 @@ export type LeadStatus =
   | "negotiation"
   | "won"
   | "lost";
-export type LeadSource = "contact_form" | "service_form";
+export type LeadSource = "contact_form" | "service_form" | "consultation_booking";
 export type LeadPriority = "low" | "medium" | "high" | "urgent";
 export type LeadLostReason = "budget" | "timing" | "competitor" | "no_response" | "other";
+export type BookingStatus = "confirmed" | "cancelled";
 
 export interface Lead {
   id: string;
@@ -41,6 +42,10 @@ export interface Lead {
   lost_reason: LeadLostReason | null;
   /** Set once this lead has a client (either pre-existing, for repeat business, or created on "won"). */
   client_id: string | null;
+  /** Only set when source === "consultation_booking". */
+  booking_date: string | null;
+  booking_time: string | null;
+  booking_status: BookingStatus | null;
 }
 
 export const LEAD_STATUSES: LeadStatus[] = [
@@ -95,3 +100,36 @@ export const LEAD_LOST_REASON_LABELS: Record<LeadLostReason, string> = {
   no_response: "No response",
   other: "Other",
 };
+
+export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  confirmed: "Confirmed",
+  cancelled: "Cancelled",
+};
+
+export const BOOKING_STATUS_COLORS: Record<BookingStatus, { bg: string; text: string }> = {
+  confirmed: { bg: "#D1FAE5", text: "#065F46" },
+  cancelled: { bg: "#F1F1F1", text: "#6B7280" },
+};
+
+/**
+ * Renders a booking's plain wall-clock date/time (no timezone conversion —
+ * the whole booking system deliberately operates in Pakistan Time only, see
+ * lib/availability.ts). Building the Date from the literal date/time parts
+ * via Date.UTC, then formatting with timeZone: "UTC", renders those same
+ * literal parts back out with zero shifting.
+ */
+export function formatBookingDateTime(lead: Pick<Lead, "booking_date" | "booking_time">): string {
+  if (!lead.booking_date || !lead.booking_time) return "";
+  const [year, month, day] = lead.booking_date.split("-").map(Number);
+  const [hour, minute] = lead.booking_time.split(":").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  const dateStr = date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+  const timeStr = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "UTC" });
+  return `${dateStr} at ${timeStr} (PKT)`;
+}

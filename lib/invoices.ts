@@ -100,3 +100,21 @@ export function formatMoney(amount: number, currency: Currency | null | undefine
     currency: safeCurrency,
   }).format(safeAmount);
 }
+
+/**
+ * Sums can't cross currencies (PKR + USD isn't a number) — group by
+ * currency and format each total separately, e.g. "$500 + PKR 20,000".
+ * Shared by the dashboard and the expenses page (anywhere multiple
+ * currency-tagged amounts need to be totaled for display).
+ */
+export function formatByCurrency(amounts: { amount: number; currency: Currency | null | undefined }[]): string {
+  const byCurrency = new Map<Currency, number>();
+  for (const { amount, currency } of amounts) {
+    const safeCurrency = currency && (CURRENCIES as string[]).includes(currency) ? currency : "USD";
+    byCurrency.set(safeCurrency, (byCurrency.get(safeCurrency) ?? 0) + Number(amount));
+  }
+  if (byCurrency.size === 0) return formatMoney(0, "USD");
+  return Array.from(byCurrency.entries())
+    .map(([currency, total]) => formatMoney(total, currency))
+    .join(" + ");
+}

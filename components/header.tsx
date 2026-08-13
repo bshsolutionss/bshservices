@@ -191,16 +191,23 @@ const Header = () => {
         </div>
 
         {/* Right - Buttons */}
-        <div className="hidden md:flex space-x-3">
+        <div className="hidden md:flex items-center space-x-3">
           <Button
             className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl px-5"
+            asChild
+          >
+            <Link href="/book-consultation">Book a Consultation</Link>
+          </Button>
+          <Button
+            variant="outline"
+            className="border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl px-5"
             asChild
           >
             <Link href="/contact">Contact</Link>
           </Button>
           <Button
             variant="outline"
-            className="border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl px-5"
+            className="hidden lg:inline-flex border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl px-5"
           >
             <Phone className="w-4 h-4 mr-2" /> +92 312 8994968
           </Button>
@@ -291,7 +298,18 @@ const Header = () => {
               className="bg-[#1A14A5] text-white shadow-md hover:bg-[#231F20] rounded-2xl"
               asChild
             >
-              <Link href="/contact">Contact</Link>
+              <Link href="/book-consultation" onClick={() => setMobileMenuOpen(false)}>
+                Book a Consultation
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white shadow-md rounded-2xl"
+              asChild
+            >
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                Contact
+              </Link>
             </Button>
             <Button
               variant="outline"

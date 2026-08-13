@@ -26,15 +26,17 @@ export default async function AdminProjectDetailPage({
     notFound();
   }
 
-  const [{ data: client }, { data: tasksData }, { data: invoicesData }] = await Promise.all([
+  const [{ data: client }, { data: tasksData }, { data: invoicesData }, { data: employeesData }] = await Promise.all([
     supabase.from("clients").select("*").eq("id", project.client_id).single<Client>(),
     supabase.from("tasks").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     supabase.from("invoices").select("*").eq("project_id", id).order("created_at", { ascending: false }),
+    supabase.from("employees").select("name").eq("status", "active").order("name"),
   ]);
 
   const tasks = (tasksData ?? []) as Task[];
   const completedCount = tasks.filter((t) => t.status === "completed").length;
   const invoices = (invoicesData ?? []) as Invoice[];
+  const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
 
   return (
     <div className="space-y-6">
@@ -73,7 +75,7 @@ export default async function AdminProjectDetailPage({
               </span>
             </div>
 
-            <NewTaskInlineForm projectId={project.id} />
+            <NewTaskInlineForm projectId={project.id} employeeNames={employeeNames} />
 
             {tasks.length === 0 ? (
               <p className="text-sm text-[#231F20]/50">No tasks yet.</p>

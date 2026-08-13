@@ -1,7 +1,13 @@
 import { Resend } from "resend";
 import type { Lead } from "@/lib/leads";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { adminNotificationEmail, clientConfirmationEmail, followUpEmail } from "@/lib/email/templates";
+import {
+  adminNotificationEmail,
+  clientConfirmationEmail,
+  bookingAdminNotificationEmail,
+  bookingClientConfirmationEmail,
+  followUpEmail,
+} from "@/lib/email/templates";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.RESEND_API || "";
 
@@ -24,19 +30,20 @@ function getResendClient(): Resend {
  */
 export async function sendLeadEmails(lead: Lead): Promise<void> {
   const resend = getResendClient();
+  const isBooking = lead.source === "consultation_booking";
 
   const [clientResult, adminResult] = await Promise.allSettled([
     resend.emails.send({
       from: FROM,
       to: lead.email,
       replyTo: ADMIN_EMAIL,
-      ...clientConfirmationEmail(lead),
+      ...(isBooking ? bookingClientConfirmationEmail(lead) : clientConfirmationEmail(lead)),
     }),
     resend.emails.send({
       from: FROM,
       to: ADMIN_EMAIL,
       replyTo: lead.email,
-      ...adminNotificationEmail(lead),
+      ...(isBooking ? bookingAdminNotificationEmail(lead) : adminNotificationEmail(lead)),
     }),
   ]);
 

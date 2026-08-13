@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import SignOutButton from "@/components/admin/SignOutButton";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -25,35 +24,10 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
-      <header className="bg-[#1A14A5] text-white">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-8 flex-wrap">
-            <span className="font-extrabold tracking-tight">BSH Admin</span>
-            <nav className="flex items-center gap-5 text-sm font-medium text-white/80 flex-wrap">
-              <Link href="/admin" className="hover:text-white transition">
-                Dashboard
-              </Link>
-              <Link href="/admin/leads" className="hover:text-white transition">
-                Leads
-              </Link>
-              <Link href="/admin/clients" className="hover:text-white transition">
-                Clients
-              </Link>
-              <Link href="/admin/projects" className="hover:text-white transition">
-                Projects
-              </Link>
-              <Link href="/admin/tasks" className="hover:text-white transition">
-                Tasks
-              </Link>
-              <Link href="/admin/invoices" className="hover:text-white transition">
-                Invoices
-              </Link>
-            </nav>
-          </div>
-          <SignOutButton />
-        </div>
-      </header>
-      <main className="max-w-7xl mx-auto px-6 py-8">{children}</main>
+      <AdminSidebar />
+      <main className="md:pl-64">
+        <div className="max-w-6xl mx-auto px-6 py-8">{children}</div>
+      </main>
     </div>
   );
 }
