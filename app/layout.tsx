@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import { safeJsonLd } from "@/lib/json-ld";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -85,10 +86,20 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
-  manifest: "/site.webmanifest",
+  // Served by app/manifest.ts at /manifest.webmanifest — not a static file.
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "BSH Solutions",
+  },
   verification: {
     google: "mftol86q7hauVyXwfTJDkzh6lEIO_NfdlDqR24A6y_4",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1A14A5",
 };
 
 export default function RootLayout({
@@ -115,7 +126,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "BSH Solutions",

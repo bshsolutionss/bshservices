@@ -1,5 +1,6 @@
 import type { ServiceDefinition } from "@/lib/services-data";
 import { SERVICE_CATEGORIES, getServicePath } from "@/lib/services-data";
+import { safeJsonLd } from "@/lib/json-ld";
 
 interface ServiceJsonLdProps {
   service: ServiceDefinition;
@@ -29,7 +30,7 @@ export default function ServiceJsonLd({ service }: ServiceJsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 }

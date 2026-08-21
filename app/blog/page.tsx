@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPosts, getFeaturedImage } from "@/lib/wp";
+import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default async function BlogPage() {
     <div className="min-h-screen bg-background pt-32 pb-20">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Our <span className="text-primary text-blue-600">Blog</span>
           </h1>
           <p className="text-lg text-muted-foreground text-gray-400">
@@ -62,7 +63,7 @@ export default async function BlogPage() {
                   href={`/blog/${post.slug}`}
                   className="group flex flex-col bg-card/50 rounded-2xl border border-border/50 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
                 >
-                  <div className="relative h-64 w-full overflow-hidden bg-muted">
+                  <div className="relative h-48 sm:h-56 md:h-64 w-full overflow-hidden bg-muted">
                     {featuredImg ? (
                       <Image
                         src={featuredImg}
@@ -84,12 +85,12 @@ export default async function BlogPage() {
                     </div>
                     <h2
                       className="text-xl font-bold mb-3 text-foreground line-clamp-2 group-hover:text-primary transition-colors"
-                      dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title.rendered) }}
                     />
                     <div
                       className="text-muted-foreground line-clamp-3 text-sm flex-grow mb-4 text-gray-400"
                       dangerouslySetInnerHTML={{
-                        __html: post.excerpt.rendered,
+                        __html: sanitizeWpHtml(post.excerpt.rendered),
                       }}
                     />
                     <div className="mt-auto flex items-center text-primary font-medium text-sm group-hover:underline">

@@ -18,6 +18,9 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Auto-generated Serwist service-worker bundle — not authored code.
+      "public/sw.js",
+      "public/sw.js.map",
     ],
   },
 ];

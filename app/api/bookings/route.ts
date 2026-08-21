@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { sendLeadEmails } from "@/lib/email/resend";
+import { sendAdminPush } from "@/lib/push";
+import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 import { isDateBookable } from "@/lib/availability";
 import type { Lead } from "@/lib/leads";
 
@@ -25,6 +27,15 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 export async function POST(request: NextRequest) {
+  // A bit more headroom than /api/leads — a "slot taken" 409 is a normal,
+  // expected retry path here (pick another time), not just error-recovery.
+  if (isRateLimited("bookings", getClientIp(request), 8, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { ok: false, error: "Too many attempts. Please try again in a few minutes." },
+      { status: 429 }
+    );
+  }
+
   let payload: BookingPayload;
 
   try {
@@ -110,6 +121,12 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[api/bookings] sendLeadEmails failed:", err);
   }
+
+  await sendAdminPush({
+    title: "New consultation booked",
+    body: `${lead.name} — ${lead.booking_date} at ${lead.booking_time}`,
+    url: `/admin/bookings`,
+  });
 
   return NextResponse.json({ ok: true, id: lead.id });
 }

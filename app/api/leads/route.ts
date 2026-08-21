@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { sendLeadEmails } from "@/lib/email/resend";
+import { sendAdminPush } from "@/lib/push";
+import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 import type { Lead, LeadSource } from "@/lib/leads";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +29,16 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 export async function POST(request: NextRequest) {
+  // 5 submissions per 10 minutes per IP — generous for a real visitor
+  // (who submits once, maybe twice after fixing a validation error), tight
+  // enough to blunt a scripted spam burst.
+  if (isRateLimited("leads", getClientIp(request), 5, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { ok: false, error: "Too many submissions. Please try again in a few minutes." },
+      { status: 429 }
+    );
+  }
+
   let payload: LeadPayload;
 
   try {
@@ -98,6 +110,12 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[api/leads] sendLeadEmails failed:", err);
   }
+
+  await sendAdminPush({
+    title: "New lead",
+    body: `${lead.name}${lead.business ? ` (${lead.business})` : ""} — ${lead.selected_service || lead.service_category || "general inquiry"}`,
+    url: `/admin/leads/${lead.id}`,
+  });
 
   return NextResponse.json({ ok: true, id: lead.id });
 }

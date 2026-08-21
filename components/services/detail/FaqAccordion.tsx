@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { ServiceFaq } from "@/lib/services-data";
+import { safeJsonLd } from "@/lib/json-ld";
 
 interface FaqAccordionProps {
   serviceName: string;
@@ -35,7 +36,7 @@ export default function FaqAccordion({ serviceName, faqs }: FaqAccordionProps) {
     <section id="faqs" className="py-16 px-6 lg:px-12 bg-[#F4F7FE]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl lg:text-4xl font-bold text-[#231F20] mb-3 text-center">

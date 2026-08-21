@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/header";
-import Footer from "@/components/footer";
+// import Footer from "@/components/footer";
 import Contactform from "@/components/contactform";
 import { OurPortfolio } from "@/components/our-portfolio";
 
@@ -47,7 +47,7 @@ export default function PortfolioPage() {
       </main>
 
       <Contactform />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

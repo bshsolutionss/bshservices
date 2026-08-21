@@ -1,5 +1,6 @@
+const BASE_URL = process.env.WORDPRESS_URL || "https://darkgrey-pelican-916395.hostingersite.com";
 const API_URL =
-  process.env.WORDPRESS_API_URL || "https://darkgrey-pelican-916395.hostingersite.com/wp-json/wp/v2";
+  process.env.WORDPRESS_API_URL || `${BASE_URL.replace(/\/+$/, "")}/wp-json/wp/v2`;
 
 export interface WPPost {
   id: number;

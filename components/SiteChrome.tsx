@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import InstallAppButton from "@/components/InstallAppButton";
 
 /**
  * Wraps the public marketing Header/Footer around page content, except on
@@ -22,6 +23,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <Header />
       <main className="overflow-x-hidden">{children}</main>
       <Footer />
+      <InstallAppButton variant="floating" />
     </>
   );
 }

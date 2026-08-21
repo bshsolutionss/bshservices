@@ -1,4 +1,6 @@
 import { getPostBySlug, getFeaturedImage } from "@/lib/wp";
+import { sanitizeWpHtml } from "@/lib/sanitize-html";
+import { safeJsonLd } from "@/lib/json-ld";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -82,8 +84,8 @@ export default async function Post({ params }: Props) {
           </Link>
 
           <h1
-            className="text-4xl md:text-5xl font-bold mb-6 text-foreground leading-tight"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-foreground leading-tight break-words"
+            dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title.rendered) }}
           />
 
           <div className="flex items-center text-muted-foreground mb-10 text-gray-400">
@@ -95,20 +97,20 @@ export default async function Post({ params }: Props) {
         </div>
 
         {featuredImg && (
-          <div className="w-full max-w-4xl mb-12 relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="w-full max-w-3xl mb-12 relative h-[200px] sm:h-[300px] md:h-[380px] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl">
             <Image
               src={featuredImg}
               alt={post.title.rendered.replace(/<[^>]+>/g, "")}
               fill
               priority
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 1024px"
+              sizes="(max-width: 768px) 100vw, 768px"
             />
           </div>
         )}
 
         <article className="w-full max-w-3xl prose prose-lg dark:prose-invert prose-blue mx-auto prose-img:rounded-xl prose-a:text-primary hover:prose-a:text-primary/80">
-          <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.content.rendered) }} />
         </article>
       </div>
 
@@ -116,7 +118,7 @@ export default async function Post({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             headline: post.title.rendered.replace(/<[^>]+>/g, ""),

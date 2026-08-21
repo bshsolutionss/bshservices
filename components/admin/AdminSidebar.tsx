@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SignOutButton from "@/components/admin/SignOutButton";
+import InstallAppButton from "@/components/InstallAppButton";
+import PushNotificationToggle from "@/components/admin/PushNotificationToggle";
 
 interface NavItem {
   href: string;
@@ -103,7 +105,9 @@ export default function AdminSidebar() {
               </button>
             </div>
             <NavLinks pathname={pathname} onNavigate={() => setMobileOpen(false)} />
-            <div className="px-3 pt-4 mt-4 border-t border-white/10">
+            <div className="px-3 pt-4 mt-4 border-t border-white/10 space-y-1">
+              <PushNotificationToggle className="w-full" />
+              <InstallAppButton variant="inline" className="w-full" />
               <SignOutButton className="w-full px-3 py-2.5" />
             </div>
           </div>
@@ -116,7 +120,9 @@ export default function AdminSidebar() {
           <span className="font-extrabold text-white text-lg tracking-tight">BSH Admin</span>
         </div>
         <NavLinks pathname={pathname} />
-        <div className="px-3 pt-4 mt-4 border-t border-white/10">
+        <div className="px-3 pt-4 mt-4 border-t border-white/10 space-y-1">
+          <PushNotificationToggle className="w-full" />
+          <InstallAppButton variant="inline" className="w-full" />
           <SignOutButton className="w-full px-3 py-2.5" />
         </div>
       </aside>

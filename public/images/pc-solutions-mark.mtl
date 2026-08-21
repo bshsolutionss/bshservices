@@ -1,0 +1,19 @@
+# Exported by three-d-stage
+newmtl steel
+Kd 0.2747 0.3140 0.3467
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl graphite
+Kd 0.0203 0.0176 0.0185
+Ks 0.2000 0.2000 0.2000
+Ns 116
+d 1.0000
+
+newmtl signal_blue
+Kd 0.0116 0.0116 0.4564
+Ks 0.2000 0.2000 0.2000
+Ns 132
+d 1.0000
+
