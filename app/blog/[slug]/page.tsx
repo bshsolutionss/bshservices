@@ -74,8 +74,8 @@ export default async function Post({ params }: Props) {
   const featuredImg = getFeaturedImage(post);
   const date = post.date
     ? new Date(post.date).toLocaleDateString("en-US", {
-        dateStyle: "long",
-      })
+      dateStyle: "long",
+    })
     : "";
 
   const cleanTitle = post.title?.rendered?.replace(/<[^>]+>/g, "") || "Blog Post";
