@@ -41,12 +41,20 @@ export async function getPosts(page = 1, perPage = 10): Promise<WPPost[]> {
   try {
     const res = await fetch(
       `${API_URL}/posts?_embed&page=${page}&per_page=${perPage}`,
-      { next: { revalidate: 60 } },
+      {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 BSHSolutions/1.0",
+          Accept: "application/json",
+        },
+        next: { revalidate: 60 },
+      },
     );
     if (!res.ok) {
-      throw new Error(`Failed to fetch posts: ${res.statusText}`);
+      console.error(`Failed to fetch posts: ${res.status} ${res.statusText}`);
+      return [];
     }
-    return res.json();
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Error fetching posts:", error);
     return [];
@@ -54,21 +62,29 @@ export async function getPosts(page = 1, perPage = 10): Promise<WPPost[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<WPPost | null> {
+  if (!slug) return null;
   try {
-    const res = await fetch(`${API_URL}/posts?_embed&slug=${slug}`, {
+    const cleanSlug = encodeURIComponent(slug.trim());
+    const res = await fetch(`${API_URL}/posts?_embed&slug=${cleanSlug}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 BSHSolutions/1.0",
+        Accept: "application/json",
+      },
       next: { revalidate: 60 },
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch post: ${res.statusText}`);
+      console.error(`Failed to fetch post by slug (${slug}): ${res.status} ${res.statusText}`);
+      return null;
     }
     const data = await res.json();
-    return data.length > 0 ? data[0] : null;
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
   } catch (error) {
-    console.error("Error fetching post by slug:", error);
+    console.error(`Error fetching post by slug (${slug}):`, error);
     return null;
   }
 }
 
-export function getFeaturedImage(post: WPPost): string | null {
+export function getFeaturedImage(post: WPPost | null | undefined): string | null {
+  if (!post) return null;
   return post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
 }
