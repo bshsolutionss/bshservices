@@ -85,12 +85,12 @@ export default async function BlogPage() {
                     </div>
                     <h2
                       className="text-xl font-bold mb-3 text-foreground line-clamp-2 group-hover:text-primary transition-colors"
-                      dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title.rendered) }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title?.rendered || "") }}
                     />
                     <div
                       className="text-muted-foreground line-clamp-3 text-sm flex-grow mb-4 text-gray-400"
                       dangerouslySetInnerHTML={{
-                        __html: sanitizeWpHtml(post.excerpt.rendered),
+                        __html: sanitizeWpHtml(post.excerpt?.rendered || ""),
                       }}
                     />
                     <div className="mt-auto flex items-center text-primary font-medium text-sm group-hover:underline">

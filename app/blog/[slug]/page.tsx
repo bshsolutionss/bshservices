@@ -21,9 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   // Strip HTML tags for description
-  const description = post.excerpt.rendered.replace(/<[^>]+>/g, "").trim();
-  const title = `${post.title.rendered.replace(/<[^>]+>/g, "")} | BSH Solutions`;
-  const url = `https://bshsolutionss.com/blog/${post.slug}`;
+  const description = post.excerpt?.rendered
+    ? post.excerpt.rendered.replace(/<[^>]+>/g, "").trim()
+    : "Read this article on BSH Solutions";
+  const title = post.title?.rendered
+    ? `${post.title.rendered.replace(/<[^>]+>/g, "")} | BSH Solutions`
+    : "Blog | BSH Solutions";
+  const url = `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`;
   const featuredImg = getFeaturedImage(post);
 
   return {
@@ -68,9 +72,14 @@ export default async function Post({ params }: Props) {
   }
 
   const featuredImg = getFeaturedImage(post);
-  const date = new Date(post.date).toLocaleDateString("en-US", {
-    dateStyle: "long",
-  });
+  const date = post.date
+    ? new Date(post.date).toLocaleDateString("en-US", {
+        dateStyle: "long",
+      })
+    : "";
+
+  const cleanTitle = post.title?.rendered?.replace(/<[^>]+>/g, "") || "Blog Post";
+  const cleanExcerpt = post.excerpt?.rendered?.replace(/<[^>]+>/g, "").trim() || "";
 
   return (
     <div className="min-h-screen bg-background pt-32 pb-20">
@@ -85,11 +94,11 @@ export default async function Post({ params }: Props) {
 
           <h1
             className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-foreground leading-tight break-words"
-            dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title.rendered) }}
+            dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.title?.rendered || "") }}
           />
 
           <div className="flex items-center text-muted-foreground mb-10 text-gray-400">
-            <time dateTime={post.date}>{date}</time>
+            {post.date && <time dateTime={post.date}>{date}</time>}
             <span className="mx-3">•</span>
             {/* Adding 5 min read as placeholder placeholder if no specific reading time is provided by WP */}
             <span>By Author</span>
@@ -100,7 +109,7 @@ export default async function Post({ params }: Props) {
           <div className="w-full max-w-3xl mb-12 relative h-[200px] sm:h-[300px] md:h-[380px] rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl">
             <Image
               src={featuredImg}
-              alt={post.title.rendered.replace(/<[^>]+>/g, "")}
+              alt={cleanTitle}
               fill
               priority
               className="object-cover"
@@ -110,7 +119,7 @@ export default async function Post({ params }: Props) {
         )}
 
         <article className="w-full max-w-3xl prose prose-lg dark:prose-invert prose-blue mx-auto prose-img:rounded-xl prose-a:text-primary hover:prose-a:text-primary/80">
-          <div dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.content.rendered) }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(post.content?.rendered || "") }} />
         </article>
       </div>
 
@@ -121,8 +130,8 @@ export default async function Post({ params }: Props) {
           __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: post.title.rendered.replace(/<[^>]+>/g, ""),
-            description: post.excerpt.rendered.replace(/<[^>]+>/g, "").trim(),
+            headline: cleanTitle,
+            description: cleanExcerpt,
             image: featuredImg ? [featuredImg] : [],
             datePublished: post.date,
             dateModified: post.date,
@@ -143,7 +152,7 @@ export default async function Post({ params }: Props) {
             },
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://bshsolutionss.com/blog/${post.slug}`,
+              "@id": `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`,
             },
           }),
         }}
