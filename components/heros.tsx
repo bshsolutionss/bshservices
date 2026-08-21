@@ -24,14 +24,7 @@ const Heros: React.FC = () => {
       {/* Left Content */}
 
       <div className="max-w-2xl text-center lg:text-left space-y-6 relative z-10 mt-12 lg:mt-0">
-        <motion.h1
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#1A14A5] drop-shadow-sm tracking-tight"
-        >
-          <TypedHeading />
-        </motion.h1>
+        <TypedHeading />
 
         <motion.h2
           initial={{ opacity: 0, y: 40 }}

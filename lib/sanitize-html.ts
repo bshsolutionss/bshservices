@@ -1,24 +1,52 @@
-import DOMPurify from "isomorphic-dompurify";
-
 /**
- * Sanitizes HTML pulled from the headless WordPress API before it's ever
- * passed to `dangerouslySetInnerHTML`. WordPress content is treated as
- * untrusted input here on purpose — it comes from a third-party CMS over
- * the network (see lib/wp.ts), and a compromised WP install, a malicious
- * plugin, or a careless post author pasting raw HTML are all realistic ways
- * a `<script>` tag could end up in `post.content.rendered`. Without this,
- * that would be a stored XSS straight into every visitor's browser.
- *
- * Runs both server- and client-side (isomorphic-dompurify wraps jsdom on
- * the server), so it's safe to call from a Server Component.
+ * Zero-dependency, serverless-safe HTML sanitizer for WordPress content.
+ * Replaces isomorphic-dompurify/jsdom to completely prevent Node.js ERR_REQUIRE_ESM
+ * crashes inside Vercel Serverless Functions.
  */
+
+// Dangerous tags that should be completely stripped including their inner content
+const DANGEROUS_TAGS_WITH_CONTENT =
+  /<(script|style|object|embed|applet|meta|base|form|input|textarea|button)[^>]*>[\s\S]*?<\/\1>/gi;
+
+const DANGEROUS_SELF_CLOSING_TAGS =
+  /<(script|style|object|embed|applet|meta|base|form|input|textarea|button)[^>]*\/?>/gi;
+
+// Unsafe attributes (event handlers like onclick, onload, onerror, etc.)
+const EVENT_HANDLER_ATTRS = /\s*on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi;
+
+// Unsafe URL schemes (javascript:, data:text/html, etc.)
+const JAVASCRIPT_URLS =
+  /\s*(href|src|action)\s*=\s*["']?\s*(javascript:|data:text\/html)[^"'>\s]*/gi;
+
 export function sanitizeWpHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    // WordPress post bodies legitimately use these — images, links,
-    // headings, tables, iframes for embeds (YouTube etc.), and formatting.
-    // Anything not listed (script, on*="" handlers, style tags/attrs with
-    // expressions, etc.) is stripped, not escaped.
-    ADD_TAGS: ["iframe"],
-    ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "target", "rel"],
+  if (!html || typeof html !== "string") return "";
+
+  let clean = html;
+
+  // 1. Remove dangerous blocks (scripts, forms, objects, etc.)
+  clean = clean.replace(DANGEROUS_TAGS_WITH_CONTENT, "");
+  clean = clean.replace(DANGEROUS_SELF_CLOSING_TAGS, "");
+
+  // 2. Remove all inline event handlers (onerror, onload, onclick, onmouseover, etc.)
+  clean = clean.replace(EVENT_HANDLER_ATTRS, "");
+
+  // 3. Remove javascript: and malicious data URIs in href/src
+  clean = clean.replace(JAVASCRIPT_URLS, "");
+
+  // 4. Sanitize iframes: only allow safe embeds (YouTube, Vimeo, SoundCloud, Spotify)
+  clean = clean.replace(/<iframe([^>]*)>/gi, (_match, attrs) => {
+    const srcMatch = attrs.match(/src\s*=\s*["']([^"']+)["']/i);
+    const src = srcMatch ? srcMatch[1] : "";
+    const isSafeSrc =
+      /^(https:\/\/)?(www\.)?(youtube\.com|youtube-nocookie\.com|youtu\.be|player\.vimeo\.com|spotify\.com|w\.soundcloud\.com)/i.test(
+        src
+      );
+
+    if (!isSafeSrc) {
+      return "";
+    }
+    return `<iframe${attrs} loading="lazy" sandbox="allow-scripts allow-same-origin allow-presentation">`;
   });
+
+  return clean;
 }
