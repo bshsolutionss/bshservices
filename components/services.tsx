@@ -34,6 +34,8 @@ type ServiceItem = {
   title: string;
   desc: string;
   icon: React.ElementType;
+  /** Canonical slug from lib/services-data.ts — used to link to the real service detail page (with its full content, FAQs, and schema) instead of a category-page anchor. */
+  slug: string;
 };
 
 type Tab = {
@@ -53,31 +55,37 @@ const TABS: Tab[] = [
         title: "Website Development",
         desc: "Fast, secure, and scalable web solutions.",
         icon: Monitor,
+        slug: "website-development",
       },
       {
         title: "E-commerce",
         desc: "Custom online stores with secure payment gateways.",
         icon: ShoppingCart,
+        slug: "ecommerce-development",
       },
       {
         title: "Mobile Apps",
         desc: "Cross-platform apps built for performance.",
         icon: Smartphone,
+        slug: "mobile-app-development",
       },
       {
         title: "Custom Software",
         desc: "Tailored systems to automate and optimize business.",
         icon: Cpu,
+        slug: "custom-software-development",
       },
       {
         title: "Web Applications",
         desc: "Dynamic, API-integrated web apps.",
         icon: ChartBar,
+        slug: "web-application-development",
       },
       {
         title: "Maintenance & Support",
         desc: "Ongoing updates, fixes, and technical support.",
         icon: SlidersHorizontal,
+        slug: "website-maintenance-support",
       },
     ],
   },
@@ -90,31 +98,37 @@ const TABS: Tab[] = [
         title: "Branding",
         desc: "Complete visual identity design.",
         icon: Paintbrush,
+        slug: "brand-identity-design",
       },
       {
         title: "UI / UX",
         desc: "Designs that delight and convert.",
         icon: Monitor,
+        slug: "ui-ux-design",
       },
       {
         title: "Graphic Design",
         desc: "Creative visuals for print and digital.",
         icon: Palette,
+        slug: "graphic-design",
       },
       {
         title: "Logo Design",
         desc: "Unique, memorable brand marks.",
         icon: PenTool,
+        slug: "logo-design",
       },
       {
         title: "Motion Graphics",
         desc: "Animated visuals and video graphics.",
         icon: Video,
+        slug: "motion-graphics-design",
       },
       {
         title: "Packaging Design",
         desc: "Professional product packaging designs.",
         icon: ChartBar,
+        slug: "packaging-design",
       },
     ],
   },
@@ -127,31 +141,37 @@ const TABS: Tab[] = [
         title: "PPC Advertising",
         desc: "Targeted paid ad campaigns for high ROI.",
         icon: DollarSign,
+        slug: "ppc-advertising",
       },
       {
         title: "Social Media Marketing",
         desc: "Growth through creative social campaigns.",
         icon: Users,
+        slug: "social-media-marketing",
       },
       {
         title: "SEO Optimization",
         desc: "Rank higher with data-driven SEO.",
         icon: Megaphone,
+        slug: "seo-optimization",
       },
       {
         title: "Email Marketing",
         desc: "Automated and personalized email flows.",
         icon: ChartBar,
+        slug: "email-marketing",
       },
       {
         title: "Content Marketing",
         desc: "Engaging blog, video, and media strategies.",
         icon: PenTool,
+        slug: "content-marketing",
       },
       {
         title: "Influencer Marketing",
         desc: "Collaborate with trusted voices in your niche.",
         icon: Users,
+        slug: "influencer-marketing",
       },
     ],
   },
@@ -164,31 +184,37 @@ const TABS: Tab[] = [
         title: "Product Photography",
         desc: "High-quality product visuals for online stores.",
         icon: Camera,
+        slug: "product-photography",
       },
       {
         title: "Brand Shoots",
         desc: "Professional shoots that tell your brand’s story.",
         icon: ImageIcon,
+        slug: "brand-shoots",
       },
       {
         title: "Event Coverage",
         desc: "Capture events with precision and creativity.",
         icon: CameraIcon,
+        slug: "event-coverage",
       },
       {
         title: "Video Production",
         desc: "Full-scale promotional and brand videos.",
         icon: Video,
+        slug: "video-production",
       },
       {
         title: "Editing & Retouching",
         desc: "Expert editing for stunning final results.",
         icon: Aperture,
+        slug: "photo-editing-retouching",
       },
       {
         title: "Drone Photography",
         desc: "Aerial shots with cinematic quality.",
         icon: Camera,
+        slug: "drone-photography",
       },
     ],
   },
@@ -201,35 +227,50 @@ const TABS: Tab[] = [
         title: "AI Automation",
         desc: "Automate workflows, customer service, and operations using AI.",
         icon: SlidersHorizontal,
+        slug: "ai-automation",
       },
       {
         title: "AI Chatbots",
         desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
         icon: MessageSquare,
+        slug: "ai-chatbots",
       },
       {
         title: "AI Website Integration",
         desc: "Integrate AI search, chatbot, personalization & automation.",
         icon: Monitor,
+        slug: "ai-website-integration",
       },
       {
         title: "AI Social Media Automation",
         desc: "AI-driven content creation, scheduling & auto-replies.",
         icon: Megaphone,
+        slug: "social-media-automation",
       },
       {
         title: "AI Video Automation",
         desc: "Auto-generated ads, reels & product videos using AI tools.",
         icon: Video,
+        slug: "ai-video-automation",
       },
       {
         title: "AEO",
         desc: "AI-powered SEO, content generation & search ranking improvement.",
         icon: BarChart3,
+        slug: "aeo-ai-enablement",
       },
     ],
   },
 ];
+
+/** Tab id → the actual URL path segment under /Services (the "design" tab id predates the "designing" route slug). */
+const CATEGORY_PATH: Record<string, string> = {
+  development: "development",
+  design: "designing",
+  marketing: "marketing",
+  photography: "photography",
+  ai: "ai",
+};
 
 export default function Services(): JSX.Element {
   const [active, setActive] = useState<string>(TABS[0].id);
@@ -380,23 +421,11 @@ export default function Services(): JSX.Element {
                     </p>
                   </div>
 
-                  {/* Learn More Button → dynamic link */}
+                  {/* Learn More Button → the service's own canonical detail page (full content, FAQs, and schema), not a category-page anchor */}
                   <Button
                     onClick={() => {
-                      const slug = item.title
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-")
-                        .replace(/^-+|-+$/g, "");
-                      if (active === "development")
-                        router.push(`/Services/development#${slug}`);
-                      else if (active === "design")
-                        router.push(`/Services/designing#${slug}`);
-                      else if (active === "marketing")
-                        router.push(`/Services/marketing#${slug}`);
-                      else if (active === "photography")
-                        router.push(`/Services/photography#${slug}`);
-                      else if (active === "ai")
-                        router.push(`/Services/ai#${slug}`);
+                      const categoryPath = CATEGORY_PATH[active] ?? active;
+                      router.push(`/Services/${categoryPath}/${item.slug}`);
                     }}
                     className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto transition-all"
                   >

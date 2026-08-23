@@ -3,6 +3,8 @@ import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import FaqAccordion from "@/components/services/detail/FaqAccordion";
+import { getCategoryFaqs } from "@/lib/services-data";
 
 // Icons
 import { FaRobot, FaCogs, FaVideo, FaSearch } from "react-icons/fa";
@@ -170,6 +172,7 @@ export default function AIServicesPage() {
         reverse
       />
 
+      <FaqAccordion serviceName="AI Services" faqs={getCategoryFaqs("ai")} />
       <Testimonial />
       <section id="ai-form">
         <Form serviceName="AI Services" />

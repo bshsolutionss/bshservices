@@ -2,27 +2,15 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { motion, MotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import HeroLogo from "./HeroLogo";
-import Image from "next/image";
 import TypedHeading from "@/components/TypedHeading";
 import Link from "next/link";
 
-// Common floating animation config
-const floatingAnimation: MotionProps = {
-  initial: { y: 0 },
-  animate: { y: [0, -15, 0, 15, 0] },
-  transition: {
-    duration: 6,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
 const Heros: React.FC = () => {
   return (
     <section className="relative w-full overflow-hidden min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-10 lg:px-16 bg-[#F4F7FE] overflow-hidden pt-20 lg:pt-32 pb-20">
       {/* Left Content */}
-
       <div className="max-w-2xl text-center lg:text-left space-y-6 relative z-10 mt-12 lg:mt-0">
         <TypedHeading />
 
@@ -74,87 +62,8 @@ const Heros: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Right Logo + Floating BG Images */}
+      {/* Right 3D Logo */}
       <div className="relative flex-1 flex justify-center items-center mt-10 lg:mt-0 w-full max-w-[600px] sm:max-w-[700px]">
-        {/* Floating Images Around Logo */}
-        <motion.div
-          {...floatingAnimation}
-          className="absolute -top-6 sm:-top-10 -right-6 sm:-right-10 w-24 sm:w-36 lg:w-48 h-24 sm:h-36 lg:h-48 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/1.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          {...floatingAnimation}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 -right-10 sm:-right-16 w-20 sm:w-32 lg:w-40 h-20 sm:h-32 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/2.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          {...floatingAnimation}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-10 right-0 w-20 sm:w-36 lg:w-44 h-20 sm:h-36 lg:h-44 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/3.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          {...floatingAnimation}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-10 left-6 sm:left-10 w-20 sm:w-32 lg:w-44 h-20 sm:h-32 lg:h-44 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/4.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          {...floatingAnimation}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 left-10 sm:left-20 w-16 sm:w-28 lg:w-40 h-16 sm:h-28 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/5.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          {...floatingAnimation}
-          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-20 left-0 w-16 sm:w-28 lg:w-40 h-16 sm:h-28 lg:h-40 drop-shadow-[0_10px_25px_rgba(26,20,165,0.5)]"
-        >
-          <Image
-            src="/images/6.png"
-            alt="Hero"
-            fill
-            className="object-contain"
-          />
-        </motion.div>
-
-        {/* Center Logo */}
         <HeroLogo />
       </div>
     </section>

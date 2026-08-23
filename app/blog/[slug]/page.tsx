@@ -1,4 +1,4 @@
-import { getPostBySlug, getFeaturedImage } from "@/lib/wp";
+import { getPostBySlug, getFeaturedImage, wpToPlainText } from "@/lib/wp";
 import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { safeJsonLd } from "@/lib/json-ld";
 import Image from "next/image";
@@ -20,12 +20,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  // Strip HTML tags for description
+  // Plain text (tags stripped, entities decoded) — anywhere this is used as
+  // a raw string (title tag, meta description, JSON-LD) rather than
+  // rendered as HTML, so WP's "[&hellip;]" etc. never leaks into a search
+  // snippet. See lib/wp.ts's wpToPlainText for why this matters.
   const description = post.excerpt?.rendered
-    ? post.excerpt.rendered.replace(/<[^>]+>/g, "").trim()
+    ? wpToPlainText(post.excerpt.rendered)
     : "Read this article on BSH Solutions";
   const title = post.title?.rendered
-    ? `${post.title.rendered.replace(/<[^>]+>/g, "")} | BSH Solutions`
+    ? `${wpToPlainText(post.title.rendered)} | BSH Solutions`
     : "Blog | BSH Solutions";
   const url = `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`;
   const featuredImg = getFeaturedImage(post);
@@ -78,8 +81,8 @@ export default async function Post({ params }: Props) {
     })
     : "";
 
-  const cleanTitle = post.title?.rendered?.replace(/<[^>]+>/g, "") || "Blog Post";
-  const cleanExcerpt = post.excerpt?.rendered?.replace(/<[^>]+>/g, "").trim() || "";
+  const cleanTitle = wpToPlainText(post.title?.rendered) || "Blog Post";
+  const cleanExcerpt = wpToPlainText(post.excerpt?.rendered);
 
   return (
     <div className="min-h-screen bg-background pt-32 pb-20">

@@ -1,6 +1,7 @@
 import type { ServiceCategorySlug, ServiceDefinition } from "@/lib/services-data";
 import { SERVICE_CATEGORIES, getRelatedServices } from "@/lib/services-data";
 import { getProcessSteps, getWhyChooseUs, getCtaContent } from "@/lib/services-content";
+import { SERVICE_ARTICLES } from "@/lib/services-articles";
 
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -15,6 +16,7 @@ import WhyChooseUs from "@/components/services/detail/WhyChooseUs";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import RelatedServices from "@/components/services/detail/RelatedServices";
 import ServiceCta from "@/components/services/detail/ServiceCta";
+import ServiceArticleSection from "@/components/services/detail/ServiceArticle";
 
 const FORM_SERVICE_NAME: Record<
   ServiceCategorySlug,
@@ -40,6 +42,7 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
   const category = SERVICE_CATEGORIES[service.category];
   const related = getRelatedServices(service);
   const cta = getCtaContent(service);
+  const article = SERVICE_ARTICLES[service.slug];
 
   return (
     <>
@@ -70,6 +73,8 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
       />
 
       <Benefits title={`Benefits of ${service.name}`} benefits={service.benefits} />
+
+      {article && <ServiceArticleSection article={article} />}
 
       <ProcessSteps steps={getProcessSteps(service)} />
 

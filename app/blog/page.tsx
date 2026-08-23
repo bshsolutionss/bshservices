@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPosts, getFeaturedImage } from "@/lib/wp";
+import { getPosts, getFeaturedImage, getFeaturedImageAlt, wpToPlainText } from "@/lib/wp";
 import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { Metadata } from "next";
 
@@ -51,6 +51,12 @@ export default async function BlogPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => {
               const featuredImg = getFeaturedImage(post);
+              // Prefer the alt text an editor actually set on the image in
+              // WordPress; fall back to the (plain-text, entity-decoded)
+              // post title rather than reusing raw title.rendered, which
+              // can contain HTML entities that would show up literally in
+              // the alt attribute.
+              const featuredImgAlt = getFeaturedImageAlt(post) || wpToPlainText(post.title?.rendered) || "Blog post cover image";
               const date = new Date(post.date).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
@@ -67,7 +73,7 @@ export default async function BlogPage() {
                     {featuredImg ? (
                       <Image
                         src={featuredImg}
-                        alt={post.title.rendered}
+                        alt={featuredImgAlt}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

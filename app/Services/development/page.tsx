@@ -3,6 +3,8 @@ import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import FaqAccordion from "@/components/services/detail/FaqAccordion";
+import { getCategoryFaqs } from "@/lib/services-data";
 
 import {
   SiJavascript,
@@ -196,6 +198,7 @@ export default function DevelopmentPage() {
         image="/images/development/6.png"
         reverse
       />
+      <FaqAccordion serviceName="Web Development" faqs={getCategoryFaqs("development")} />
       <Testimonial />
       <section id="development-form">
         <Form serviceName="Development" />

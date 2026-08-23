@@ -22,9 +22,7 @@ import {
   Megaphone,
   ChevronDown,
   ChevronRight,
-  ArrowRight,
   Cpu,
-  Sparkles,
   Layers,
 } from "lucide-react";
 import {
@@ -47,40 +45,13 @@ const CATEGORY_META: Record<
   {
     icon: React.ComponentType<{ className?: string }>;
     colorBg: string;
-    colorText: string;
-    borderHover: string;
   }
 > = {
-  development: {
-    icon: Code,
-    colorBg: "bg-blue-500/10 text-blue-600",
-    colorText: "text-blue-600",
-    borderHover: "hover:border-blue-200",
-  },
-  designing: {
-    icon: Palette,
-    colorBg: "bg-purple-500/10 text-purple-600",
-    colorText: "text-purple-600",
-    borderHover: "hover:border-purple-200",
-  },
-  marketing: {
-    icon: Megaphone,
-    colorBg: "bg-amber-500/10 text-amber-600",
-    colorText: "text-amber-600",
-    borderHover: "hover:border-amber-200",
-  },
-  photography: {
-    icon: Camera,
-    colorBg: "bg-emerald-500/10 text-emerald-600",
-    colorText: "text-emerald-600",
-    borderHover: "hover:border-emerald-200",
-  },
-  ai: {
-    icon: Cpu,
-    colorBg: "bg-indigo-500/10 text-indigo-600",
-    colorText: "text-indigo-600",
-    borderHover: "hover:border-indigo-200",
-  },
+  development: { icon: Code, colorBg: "bg-blue-500/10 text-blue-600" },
+  designing: { icon: Palette, colorBg: "bg-purple-500/10 text-purple-600" },
+  marketing: { icon: Megaphone, colorBg: "bg-amber-500/10 text-amber-600" },
+  photography: { icon: Camera, colorBg: "bg-emerald-500/10 text-emerald-600" },
+  ai: { icon: Cpu, colorBg: "bg-indigo-500/10 text-indigo-600" },
 };
 
 const Header = () => {
@@ -99,11 +70,11 @@ const Header = () => {
         {/* Left - Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/3dlogobgrewtx.png"
+            src="/images/noghlogo.png"
             alt="BSH Solutions logo"
             width={56}
             height={56}
-            className="drop-shadow-md transition-transform hover:scale-105"
+            className="h-12 w-auto object-contain rounded-md drop-shadow-md transition-transform hover:scale-105"
           />
         </Link>
 
@@ -126,27 +97,13 @@ const Header = () => {
                   Services
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="left-1/2 -translate-x-1/2">
-                  <div className="w-[940px] lg:w-[1040px] xl:w-[1140px] p-6 bg-white/98 backdrop-blur-2xl shadow-2xl rounded-2xl border border-gray-100/80">
-                    {/* Header bar of Mega Menu */}
-                    <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
-                      <div className="flex items-center space-x-2">
-                        <span className="p-1.5 rounded-lg bg-[#1A14A5]/10 text-[#1A14A5]">
-                          <Layers size={18} />
-                        </span>
-                        <div>
-                          <h3 className="text-sm font-bold text-[#231F20] tracking-tight">
-                            Explore All 30 Specialized Services
-                          </h3>
-                          <p className="text-xs text-gray-500">
-                            Categorized full-cycle digital solutions tailored to accelerate your business
-                          </p>
-                        </div>
-                      </div>
+                  <div className="w-[940px] lg:w-[1040px] xl:w-[1140px] p-5 bg-white shadow-xl rounded-xl border border-gray-100">
+                    <div className="flex items-center justify-end pb-3 mb-3 border-b border-gray-100">
                       <Link
                         href="/Services"
-                        className="inline-flex items-center text-xs font-semibold text-[#1A14A5] hover:underline"
+                        className="text-xs font-semibold text-[#1A14A5] hover:underline"
                       >
-                        All Services Overview <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                        All Services Overview →
                       </Link>
                     </div>
 
@@ -154,44 +111,30 @@ const Header = () => {
                     <div className="grid grid-cols-5 gap-4">
                       {CATEGORY_KEYS.map((catKey) => {
                         const category = SERVICE_CATEGORIES[catKey];
-                        const meta = CATEGORY_META[catKey];
-                        const Icon = meta.icon;
                         const services = getServicesByCategory(catKey);
 
                         return (
-                          <div
-                            key={catKey}
-                            className={`flex flex-col bg-[#F9FAFD] rounded-xl p-3.5 border border-gray-100 transition-all ${meta.borderHover}`}
-                          >
+                          <div key={catKey} className="flex flex-col">
                             {/* Category Header Link */}
                             <Link
                               href={category.overviewPath}
-                              className="group/cat flex items-center justify-between pb-2.5 mb-2.5 border-b border-gray-200/60"
+                              className="pb-2 mb-2 border-b border-gray-200"
                             >
-                              <div className="flex items-center space-x-2">
-                                <span className={`p-1.5 rounded-md ${meta.colorBg}`}>
-                                  <Icon className="w-4 h-4" />
-                                </span>
-                                <span className="font-bold text-[13.5px] text-[#231F20] group-hover/cat:text-[#1A14A5] transition-colors leading-tight">
-                                  {category.shortName}
-                                </span>
-                              </div>
-                              <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover/cat:text-[#1A14A5] group-hover/cat:translate-x-0.5 transition-all opacity-0 group-hover/cat:opacity-100" />
+                              <span className="font-bold text-[13.5px] text-[#231F20] hover:text-[#1A14A5] transition-colors">
+                                {category.shortName}
+                              </span>
                             </Link>
 
                             {/* 6 Sub-services list */}
-                            <ul className="space-y-1 flex-1">
+                            <ul className="space-y-0.5 flex-1">
                               {services.map((service) => (
                                 <li key={service.slug}>
                                   <NavigationMenuLink asChild>
                                     <Link
                                       href={getServicePath(service)}
-                                      className="group/item flex items-center justify-between py-1.5 px-2 rounded-lg text-[12.5px] text-gray-600 hover:text-[#1A14A5] hover:bg-white hover:shadow-xs transition-all"
+                                      className="block py-1 text-[12.5px] text-gray-600 hover:text-[#1A14A5] transition-colors"
                                     >
-                                      <span className="line-clamp-1 group-hover/item:font-semibold transition-all">
-                                        {service.name}
-                                      </span>
-                                      <ChevronRight className="w-3 h-3 text-[#1A14A5] opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all flex-shrink-0" />
+                                      <span className="line-clamp-1">{service.name}</span>
                                     </Link>
                                   </NavigationMenuLink>
                                 </li>
@@ -199,35 +142,26 @@ const Header = () => {
                             </ul>
 
                             {/* Category Bottom Quick link */}
-                            <div className="pt-2.5 mt-2 border-t border-gray-200/60">
-                              <Link
-                                href={category.overviewPath}
-                                className="text-[11.5px] font-semibold text-[#1A14A5] hover:underline flex items-center justify-between"
-                              >
-                                View {category.shortName} <ChevronRight className="w-3 h-3" />
-                              </Link>
-                            </div>
+                            <Link
+                              href={category.overviewPath}
+                              className="mt-2 text-[11.5px] font-semibold text-[#1A14A5] hover:underline"
+                            >
+                              View {category.shortName} →
+                            </Link>
                           </div>
                         );
                       })}
                     </div>
 
                     {/* Bottom CTA Banner */}
-                    <div className="mt-4 pt-3.5 border-t border-gray-100 flex items-center justify-between text-xs text-gray-600">
-                      <div className="flex items-center space-x-2">
-                        <Sparkles className="w-4 h-4 text-amber-500" />
-                        <span>
-                          Need a custom package combining multiple services? Let&apos;s build your roadmap.
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-3 font-medium">
-                        <Link
-                          href="/book-consultation"
-                          className="text-[#1A14A5] font-semibold hover:underline"
-                        >
-                          Book Free Discovery Call →
-                        </Link>
-                      </div>
+                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-600">
+                      <span>Need a custom package combining multiple services? Let&apos;s build your roadmap.</span>
+                      <Link
+                        href="/book-consultation"
+                        className="font-semibold text-[#1A14A5] hover:underline"
+                      >
+                        Book Free Discovery Call →
+                      </Link>
                     </div>
                   </div>
                 </NavigationMenuContent>
@@ -322,9 +256,8 @@ const Header = () => {
               </span>
               <ChevronDown
                 size={18}
-                className={`transition-transform duration-300 ${
-                  mobileServicesOpen ? "rotate-180 text-[#1A14A5]" : "text-gray-400"
-                }`}
+                className={`transition-transform duration-300 ${mobileServicesOpen ? "rotate-180 text-[#1A14A5]" : "text-gray-400"
+                  }`}
               />
             </button>
 
@@ -364,9 +297,8 @@ const Header = () => {
                         </div>
                         <ChevronDown
                           size={16}
-                          className={`transition-transform duration-200 text-gray-400 ${
-                            isExpanded ? "rotate-180 text-[#1A14A5]" : ""
-                          }`}
+                          className={`transition-transform duration-200 text-gray-400 ${isExpanded ? "rotate-180 text-[#1A14A5]" : ""
+                            }`}
                         />
                       </button>
 

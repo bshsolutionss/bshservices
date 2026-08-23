@@ -4,6 +4,8 @@ import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import FaqAccordion from "@/components/services/detail/FaqAccordion";
+import { getCategoryFaqs } from "@/lib/services-data";
 
 // ==== ICONS ====
 import {
@@ -217,6 +219,7 @@ export default function PhotographyPage() {
         />
       </section>
 
+      <FaqAccordion serviceName="Photography & Videography" faqs={getCategoryFaqs("photography")} />
       <Testimonial />
       <section id="photography-form">
         <Form serviceName="Photography" />

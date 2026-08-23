@@ -3,6 +3,8 @@ import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import FaqAccordion from "@/components/services/detail/FaqAccordion";
+import { getCategoryFaqs } from "@/lib/services-data";
 
 // 🎨 React Icons Imports
 import {
@@ -202,6 +204,7 @@ export default function DesigningPage() {
         reverse
       />
 
+      <FaqAccordion serviceName="Creative Design" faqs={getCategoryFaqs("designing")} />
       <Testimonial />
       <section id="designing-form">
         <Form serviceName="Designing" />
