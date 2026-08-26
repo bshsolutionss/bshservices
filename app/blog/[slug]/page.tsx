@@ -15,8 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(resolvedParams.slug);
 
   if (!post) {
+    // No manual "| BSH Solutions" here — the root layout's title template
+    // ("%s | BSH Solutions") already appends it to whatever `title` is.
     return {
-      title: "Post Not Found | BSH Solutions",
+      title: "Post Not Found",
     };
   }
 
@@ -27,20 +29,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = post.excerpt?.rendered
     ? wpToPlainText(post.excerpt.rendered)
     : "Read this article on BSH Solutions";
-  const title = post.title?.rendered
-    ? `${wpToPlainText(post.title.rendered)} | BSH Solutions`
-    : "Blog | BSH Solutions";
+  const postTitle = post.title?.rendered ? wpToPlainText(post.title.rendered) : "Blog Post";
+  // `title` below feeds the root layout's title template, which already
+  // appends " | BSH Solutions" — adding it here too produced a doubled
+  // "Post Title | BSH Solutions | BSH Solutions" <title> tag in production.
+  // OpenGraph/Twitter titles aren't templated, so they use the full string.
+  const fullTitle = `${postTitle} | BSH Solutions`;
   const url = `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`;
   const featuredImg = getFeaturedImage(post);
 
   return {
-    title,
+    title: postTitle,
     description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title,
+      title: fullTitle,
       description,
       url,
       type: "article",
@@ -50,14 +55,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         images: [
           {
             url: featuredImg,
-            alt: title,
+            alt: postTitle,
           },
         ],
       }),
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description,
       ...(featuredImg && {
         images: [featuredImg],

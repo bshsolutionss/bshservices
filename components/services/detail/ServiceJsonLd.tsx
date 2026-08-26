@@ -1,5 +1,6 @@
 import type { ServiceDefinition } from "@/lib/services-data";
 import { SERVICE_CATEGORIES, getServicePath } from "@/lib/services-data";
+import { SERVICE_ARTICLES } from "@/lib/services-articles";
 import { safeJsonLd } from "@/lib/json-ld";
 
 interface ServiceJsonLdProps {
@@ -10,12 +11,17 @@ interface ServiceJsonLdProps {
 export default function ServiceJsonLd({ service }: ServiceJsonLdProps) {
   const category = SERVICE_CATEGORIES[service.category];
   const url = `https://bshsolutionss.com${getServicePath(service)}`;
+  const article = SERVICE_ARTICLES[service.slug];
+  // The real content file's own title/intro when there is one — schema
+  // should describe the page the same way the visible page does.
+  const name = article?.title ?? service.name;
+  const description = article ? article.intro.join(" ") : service.description;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: service.name,
-    description: service.description,
+    name,
+    description,
     url,
     serviceType: service.name,
     category: category.name,

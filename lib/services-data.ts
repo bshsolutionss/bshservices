@@ -82,6 +82,7 @@ import {
 } from "react-icons/fa";
 import { MdOutlineColorLens, MdIntegrationInstructions } from "react-icons/md";
 import { TbDrone, TbCameraSelfie } from "react-icons/tb";
+import { SERVICE_ARTICLES } from "@/lib/services-articles";
 
 export type ServiceCategorySlug =
   | "development"
@@ -1221,6 +1222,6 @@ export function getRelatedServices(service: ServiceDefinition, count = 3): Servi
  */
 export function getCategoryFaqs(category: ServiceCategorySlug): ServiceFaq[] {
   return getServicesByCategory(category)
-    .map((service) => service.faqs[0])
+    .map((service) => SERVICE_ARTICLES[service.slug]?.faqs[0] ?? service.faqs[0])
     .filter((faq): faq is ServiceFaq => Boolean(faq));
 }

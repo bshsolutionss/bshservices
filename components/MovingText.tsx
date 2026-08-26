@@ -27,61 +27,66 @@ const services = [
   {
     id: "ai",
     title: "AI Services",
+    category: "ai",
     items: [
-      { title: "AI Automation", icon: SlidersHorizontal },
-      { title: "AI Chatbots", icon: MessageSquare },
-      { title: "AI Website Integration", icon: Monitor },
-      { title: "AI Social Media Automation", icon: Megaphone },
-      { title: "AI Video Automation", icon: Video },
-      { title: "AEO", icon: ChartBar },
+      { title: "AI Automation", icon: SlidersHorizontal, slug: "ai-automation" },
+      { title: "AI Chatbots", icon: MessageSquare, slug: "ai-chatbots" },
+      { title: "AI Website Integration", icon: Monitor, slug: "ai-website-integration" },
+      { title: "AI Social Media Automation", icon: Megaphone, slug: "social-media-automation" },
+      { title: "AI Video Automation", icon: Video, slug: "ai-video-automation" },
+      { title: "AEO", icon: ChartBar, slug: "aeo-ai-enablement" },
     ],
   },
   {
     id: "development",
     title: "Development",
+    category: "development",
     items: [
-      { title: "Website Development", icon: Monitor },
-      { title: "E-commerce", icon: ShoppingCart },
-      { title: "Mobile Apps", icon: Smartphone },
-      { title: "Custom Software", icon: Cpu },
-      { title: "Web Applications", icon: ChartBar },
-      { title: "Maintenance & Support", icon: SlidersHorizontal },
+      { title: "Website Development", icon: Monitor, slug: "website-development" },
+      { title: "E-commerce", icon: ShoppingCart, slug: "ecommerce-development" },
+      { title: "Mobile Apps", icon: Smartphone, slug: "mobile-app-development" },
+      { title: "Custom Software", icon: Cpu, slug: "custom-software-development" },
+      { title: "Web Applications", icon: ChartBar, slug: "web-application-development" },
+      { title: "Maintenance & Support", icon: SlidersHorizontal, slug: "website-maintenance-support" },
     ],
   },
   {
     id: "design",
     title: "Designing",
+    category: "designing",
     items: [
-      { title: "Branding", icon: Paintbrush },
-      { title: "UI / UX", icon: Monitor },
-      { title: "Graphic Design", icon: Palette },
-      { title: "Logo Design", icon: PenTool },
-      { title: "Motion Graphics", icon: Video },
-      { title: "Packaging Design", icon: ChartBar },
+      { title: "Branding", icon: Paintbrush, slug: "brand-identity-design" },
+      { title: "UI / UX", icon: Monitor, slug: "ui-ux-design" },
+      { title: "Graphic Design", icon: Palette, slug: "graphic-design" },
+      { title: "Logo Design", icon: PenTool, slug: "logo-design" },
+      { title: "Motion Graphics", icon: Video, slug: "motion-graphics-design" },
+      { title: "Packaging Design", icon: ChartBar, slug: "packaging-design" },
     ],
   },
   {
     id: "marketing",
     title: "Marketing",
+    category: "marketing",
     items: [
-      { title: "PPC Advertising", icon: DollarSign },
-      { title: "Social Media Marketing", icon: Users },
-      { title: "SEO Optimization", icon: Megaphone },
-      { title: "Email Marketing", icon: ChartBar },
-      { title: "Content Marketing", icon: PenTool },
-      { title: "Influencer Marketing", icon: Users },
+      { title: "PPC Advertising", icon: DollarSign, slug: "ppc-advertising" },
+      { title: "Social Media Marketing", icon: Users, slug: "social-media-marketing" },
+      { title: "SEO Optimization", icon: Megaphone, slug: "seo-optimization" },
+      { title: "Email Marketing", icon: ChartBar, slug: "email-marketing" },
+      { title: "Content Marketing", icon: PenTool, slug: "content-marketing" },
+      { title: "Influencer Marketing", icon: Users, slug: "influencer-marketing" },
     ],
   },
   {
     id: "photography",
     title: "Photography",
+    category: "photography",
     items: [
-      { title: "Product Photography", icon: Camera },
-      { title: "Brand Shoots", icon: ImageIcon },
-      { title: "Event Coverage", icon: CameraIcon },
-      { title: "Video Production", icon: Video },
-      { title: "Editing & Retouching", icon: Aperture },
-      { title: "Drone Photography", icon: Camera },
+      { title: "Product Photography", icon: Camera, slug: "product-photography" },
+      { title: "Brand Shoots", icon: ImageIcon, slug: "brand-shoots" },
+      { title: "Event Coverage", icon: CameraIcon, slug: "event-coverage" },
+      { title: "Video Production", icon: Video, slug: "video-production" },
+      { title: "Editing & Retouching", icon: Aperture, slug: "photo-editing-retouching" },
+      { title: "Drone Photography", icon: Camera, slug: "drone-photography" },
     ],
   },
 ];
@@ -105,32 +110,21 @@ const MovingText: React.FC = () => {
           >
             {category.items.map((item, i) => {
               const Icon = item.icon;
-              const slug = item.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, "");
-
-              const pageMap: Record<string, string> = {
-                development: "development",
-                design: "designing",
-                marketing: "marketing",
-                photography: "photography",
-                ai: "ai",
-              };
-
-              const href = `/Services/${pageMap[category.id]}#${slug}`;
+              // Canonical service detail page (full content, FAQs, schema) —
+              // not a heading, and not a category-page anchor.
+              const href = `/Services/${category.category}/${item.slug}`;
 
               return (
                 <Link
                   key={i}
                   href={href}
-                  className="flex items-center gap-3 bg-white/10 dark:bg-white/5 px-6 py-3 rounded-full shadow-lg 
+                  className="flex items-center gap-3 bg-white/10 dark:bg-white/5 px-6 py-3 rounded-full shadow-lg
                              hover:scale-105 hover:bg-[#0ef]/10 transition-transform duration-300 cursor-pointer"
                 >
                   <Icon className="w-6 h-6 text-[#1A14A5] icon-glow" />
-                  <h1 className="text-[2vw] font-semibold whitespace-nowrap text-[#1A14A5] dark:text-[#0ef]">
+                  <span className="text-[2vw] font-semibold whitespace-nowrap text-[#1A14A5] dark:text-[#0ef]">
                     {item.title}
-                  </h1>
+                  </span>
                 </Link>
               );
             })}

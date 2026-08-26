@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface HeroProps {
@@ -62,12 +63,17 @@ export default function Hero({ title, subtitle, image }: HeroProps) {
           transition={{ delay: 1, duration: 0.8 }}
           className="mt-8 flex justify-center"
         >
-          <a
-            href="#services"
+          {/* This Hero is reused across ~38 pages (service detail, category,
+              about, contact, book-consultation) that have no `#services`
+              element of their own — that anchor only exists on the homepage,
+              which doesn't even render this component. Linking to the real
+              /Services page works everywhere it's actually used. */}
+          <Link
+            href="/Services"
             className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Explore Services
-          </a>
+          </Link>
         </motion.div>
       </motion.div>
 

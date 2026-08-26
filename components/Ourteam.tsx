@@ -24,7 +24,7 @@ export default function OurTeamSection({
   tech,
   image,
   reverse = false,
-  cvLink = "#",
+  cvLink,
 }: TeamProps) {
   return (
     <section id={id} className="py-20 bg-background border-b border-border">
@@ -66,16 +66,18 @@ export default function OurTeamSection({
 
           <p className="text-muted-foreground mb-6 leading-relaxed">{about}</p>
 
-          {/* ==== CV BUTTON ==== */}
-          <a
-            href={cvLink}
-            download
-            className="inline-flex items-center gap-2 bg-[#1A14A5] hover:bg-[#0f0b7a] 
-                       text-white px-6 py-3 rounded-lg font-medium transition"
-          >
-            <FileDown className="w-5 h-5" />
-            Download CV
-          </a>
+          {/* ==== CV BUTTON — only rendered when a real file is actually provided ==== */}
+          {cvLink && (
+            <a
+              href={cvLink}
+              download
+              className="inline-flex items-center gap-2 bg-[#1A14A5] hover:bg-[#0f0b7a]
+                         text-white px-6 py-3 rounded-lg font-medium transition"
+            >
+              <FileDown className="w-5 h-5" />
+              Download CV
+            </a>
+          )}
         </motion.div>
       </div>
 

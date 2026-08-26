@@ -56,7 +56,6 @@ const page = () => {
         role="Full Stack Developer & SEO Specialist"
         about="Bilal is a skilled full stack developer with a strong command of modern web technologies. He also specializes in SEO, helping businesses grow organically through smart optimization strategies."
         image="/team/bilal.jpeg"
-        cvLink="/cv/muhammad-bilal.pdf"
         tech={[
           { name: "React", icon: <SiReact /> },
           { name: "Next.js", icon: <SiNextdotjs /> },
@@ -73,7 +72,6 @@ const page = () => {
         about="Shahzaib builds high-performance websites and creates effective digital marketing strategies that help brands grow faster and stronger. He delivers results with clean designs and smart marketing."
         image="/team/shahzaib.jpeg"
         reverse
-        cvLink="/cv/muhammad-shahzaib.pdf"
         tech={[
           { name: "WordPress", icon: <SiWordpress /> },
           { name: "PHP", icon: <SiPhp /> },

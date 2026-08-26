@@ -16,6 +16,7 @@ import {
   getServicePath,
   type ServiceCategorySlug,
 } from "@/lib/services-data";
+import { SERVICE_ARTICLES, truncateForMeta } from "@/lib/services-articles";
 import ServiceDetailPage from "@/components/services/detail/ServiceDetailPage";
 
 type PageProps = {
@@ -37,24 +38,28 @@ export function makeServiceCategoryPage(category: ServiceCategorySlug) {
 
     const path = getServicePath(service);
     const url = `https://bshsolutionss.com${path}`;
-    const title = `${service.name} Services`;
+    // The real content file's own title/intro when this service has one —
+    // not a generic "X Services" label or hand-authored blurb.
+    const article = SERVICE_ARTICLES[service.slug];
+    const title = article?.title ?? `${service.name} Services`;
+    const description = article ? truncateForMeta(article.intro.join(" "), 160) : service.shortDescription;
 
     return {
       title,
-      description: service.shortDescription,
+      description,
       keywords: service.keywords,
       alternates: { canonical: url },
       openGraph: {
         title: `${title} | BSH Solutions`,
-        description: service.shortDescription,
+        description,
         url,
         type: "website",
-        images: [{ url: `https://bshsolutionss.com${service.image}`, alt: service.name }],
+        images: [{ url: `https://bshsolutionss.com${service.image}`, alt: title }],
       },
       twitter: {
         card: "summary_large_image",
         title: `${title} | BSH Solutions`,
-        description: service.shortDescription,
+        description,
         images: [`https://bshsolutionss.com${service.image}`],
       },
     };

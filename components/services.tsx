@@ -272,10 +272,22 @@ const CATEGORY_PATH: Record<string, string> = {
   ai: "ai",
 };
 
-export default function Services(): JSX.Element {
+interface ServicesProps {
+  /**
+   * "Our Services" is this section's own heading either way — but which
+   * tag it renders as depends on where the section lives. Default "h2"
+   * fits its homepage use (the page's own H1 is the Hero above it). Pass
+   * "h1" when this section IS the page's primary heading, e.g. on
+   * `/Services`, which otherwise has no H1 at all.
+   */
+  headingLevel?: "h1" | "h2";
+}
+
+export default function Services({ headingLevel = "h2" }: ServicesProps): JSX.Element {
   const [active, setActive] = useState<string>(TABS[0].id);
   const activeTab = TABS.find((t) => t.id === active) ?? TABS[0];
   const router = useRouter();
+  const Heading = headingLevel;
 
   const imageMap: Record<string, string> = {
     development: "/images/Development.png",
@@ -299,9 +311,9 @@ export default function Services(): JSX.Element {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-4xl lg:text-5xl font-extrabold text-[#1A14A5] drop-shadow-sm">
+          <Heading className="text-4xl lg:text-5xl font-extrabold text-[#1A14A5] drop-shadow-sm">
             Our <span className="text-[#231F20]">Services</span>
-          </h2>
+          </Heading>
           <p className="mt-4 text-lg text-[#231F20]/80 max-w-2xl mx-auto">
             Business Smart Hub (BSH) provides future-ready solutions to help
             businesses design, develop, market, and scale in the digital age.

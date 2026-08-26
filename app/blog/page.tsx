@@ -5,7 +5,11 @@ import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog | BSH Solutions",
+  // Root layout's title template ("%s | BSH Solutions") already appends the
+  // suffix — repeating it here produced "Blog | BSH Solutions | BSH
+  // Solutions" in the actual <title> tag. OpenGraph/Twitter titles below
+  // aren't templated, so they still need the full string.
+  title: "Blog",
   description:
     "Read the latest insights, news, and articles from BSH Solutions.",
   alternates: {

@@ -33,7 +33,8 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <div>
-      <Services />
+      {/* This page has no separate Hero — "Our Services" below is this page's own H1. */}
+      <Services headingLevel="h1" />
       <ProcessFlow />
       <OurTechnologies />
       <OurPortfolio limit={6} showViewAll={true} />

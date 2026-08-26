@@ -5,6 +5,8 @@ import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
+import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
+import { CATEGORY_BLOG_LINKS } from "@/lib/blog-links";
 
 import {
   SiGoogleads,
@@ -206,6 +208,7 @@ export default function MarketingPage() {
       </section>
 
       <FaqAccordion serviceName="Digital Marketing" faqs={getCategoryFaqs("marketing")} />
+      <RelatedBlogPosts posts={CATEGORY_BLOG_LINKS.marketing} />
       <Testimonial />
       <section id="marketing-form">
         <Form serviceName="Marketing" />
