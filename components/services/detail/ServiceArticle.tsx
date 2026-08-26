@@ -7,43 +7,49 @@ import ArticleClosingCta from "./article/ArticleClosingCta";
 
 interface ServiceArticleProps {
   article: ServiceArticle;
+  image: string;
+  imageAlt: string;
 }
 
 /**
  * Renders the complete, verbatim long-form guide supplied in `content/*.md`
  * for services that have one (see `lib/services-articles.ts`). Every word
  * is preserved exactly as written — nothing here is trimmed or paraphrased.
- * What *is* deliberately designed is the presentation: the source content
- * is parsed into its actual semantic parts (topic prose, the named
- * "services" list, the numbered "process" list, the "why trusted" panel,
- * and the closing pitch), and each part renders through a purpose-built
- * component instead of one repeated generic block.
+ * What *is* deliberately designed is the presentation: this is a service
+ * page, not a blog article, so the content renders as a sequence of proper,
+ * alternating-background page sections (image + intro, icon-tagged topic
+ * bands, an icon-card services grid, a numbered process timeline, a solid
+ * trust panel, a closing banner) — the same visual language the rest of
+ * the site's service pages use — rather than one long continuous scroll of
+ * text.
  *
  * The article's own FAQ section is intentionally not repeated here — it
  * renders via `FaqAccordion` below, with matching FAQPage schema.
  */
-export default function ServiceArticleSection({ article }: ServiceArticleProps) {
+export default function ServiceArticleSection({ article, image, imageAlt }: ServiceArticleProps) {
+  let bandIndex = 0;
+
   return (
-    <section className="py-16 px-6 lg:px-12 bg-white">
-      <ArticleHeader intro={article.intro} />
+    <>
+      <ArticleHeader intro={article.intro} image={image} imageAlt={imageAlt} />
 
       {article.sections.map((section, index) => {
         switch (section.kind) {
           case "topic":
           case "trust":
-            return <ArticleTopicSection key={index} section={section} />;
+            return <ArticleTopicSection key={index} section={section} index={bandIndex++} />;
           case "list":
             return section.listKind === "services" ? (
-              <ArticleServicesGrid key={index} section={section} />
+              <ArticleServicesGrid key={index} section={section} index={bandIndex++} />
             ) : (
-              <ArticleProcessTimeline key={index} section={section} />
+              <ArticleProcessTimeline key={index} section={section} index={bandIndex++} />
             );
           default:
             return null;
         }
       })}
 
-      <ArticleClosingCta closing={article.closing} />
-    </section>
+      <ArticleClosingCta closing={article.closing} index={bandIndex++} />
+    </>
   );
 }

@@ -62,8 +62,10 @@ export default function ModelViewer3D({ className = "" }: ModelViewer3DProps) {
     controls.dampingFactor = 0.05;
     controls.enableZoom = false; // Hero logo should stay consistently sized
     controls.enablePan = false;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.2;
+    // Logo stays still at its initial angle — no continuous auto-rotation.
+    // Dragging still works (OrbitControls itself stays enabled) for anyone
+    // who wants to look at it from another angle.
+    controls.autoRotate = false;
     controls.maxPolarAngle = Math.PI / 1.6;
     controls.minPolarAngle = Math.PI / 2.8;
 

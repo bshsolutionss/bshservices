@@ -96,7 +96,9 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
 
       {!article && <Benefits title={`Benefits of ${service.name}`} benefits={service.benefits} />}
 
-      {article && <ServiceArticleSection article={article} />}
+      {article && (
+        <ServiceArticleSection article={article} image={service.image} imageAlt={heroTitle} />
+      )}
 
       {!articleHasProcess && <ProcessSteps steps={getProcessSteps(service)} />}
 

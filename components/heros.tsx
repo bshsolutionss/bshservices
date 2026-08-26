@@ -49,15 +49,23 @@ const Heros: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
+          className="flex flex-wrap items-center justify-center lg:justify-start gap-4"
         >
           <Button
             asChild
             className="relative bg-[#1A14A5] hover:bg-[#0e0a7a] text-white px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-lg rounded-2xl shadow-lg hover:shadow-2xl transition group overflow-hidden"
           >
-            <Link href="/contact">
-              <span className="relative z-10">🚀 Get Started</span>
+            <Link href="/book-consultation">
+              <span className="relative z-10">Book Consultation</span>
               <span className="absolute inset-0 bg-gradient-to-r from-[#1A14A5] to-[#231F20] opacity-0 group-hover:opacity-100 transition duration-300 rounded-2xl" />
             </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="border-2 border-[#1A14A5] text-[#1A14A5] hover:bg-[#1A14A5] hover:text-white bg-transparent px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-lg rounded-2xl shadow-sm hover:shadow-lg transition"
+          >
+            <Link href="/Services">Explore Services</Link>
           </Button>
         </motion.div>
       </div>

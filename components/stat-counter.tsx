@@ -20,7 +20,13 @@ const StatItem: React.FC<StatItemProps> = ({
   delay,
   suffix = "",
 }) => {
-  const [count, setCount] = useState(0);
+  // Starts at the real final value (not 0) — so the server-rendered HTML,
+  // and anything reading the page without running the count-up animation
+  // (search/AI crawlers, JS disabled, a slow connection), always shows the
+  // actual number. The count-up-from-0 effect below only replays it
+  // cosmetically once the element scrolls into view for users who do have
+  // JS running; it never removes the real number from the initial markup.
+  const [count, setCount] = useState(value);
   const countRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
 
@@ -41,7 +47,7 @@ const StatItem: React.FC<StatItemProps> = ({
     };
   }, []);
 
-  // Counting animation
+  // Counting animation — replays from 0 up to the real value once in view.
   useEffect(() => {
     if (!isInView) return;
     let start = 0;
