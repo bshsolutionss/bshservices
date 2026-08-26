@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin } from "lucide-react"
-import { Facebook, Instagram, Linkedin, } from "lucide-react"
+import { Facebook, Instagram, Linkedin, X as XIcon } from "lucide-react"
 import Link from "next/link"
 
 const Contactform = () => {
@@ -115,6 +115,9 @@ const Contactform = () => {
 
             <Link href="https://www.linkedin.com/company/bshsolutions" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
               <Linkedin className="text-[#1A14A5]" />
+            </Link>
+            <Link href="https://x.com/BSHSolutionss" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
+              <XIcon className="text-[#1A14A5]" />
             </Link>
           </div>
           </div>

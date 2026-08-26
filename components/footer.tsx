@@ -21,6 +21,7 @@ const socialLinks = [
   { name: "Facebook", href: "https://www.facebook.com/bshsolutions" },
   { name: "Instagram", href: "https://www.instagram.com/bshsolutionss" },
   { name: "LinkedIn", href: "https://www.linkedin.com/company/bshsolutions" },
+  { name: "X", href: "https://x.com/BSHSolutionss" },
   { name: "YouTube", href: "https://www.youtube.com/@bshsolutions" },
 ];
 

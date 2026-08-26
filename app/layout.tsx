@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     description:
       "A hub for all business tech needs — powered by BSH Solutions.",
     images: ["https://bshsolutionss.com/android-chrome-512x512.png"],
-    creator: "@bshsolutions",
+    creator: "@BSHSolutionss",
   },
   icons: {
     icon: [
@@ -136,7 +136,7 @@ export default function RootLayout({
                 "https://facebook.com/bshsolutions",
                 "https://www.instagram.com/bshsolutionss",
                 "https://www.linkedin.com/company/bshsolutions/",
-                "https://twitter.com/bshsolutions",
+                "https://x.com/BSHSolutionss",
               ],
             }),
           }}
