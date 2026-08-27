@@ -41,12 +41,12 @@ export const metadata: Metadata = {
     "PPC advertising",
     "social media marketing",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/Services/marketing" },
+  alternates: { canonical: "/Services/marketing" },
   openGraph: {
     title: "Digital Marketing Services | BSH Solutions",
     description:
       "Grow, engage, and convert through data-driven digital marketing strategies.",
-    url: "https://bshsolutionss.com/Services/marketing",
+    url: "/Services/marketing",
   },
 };
 

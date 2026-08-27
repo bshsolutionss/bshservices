@@ -21,12 +21,12 @@ export const metadata: Metadata = {
     "digital marketing agency",
     "AI automation services",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/Services" },
+  alternates: { canonical: "/Services" },
   openGraph: {
     title: "Our Services | BSH Solutions",
     description:
       "Web & software development, design, marketing, AI automation, and photography services built to scale your business.",
-    url: "https://bshsolutionss.com/Services",
+    url: "/Services",
   },
 };
 

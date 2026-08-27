@@ -22,11 +22,11 @@ export const metadata: Metadata = {
     title: "AI Automation Services | Smart AI Agents for Your Business",
     description:
       "Automate tasks, reduce costs, and scale your business with custom AI solutions. From chatbots to full workflow automation — we build intelligent systems for your needs.",
-    url: "https://bshsoltionss.com/Services/ai",
+    url: "/Services/ai",
     siteName: "Business Smart Hub (BSH)",
     images: [
       {
-        url: "https://bshsoltionss.com/Services/ai-banner.png",
+        url: "/Services/ai-banner.png",
         width: 1200,
         height: 630,
         alt: "AI Automation Services - Business Smart Hub",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "AI Automation Services | Automate & Scale with Intelligent AI",
     description:
       "Automate workflows, boost productivity, and build smarter operations with AI-powered solutions.",
-    images: ["https://bshsolutionss.com/images/ai-automation-banner.png"],
+    images: ["/images/ai-automation-banner.png"],
   },
   icons: {
     icon: "/favicon.ico",

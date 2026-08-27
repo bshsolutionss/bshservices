@@ -13,13 +13,13 @@ export const metadata: Metadata = {
   description:
     "Read the latest insights, news, and articles from BSH Solutions.",
   alternates: {
-    canonical: "https://bshsolutionss.com/blog",
+    canonical: "/blog",
   },
   openGraph: {
     title: "Blog | BSH Solutions",
     description:
       "Read the latest insights, news, and articles from BSH Solutions.",
-    url: "https://bshsolutionss.com/blog",
+    url: "/blog",
     siteName: "BSH Solutions",
     type: "website",
   },

@@ -46,12 +46,12 @@ export const metadata: Metadata = {
     "eCommerce development",
     "Next.js development agency",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/Services/development" },
+  alternates: { canonical: "/Services/development" },
   openGraph: {
     title: "Web Development Services | BSH Solutions",
     description:
       "Fast, scalable, and beautiful web experiences tailored to your business.",
-    url: "https://bshsolutionss.com/Services/development",
+    url: "/Services/development",
   },
 };
 

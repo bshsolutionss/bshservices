@@ -37,9 +37,9 @@ export function makeServiceCategoryPage(category: ServiceCategorySlug) {
     }
 
     const path = getServicePath(service);
-    const url = `https://bshsolutionss.com${path}`;
-    // The real content file's own title/intro when this service has one —
-    // not a generic "X Services" label or hand-authored blurb.
+    // Relative — resolved against the root layout's metadataBase (lib/site.ts's
+    // SITE_URL), so this factory (shared by all ~30 sub-service pages) never
+    // needs to hardcode the domain itself.
     const article = SERVICE_ARTICLES[service.slug];
     const title = article?.title ?? `${service.name} Services`;
     const description = article ? truncateForMeta(article.intro.join(" "), 160) : service.shortDescription;
@@ -48,19 +48,19 @@ export function makeServiceCategoryPage(category: ServiceCategorySlug) {
       title,
       description,
       keywords: service.keywords,
-      alternates: { canonical: url },
+      alternates: { canonical: path },
       openGraph: {
         title: `${title} | BSH Solutions`,
         description,
-        url,
+        url: path,
         type: "website",
-        images: [{ url: `https://bshsolutionss.com${service.image}`, alt: title }],
+        images: [{ url: service.image, alt: title }],
       },
       twitter: {
         card: "summary_large_image",
         title: `${title} | BSH Solutions`,
         description,
-        images: [`https://bshsolutionss.com${service.image}`],
+        images: [service.image],
       },
     };
   }

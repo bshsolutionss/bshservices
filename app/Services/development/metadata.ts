@@ -3,6 +3,6 @@ export const metadata = {
   description:
     "Custom software, websites, mobile apps, and scalable digital solutions for businesses by BSH Solutions.",
   alternates: {
-    canonical: "https://bshsolutionss.com/Services/development",
+    canonical: "/Services/development",
   },
 };

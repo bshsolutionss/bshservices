@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -11,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
       // exposed admin panels).
       disallow: ["/admin", "/api"],
     },
-    sitemap: "https://bshsolutionss.com/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

@@ -81,7 +81,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional branding services bring structure to this process, starting with genuinely understanding your business, your audience, and your goals before any visual design work begins. A skilled branding agency treats design as the outcome of strategy, not a replacement for it."
         ],
         "ctas": [
-          "Ready to build a brand people actually remember? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build a brand people actually remember? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -114,7 +114,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Brand identity services typically also include creating brand guidelines, a reference document that defines exactly how your visual identity should be used across different applications, from your website to printed materials to social media graphics. Without clear guidelines, brand consistency tends to erode over time as different people apply the identity inconsistently across different channels."
         ],
         "ctas": [
-          "Not sure where your brand needs the most work? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure where your brand needs the most work? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -151,7 +151,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start building or refreshing your brand? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start building or refreshing your brand? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -239,7 +239,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right branding agency is one of the most important decisions you will make for the long term growth and recognition of your business. The right partner does not just design a logo, they help define how your business is genuinely perceived, remembered, and chosen over competitors in a crowded market.",
         "Whether you need complete branding solutions, a focused rebrand, brand guidelines, or ongoing brand consulting services, our team has the experience to guide your business through the process thoughtfully. We combine strategic thinking with strong creative execution, so you get a brand built by people who understand both the business side and the creative side of what makes a brand genuinely effective.",
-        "Ready to build a brand that actually stands out? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build a brand that actually stands out? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -280,7 +280,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Unlike a single product photoshoot, brand photography typically results in a broader, more versatile image library, covering multiple contexts and use cases so a business has genuinely appropriate imagery available across its website, social media, marketing materials, and other channels, rather than relying on the same handful of images repeated everywhere simply because nothing else is available."
         ],
         "ctas": [
-          "Ready for photography that actually shows people who you really are? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for photography that actually shows people who you really are? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -313,7 +313,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Creative brand photoshoot concepts often blend traditional portraiture with this more candid, lifestyle oriented approach, giving a business a versatile mix of polished, professional images alongside more natural, relatable content suitable for different specific platforms and purposes across their overall marketing strategy."
         ],
         "ctas": [
-          "Curious what a brand photoshoot could look like for your specific business? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious what a brand photoshoot could look like for your specific business? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -350,7 +350,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start planning your brand photoshoot? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start planning your brand photoshoot? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -439,7 +439,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right brand photography partner is one of the most important decisions you will make for how genuinely and effectively your business connects with the people encountering it. The right partner does not just take polished photos, they help capture your real personality, your real team, and your real story in a way that generic stock imagery simply cannot replicate.",
         "Whether you need corporate team photography, a personal brand session for a founder, ongoing social media content, or a complete visual library for your growing business, our team has the experience to capture something genuinely authentic. We combine real technical skill with genuine understanding of brand and personality, so you get imagery created by people who understand both the creative side and the practical, trust building side of what makes brand photography actually work.",
-        "Ready for photography that actually shows people exactly who you are? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready for photography that actually shows people exactly who you are? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -480,7 +480,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Aerial photography services also require the same fundamental photography and videography skills that apply to any professional visual content, including composition, lighting awareness, and an understanding of how a shot will actually be used, layered on top of the additional technical skill required to operate a drone safely and effectively to capture that vision from the air."
         ],
         "ctas": [
-          "Ready to show your business or project from a perspective worth seeing? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to show your business or project from a perspective worth seeing? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -513,7 +513,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "These applications benefit significantly from careful advance planning and coordination with event organizers or business stakeholders, ensuring aerial coverage integrates smoothly with the broader event or corporate content strategy rather than existing as a disconnected, standalone element captured without real coordination with everything else happening on the ground."
         ],
         "ctas": [
-          "Planning a project or event that could benefit from an aerial perspective? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Planning a project or event that could benefit from an aerial perspective? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -550,7 +550,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to explore what aerial photography or video could add to your project? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to explore what aerial photography or video could add to your project? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -639,7 +639,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right drone photography and videography provider is one of the most important decisions you will make for how effectively your project or business can leverage genuinely distinctive aerial perspective. The right partner does not just fly a drone, they bring proper licensing, safety, and genuine photography and videography skill to capture content that actually elevates your project.",
         "Whether you need real estate photography, construction documentation, corporate or event coverage, or cinematic aerial footage for a brand video, our team has the experience to capture your business from a perspective worth showing. We combine proper certification and safety expertise with genuine creative and technical skill, so you get aerial content captured by people who understand both the technical side and the practical, results focused side of what makes drone photography actually valuable.",
-        "Ready to show your business or project from a whole new angle? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to show your business or project from a whole new angle? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -680,7 +680,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional content creation services also require genuine subject matter understanding, not just general writing skill. Content that sounds polished but lacks real depth or accuracy tends to underperform compared to content written by people who have taken the time to genuinely understand the topic, the audience, and what that audience actually needs to know in order to make a confident decision."
         ],
         "ctas": [
-          "Ready for content that actually drives real business results? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for content that actually drives real business results? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -703,7 +703,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Content optimization services extend this work to existing content as well, reviewing previously published material and identifying opportunities to improve structure, update information, or better target relevant search terms that may not have been properly addressed in the original version. Updating and improving existing content is often a faster path to improved rankings than starting entirely new content from scratch."
         ],
         "ctas": [
-          "Not sure if your current content is actually working for you? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure if your current content is actually working for you? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -740,7 +740,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to build a content strategy that actually works? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build a content strategy that actually works? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -839,7 +839,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right content marketing agency is one of the most important decisions you will make for how effectively your content actually supports your business. The right partner does not just produce articles, they build genuine strategy designed to attract the right audience and guide them toward real action.",
         "Whether you need a full content strategy, consistent blog writing, website copy, or a coordinated content and distribution plan, our team has the experience to help your content actually deliver results. We combine strong research and writing skill with genuine strategic thinking, so you get content created by people who understand both the creative side and the practical, results focused side of what makes content marketing actually work.",
-        "Ready to turn your content into a genuine driver of business growth? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn your content into a genuine driver of business growth? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -880,7 +880,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Software development services in this space typically include discovery and planning, design, development, testing, deployment, and ongoing support. Each stage matters, and skipping steps like proper testing or planning often leads to software that technically works but does not actually solve the underlying business problem effectively."
         ],
         "ctas": [
-          "Have a process that off the shelf software cannot handle? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Have a process that off the shelf software cannot handle? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -937,7 +937,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which type of custom solution fits your business? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which type of custom solution fits your business? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1039,7 +1039,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right custom software development company is one of the most important decisions you will make for the long term efficiency of your business. The right partner does not just write code, they take the time to understand your actual operations and build a solution that genuinely solves the problems generic software cannot.",
         "Whether you need a custom CRM, a custom ERP system, a SaaS product, or a fully custom platform built around your specific operations, our team has the experience to bring it to life. We combine deep technical expertise with a genuine understanding of how businesses actually operate, so you get software built by people who understand both the development side and the practical, day to day business side of what makes software genuinely useful.",
-        "Ready to build software that actually fits how your business works? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build software that actually fits how your business works? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -1080,7 +1080,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Ecommerce website development services should also account for how the store performs on mobile devices, since most online shopping today happens on phones rather than desktop computers. A store that looks great on a laptop but is difficult to use on a phone is losing sales it should be capturing."
         ],
         "ctas": [
-          "Ready to build a store that actually converts visitors into customers? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build a store that actually converts visitors into customers? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1138,7 +1138,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which ecommerce service is right for your business? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which ecommerce service is right for your business? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1238,7 +1238,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right ecommerce development company is one of the most important decisions you will make for your online business. The right partner does not just build you a store, they build you a system designed to turn visitors into paying customers, handle growth without breaking, and give your brand a professional, trustworthy presence online.",
         "Whether you need shopify ecommerce development, woocommerce development services, a fully custom ecommerce platform, a multi vendor marketplace, or a redesign of an existing store, our team has the experience to bring it to life. We combine technical expertise with a genuine understanding of what drives online sales, so you get a store built by people who understand both the development side and the business side of ecommerce.",
-        "Ready to move forward with your online store? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to move forward with your online store? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -1283,7 +1283,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom AI automation means the solution is built specifically around your actual workflows and systems, rather than forcing your business to adapt to a generic automation template that may not fit how your specific processes actually operate. This distinction matters significantly, since the value of automation comes directly from how precisely it fits the actual problem it is meant to solve."
         ],
         "ctas": [
-          "Have a repetitive process eating up your team's time? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Have a repetitive process eating up your team's time? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1316,7 +1316,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Proper intelligent process automation also requires ongoing monitoring, since these more sophisticated systems need to be reviewed periodically to confirm they continue performing accurately as underlying data, business rules, or connected systems inevitably change and evolve over time."
         ],
         "ctas": [
-          "Curious what a complex, multi step process could look like fully automated? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious what a complex, multi step process could look like fully automated? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1353,7 +1353,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to explore what automation could do for your business? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to explore what automation could do for your business? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1441,7 +1441,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right AI automation agency is one of the most important decisions you will make for how efficiently your business actually operates going forward. The right partner does not just automate tasks for the sake of automation, they genuinely understand your processes and build solutions that actually save time, reduce errors, and free your team to focus on work that truly requires human judgment.",
         "Whether you need a single automated workflow, custom AI agent development, or a comprehensive enterprise automation strategy, our team has the experience to help your business genuinely benefit from automation. We combine deep technical expertise with honest, practical recommendations, so you get automation built by people who understand both the technical side and the practical, real world side of what makes automation actually work.",
-        "Ready to give your team back real time through smart automation? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to give your team back real time through smart automation? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -1482,7 +1482,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Conversational AI solutions today are built on genuinely more sophisticated technology than the rigid, rule based chatbots common just a few years ago. Modern systems can understand varied phrasing, maintain context across a multi turn conversation, and respond in a way that feels genuinely conversational rather than obviously scripted, though this still requires careful development and training to actually work well in practice rather than simply being assumed based on the underlying technology alone."
         ],
         "ctas": [
-          "Ready for a chatbot that actually helps your customers get real answers? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for a chatbot that actually helps your customers get real answers? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1515,7 +1515,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Ecommerce AI chatbots in particular benefit from integration with product catalogs and inventory systems, allowing the chatbot to make specific, accurate recommendations and confirm real time availability, rather than suggesting products that may already be out of stock or providing pricing information that has since changed."
         ],
         "ctas": [
-          "Curious whether a sales focused chatbot could help convert more visitors? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious whether a sales focused chatbot could help convert more visitors? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1552,7 +1552,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to explore what a custom chatbot could do for your business? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to explore what a custom chatbot could do for your business? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1635,7 +1635,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right AI chatbot development company is one of the most important decisions you will make for how effectively your business can support and engage customers around the clock. The right partner does not just deploy a generic chatbot, they build something genuinely trained on your business, honestly scoped, and properly integrated with the systems it actually needs to be helpful.",
         "Whether you need a website chatbot, a customer service assistant, a WhatsApp integration, or a sales focused conversational tool, our team has the experience to build something that actually works for your customers. We combine deep technical expertise with genuine conversational design thinking, so you get a chatbot built by people who understand both the technical side and the practical, customer focused side of what makes conversational AI actually effective.",
-        "Ready to give your customers instant, genuinely helpful answers around the clock? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to give your customers instant, genuinely helpful answers around the clock? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -1676,7 +1676,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "AI video creation services increasingly extend beyond editing alone, with some tools now capable of generating entirely new video content from text prompts, existing assets, or structured data. This capability continues to evolve rapidly, and understanding where it genuinely delivers professional, usable results versus where it still requires significant human refinement is an important part of building an effective, realistic automation strategy rather than over relying on capabilities that are not yet fully mature."
         ],
         "ctas": [
-          "Ready to produce more video content without burning out your team? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to produce more video content without burning out your team? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1709,7 +1709,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Properly implemented workflow automation tends to deliver the most value when it genuinely reflects how a specific team actually works, rather than forcing an existing production process to awkwardly adapt to a rigid, generic automation template that does not account for a team's real, specific workflow and creative priorities."
         ],
         "ctas": [
-          "Curious how much time your team could save with proper video workflow automation? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious how much time your team could save with proper video workflow automation? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1746,7 +1746,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to build a more efficient video production process? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build a more efficient video production process? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1835,7 +1835,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right AI video automation agency is one of the most important decisions you will make for how sustainably your team can actually keep up with modern video content demands. The right partner does not just automate everything indiscriminately, they build a thoughtful system that genuinely saves time while preserving the creative quality and authenticity that makes video content actually effective.",
         "Whether you need automated editing, AI powered social media video creation, a full workflow automation system, or help exploring what AI generated video can realistically deliver for your business, our team has the experience to build something that genuinely works. We combine real production expertise with genuine technical understanding of AI tools, so you get a video automation system built by people who understand both the creative side and the practical, efficiency focused side of what makes this actually work.",
-        "Ready to turn one idea into a constant, sustainable stream of video content? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn one idea into a constant, sustainable stream of video content? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -1876,7 +1876,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "AI powered website development also requires careful technical planning, since these features need to integrate properly with a site's existing structure, data, and performance requirements. AI features that slow down a website significantly or create a disjointed, inconsistent experience compared to the rest of the site often do more harm than good, regardless of how impressive the underlying technology might be in isolation."
         ],
         "ctas": [
-          "Ready to make your website genuinely smarter for your visitors? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to make your website genuinely smarter for your visitors? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1909,7 +1909,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Both of these features depend heavily on proper data integration, since recommendations and search results are only as good as the underlying data and behavior signals feeding into the system. A recommendation engine built without access to genuine purchase history or browsing behavior can only ever provide generic, limited suggestions rather than the kind of specific, relevant recommendations that actually influence purchasing decisions."
         ],
         "ctas": [
-          "Curious how AI search or recommendations could improve your conversion rates? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious how AI search or recommendations could improve your conversion rates? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -1946,7 +1946,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to explore which AI features would genuinely benefit your website? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to explore which AI features would genuinely benefit your website? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2037,7 +2037,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right AI website integration partner is one of the most important decisions you will make for how effectively your site can actually serve visitors and support your business goals. The right partner does not just add AI features for the sake of having them, they thoughtfully integrate genuinely useful capabilities that improve the actual visitor experience.",
         "Whether you need a chatbot, AI powered search, personalized recommendations, or a comprehensive AI enabled web application built from scratch, our team has the experience to bring genuine intelligence into your website the right way. We combine deep technical expertise with honest, practical thinking about what will actually benefit your specific visitors, so you get AI integration built by people who understand both the technical side and the practical, results focused side of what makes these features genuinely work.",
-        "Ready to make your website genuinely smarter for the people who visit it? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to make your website genuinely smarter for the people who visit it? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -2078,7 +2078,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "AI content optimization plays a central role in this work, since the same fundamentals that help human readers understand content quickly, clear structure, direct answers to likely questions, and genuine depth on a topic, also tend to help AI systems parse and trust that content when deciding what to include in a generated response."
         ],
         "ctas": [
-          "Ready to make sure your business actually shows up in AI generated answers? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to make sure your business actually shows up in AI generated answers? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2100,7 +2100,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Optimizing content for AI answers also often benefits from directly and clearly answering likely questions within the content itself, since AI systems tend to favor content that provides a direct, complete answer to a specific query over content that requires significant additional interpretation or synthesis to extract a clear, usable answer."
         ],
         "ctas": [
-          "Curious whether your content is actually AI search ready? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious whether your content is actually AI search ready? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2133,7 +2133,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to improve how your business shows up in AI generated answers? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to improve how your business shows up in AI generated answers? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2155,7 +2155,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "AI implementation services then translate this strategy into actual, working solutions, whether that means specific automation, customer facing AI tools, or internal decision support systems, always grounded in the specific priorities identified during the initial strategic assessment rather than generic AI adoption for its own sake."
         ],
         "ctas": [
-          "Not sure where your organization actually stands when it comes to AI readiness? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure where your organization actually stands when it comes to AI readiness? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2230,7 +2230,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right partner for AEO and AI strategy work is one of the most important decisions you will make for how well positioned your business actually is as AI continues to reshape both how people search and how businesses operate internally. The right partner does not just chase trends, they bring genuine, current understanding to help your business get found within AI systems and use AI effectively within your own operations.",
         "Whether you need AI content optimization, a full AEO strategy, an AI readiness assessment, or hands on implementation support, our team has the experience to help your business navigate this shift thoughtfully. We combine deep technical understanding with honest, practical strategy, so you get guidance from people who genuinely understand both the visibility side and the operational side of what it means to be AI ready.",
-        "Ready to get your business found and ready for an AI driven landscape? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to get your business found and ready for an AI driven landscape? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -2271,7 +2271,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional email marketing management also includes the technical side that many business owners overlook, including proper list segmentation, deliverability best practices, and compliance with email regulations. Emails that technically get sent but land in a spam folder or go to the wrong audience segment waste both the effort behind them and the goodwill of the subscribers who never actually see them."
         ],
         "ctas": [
-          "Ready to turn your email list into a genuine source of revenue? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to turn your email list into a genuine source of revenue? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2294,7 +2294,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Setting up effective automation requires genuine planning upfront, mapping out the different subscriber journeys a business needs to support and building sequences specifically designed for each one. Once properly built, however, this automation continues delivering value with minimal ongoing effort, making it one of the more efficient long term investments available within a broader email marketing strategy."
         ],
         "ctas": [
-          "Curious how automation could reduce your workload while improving results? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious how automation could reduce your workload while improving results? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2331,7 +2331,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to build an email program that actually drives results? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build an email program that actually drives results? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2439,7 +2439,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right email marketing agency is one of the most important decisions you will make for how effectively this channel actually supports your business. The right partner does not just send emails, they build genuine strategy and automation designed to turn subscribers into engaged, loyal customers over time.",
         "Whether you need full campaign management, automated sequences, ecommerce focused email marketing, or an honest audit of an existing program, our team has the experience to help your email marketing actually deliver results. We combine strong strategic thinking with genuine copywriting and design skill, so you get campaigns built by people who understand both the creative side and the practical, results focused side of email marketing.",
-        "Ready to turn your email list into a genuine source of loyal customers? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn your email list into a genuine source of loyal customers? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -2480,7 +2480,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Full event coverage services typically combine both photography and videography, since each medium serves a genuinely different purpose. Photography captures specific, polished moments perfect for immediate social sharing and long term marketing use, while video captures the actual energy, sound, and movement of an event in a way that static images alone cannot fully convey."
         ],
         "ctas": [
-          "Ready to make sure your next event gets covered the right way? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to make sure your next event gets covered the right way? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2513,7 +2513,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Both product launches and exhibition coverage benefit significantly from photographers and videographers who understand the specific marketing goals behind the event, ensuring the resulting content genuinely supports those goals rather than simply documenting that the event occurred without any particular strategic focus."
         ],
         "ctas": [
-          "Planning a product launch or exhibition appearance? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Planning a product launch or exhibition appearance? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2550,7 +2550,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to plan coverage for your upcoming event? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to plan coverage for your upcoming event? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2639,7 +2639,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right event coverage company is one of the most important decisions you will make for how well your next business event actually gets documented and remembered. The right partner does not just show up and take pictures, they genuinely understand your event's goals and capture content that continues delivering value well beyond the day itself.",
         "Whether you need corporate event photography, full videography coverage, real time social media content, or a complete event highlight video, our team has the experience to capture your event thoroughly and professionally. We combine genuine live event expertise with real understanding of how content will actually be used afterward, so you get coverage delivered by people who understand both the creative side and the practical, results focused side of what makes event photography and videography actually valuable.",
-        "Ready to make sure your next event gets captured the right way? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to make sure your next event gets captured the right way? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -2680,7 +2680,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom graphic design means every piece is created specifically for your brand and your specific message, rather than relying on generic templates that dozens of other businesses might also be using. This distinction matters more than it might initially seem, since generic, templated visuals rarely stand out and can quietly signal to potential customers that a business has not invested much thought into how it presents itself."
         ],
         "ctas": [
-          "Ready for visuals that actually reflect how professional your business really is? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for visuals that actually reflect how professional your business really is? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2738,7 +2738,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which type of design your business needs most right now? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which type of design your business needs most right now? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2831,7 +2831,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right graphic design agency is one of the most important decisions you will make for how your business is perceived by everyone who encounters it. The right partner does not just make things look nice, they help your business communicate clearly and consistently across every piece of material it produces, building genuine trust and recognition over time.",
         "Whether you need brochures, flyers, presentations, advertising, social media graphics, or a complete visual system for your growing business, our team has the experience to deliver work that actually reflects how professional your business truly is. We combine strong creative skill with a genuine understanding of what makes design actually effective, so you get visuals created by people who understand both the artistic side and the practical, business focused side of design.",
-        "Ready for design work that actually looks as good as your business deserves? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready for design work that actually looks as good as your business deserves? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -2872,7 +2872,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional influencer campaign management also includes the less visible work that makes partnerships actually succeed, including clear briefing, content review, and ensuring creators have what they genuinely need to represent a brand accurately and effectively. Campaigns launched without this coordination often result in content that technically gets posted but fails to communicate the right message or genuinely resonate with the creator's actual audience."
         ],
         "ctas": [
-          "Ready to build influencer partnerships that actually drive real results? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build influencer partnerships that actually drive real results? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2906,7 +2906,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "YouTube influencer marketing tends to support longer form, more in depth content, making the platform particularly effective for products that benefit from genuine explanation or demonstration, such as detailed reviews, tutorials, or unboxing content that gives an audience a much fuller picture of a product than a shorter form post typically allows."
         ],
         "ctas": [
-          "Not sure which platform or creator type fits your brand? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which platform or creator type fits your brand? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -2943,7 +2943,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start building influencer partnerships for your brand? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start building influencer partnerships for your brand? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3035,7 +3035,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right influencer marketing agency is one of the most important decisions you will make for how effectively this channel actually supports your brand. The right partner does not just reach out to popular accounts, they build genuine, well vetted partnerships designed to reach the right audience with a message that feels authentic rather than obviously promotional.",
         "Whether you need influencer discovery, full campaign management, ongoing partnership management, or a coordinated multi platform content campaign, our team has the experience to help your brand build partnerships that actually deliver results. We combine careful creator vetting with genuine strategic thinking, so you get influencer campaigns managed by people who understand both the creative side and the practical, results focused side of what makes influencer marketing actually work.",
-        "Ready to turn trusted creator voices into real growth for your brand? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn trusted creator voices into real growth for your brand? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -3076,7 +3076,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "A complete logo design process typically results in more than a single image. Professional logo designers usually deliver multiple variations, including a primary version, simplified versions for small applications like app icons or social media profiles, and different color variations for use on different backgrounds. This ensures the logo remains clear and recognizable no matter where or how it actually gets used."
         ],
         "ctas": [
-          "Ready for a logo that actually represents your business well? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for a logo that actually represents your business well? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3109,7 +3109,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Businesses that need a logo as part of a larger identity project often benefit from working with a design partner who can handle brand identity and logo design together, ensuring everything is built cohesively from the very beginning rather than needing to be reconciled awkwardly after the fact."
         ],
         "ctas": [
-          "Building a brand from the ground up? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Building a brand from the ground up? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3146,7 +3146,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start your logo project? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start your logo project? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3225,7 +3225,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right logo design company is one of the most important early decisions you will make for how your business is perceived. The right partner does not just create an attractive image, they help build a visual mark that genuinely reflects what your business stands for and that people will actually remember and recognize over time.",
         "Whether you need a completely new startup logo, a corporate logo built for scale, an ecommerce logo optimized for digital use, or a thoughtful redesign of an existing mark, our team has the experience to guide your project carefully. We combine strong creative execution with genuine strategic thinking, so you get a logo created by people who understand both the artistic side and the practical, business focused side of what makes a mark genuinely effective.",
-        "Ready to build a logo people will actually remember? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build a logo people will actually remember? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -3265,7 +3265,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Mobile application development also has to account for real world conditions. Users open apps on older phones, on slow networks, and in situations where battery life matters. A well built app is designed to handle these conditions gracefully instead of crashing or draining battery unnecessarily. This is why experienced mobile app developers spend as much time on performance and stability as they do on features and design."
         ],
         "ctas": [
-          "Have an app idea you want to turn into a real product? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Have an app idea you want to turn into a real product? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3315,7 +3315,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Choosing between native, react native app development, or flutter app development depends on your specific goals, timeline, and budget. An experienced app development company can walk you through the tradeoffs based on your actual project rather than pushing whichever framework they happen to specialize in."
         ],
         "ctas": [
-          "Not sure which platform or framework fits your app idea? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which platform or framework fits your app idea? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3352,7 +3352,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to talk through your app idea? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to talk through your app idea? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3420,7 +3420,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right mobile app development company is one of the most important decisions you will make when turning your idea into a real product. The right team does not just write code, they help shape your idea into something people actually want to use, built on a foundation that can grow as your business does.",
         "Whether you need android app development, iOS app development, cross platform app development using react native or flutter, or a full custom build for an enterprise system, our team has the experience to bring your project to life. We combine technical expertise with a genuine understanding of what makes an app succeed in the real world, so you get a product built by people who understand both the development side and the business side of mobile apps.",
-        "Ready to bring your app idea to life? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to bring your app idea to life? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -3461,7 +3461,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom motion graphics means the animation is built specifically around your brand and your specific message, using your actual colors, typography, and visual style rather than relying on generic stock animation templates that many other businesses might also be using. This distinction matters significantly for brand recognition, since consistent, custom animated content reinforces your visual identity every time it appears, rather than looking disconnected from everything else your business produces."
         ],
         "ctas": [
-          "Ready to bring your brand to life through animation? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to bring your brand to life through animation? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3494,7 +3494,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "This type of content tends to perform particularly well for software products, complex services, or anything requiring a viewer to understand a multi step process, since animation can show a sequence of events clearly in a way that is difficult to communicate through static images or text alone."
         ],
         "ctas": [
-          "Have a product or service that is hard to explain in words alone? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Have a product or service that is hard to explain in words alone? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3531,7 +3531,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which type of animated content fits your goals? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which type of animated content fits your goals? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3619,7 +3619,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right motion graphics agency is one of the most important decisions you will make for how engaging and memorable your video content actually becomes. The right partner does not just animate shapes on a screen, they help translate your message into something genuinely engaging that holds attention and communicates clearly.",
         "Whether you need an explainer video, product animation, an animated logo, or a full set of social media content, our team has the experience to bring your ideas to life effectively. We combine strong creative execution with genuine strategic thinking about pacing, storytelling, and platform, so you get animated content created by people who understand both the artistic side and the practical, results focused side of motion graphics.",
-        "Ready to bring your brand and message to life through animation? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to bring your brand and message to life through animation? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -3660,7 +3660,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom packaging design means the packaging is created specifically around your brand, your product, and your specific audience, rather than relying on a generic template that could belong to almost any product in the same general category. This distinction matters enormously in competitive retail environments, where distinctive packaging is often the single biggest factor separating a product that gets picked up from one that gets passed over entirely."
         ],
         "ctas": [
-          "Ready for packaging that actually makes your product stand out? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for packaging that actually makes your product stand out? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3695,7 +3695,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Clear visual hierarchy matters enormously in label design specifically, since customers typically scan a label quickly rather than reading every detail carefully. Effective label design guides the eye toward the most important information first, whether that is the brand name, a key benefit, or required regulatory information, rather than presenting everything with equal visual weight."
         ],
         "ctas": [
-          "Need labels that actually work as hard as the rest of your packaging? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Need labels that actually work as hard as the rest of your packaging? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3732,7 +3732,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start your packaging project? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start your packaging project? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3811,7 +3811,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right packaging design company is one of the most important decisions you will make for how your product actually performs once it reaches real customers. The right partner does not just create something attractive, they help build packaging that genuinely captures attention, communicates quality, and holds up correctly once it leaves the design studio and enters the real world.",
         "Whether you need custom packaging for a brand new product, a complete redesign for an existing line, sustainable packaging options, or a cohesive branding system across multiple products, our team has the experience to guide your project carefully. We combine strong creative execution with genuine production knowledge, so you get packaging designed by people who understand both the artistic side and the practical, real world side of what makes packaging actually work.",
-        "Ready to build packaging that makes your product impossible to ignore? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build packaging that makes your product impossible to ignore? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -3852,7 +3852,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional image editing also includes color correction, ensuring images accurately and consistently represent true colors across an entire set, which matters significantly for maintaining a cohesive, professional look across a full catalog or content library rather than having individual images that each look slightly different in tone or color balance."
         ],
         "ctas": [
-          "Ready to turn your raw photos and footage into something genuinely publication ready? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to turn your raw photos and footage into something genuinely publication ready? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3885,7 +3885,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Both services benefit significantly from working with an experienced provider who understands not just the technical editing process, but how the finished images will actually be used, ensuring appropriate resolution, file format, and overall treatment for the specific platform or purpose the images are actually intended for."
         ],
         "ctas": [
-          "Have raw photos that need professional editing before they are ready to publish? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Have raw photos that need professional editing before they are ready to publish? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -3922,7 +3922,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to get your raw photos and footage professionally edited? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to get your raw photos and footage professionally edited? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4020,7 +4020,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right photo and video editing partner is one of the most important decisions you will make for how professional your final content actually looks once it reaches your audience. The right partner does not just apply generic filters and effects, they bring genuine skill and restraint to elevate your content naturally.",
         "Whether you need product photo retouching, beauty retouching, background removal, or professional video editing for social media or broader use, our team has the experience to transform your raw content into something genuinely publication ready. We combine strong technical skill with genuine understanding of natural, effective editing, so you get content edited by people who understand both the creative side and the practical, results focused side of what makes editing actually work.",
-        "Ready to turn your raw photos and footage into something genuinely worth publishing? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn your raw photos and footage into something genuinely worth publishing? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -4061,7 +4061,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional PPC management services go well beyond simply setting up a campaign and letting it run. Effective management requires constant attention, reviewing which keywords and audiences are actually converting, adjusting bids based on real performance data, and continuously refining targeting as more data becomes available. Campaigns that are set up once and left untouched almost always underperform compared to those receiving genuine ongoing optimization."
         ],
         "ctas": [
-          "Ready to make sure your ad spend is actually working for you? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to make sure your ad spend is actually working for you? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4084,7 +4084,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Bid strategy represents another area where experienced management makes a real difference. Google Ads offers multiple bidding approaches, and choosing the right one for a specific business goal, whether that means maximizing conversions, controlling cost per acquisition, or simply maximizing visibility, requires understanding both the platform's capabilities and the specific business objective being pursued."
         ],
         "ctas": [
-          "Wondering if your current Google Ads account could be performing better? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Wondering if your current Google Ads account could be performing better? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4121,7 +4121,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which type of PPC service fits your business? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which type of PPC service fits your business? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4220,7 +4220,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right PPC agency is one of the most important decisions you will make for how effectively your advertising budget actually performs. The right partner does not just launch campaigns, they treat your budget with the same care you would yourself, continuously optimizing toward the outcomes that genuinely matter to your business.",
         "Whether you need full PPC campaign management, ecommerce advertising, lead generation focused campaigns, or an honest audit of an existing account, our team has the experience to help your advertising actually deliver results. We combine deep platform expertise with a genuine focus on real business outcomes, so you get campaigns managed by people who understand both the technical side and the practical, results focused side of paid advertising.",
-        "Ready to make your ad spend actually work for you? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to make your ad spend actually work for you? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -4261,7 +4261,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Consistency matters significantly across a full catalog of images as well. Ecommerce product photography in particular benefits from a cohesive visual style across an entire product line, since inconsistent lighting, backgrounds, or editing across different images can make a store feel disorganized and less professional, even when each individual photo is technically well executed on its own."
         ],
         "ctas": [
-          "Ready for product photography that actually makes your listings convert? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for product photography that actually makes your listings convert? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4296,7 +4296,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Jewelry product photography demands exceptional attention to detail and lighting, given the small size and often highly reflective materials involved, requiring specialized techniques to properly capture sparkle, texture, and fine craftsmanship without distracting glare or unwanted reflections obscuring the actual product."
         ],
         "ctas": [
-          "Not sure what photography approach fits your specific products? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure what photography approach fits your specific products? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4333,7 +4333,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start planning your product photography? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start planning your product photography? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4422,7 +4422,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right product photography partner is one of the most important decisions you will make for how effectively your products actually convert browsers into buyers. The right partner does not just take clear pictures, they understand how to present your products in a way that genuinely builds trust and desire in the absence of a physical, in person interaction.",
         "Whether you need a full ecommerce catalog, Amazon optimized listings, creative brand photography, or specialized shots for a challenging product category like jewelry or food, our team has the experience to make your products look genuinely worth buying. We combine technical photography skill with real understanding of what actually converts online, so you get images created by people who understand both the creative side and the practical, sales focused side of what makes product photography actually work.",
-        "Ready for product photography that makes every listing look worth buying? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready for product photography that makes every listing look worth buying? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -4463,7 +4463,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "A genuine seo strategy also has to account for what a business actually wants to achieve, whether that means driving local foot traffic, generating qualified leads, or increasing ecommerce sales. Rankings alone do not matter if the traffic they generate does not actually convert into real business results, which is why effective seo work is always connected to broader business goals rather than treated as an isolated technical exercise."
         ],
         "ctas": [
-          "Ready to actually get found by the people searching for what you offer? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to actually get found by the people searching for what you offer? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4496,7 +4496,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "These two areas work best together rather than in isolation. Excellent on page content with no external validation often struggles to rank against competitors with stronger backlink profiles, while strong backlinks pointing to poorly optimized, low quality pages also tend to underperform compared to a coordinated approach addressing both areas simultaneously."
         ],
         "ctas": [
-          "Not sure whether your website needs technical fixes, content work, or link building? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure whether your website needs technical fixes, content work, or link building? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4533,7 +4533,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to see where your website currently stands? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to see where your website currently stands? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4631,7 +4631,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right seo agency is one of the most important decisions you will make for how easily potential customers can actually find your business online. The right partner does not just chase rankings, they build genuine, sustainable search visibility that connects your business with people who are actively looking for exactly what you offer.",
         "Whether you need a full seo audit, technical optimization, content strategy, local seo, or a complete ecommerce seo approach, our team has the experience to help your website actually get found by the right people. We combine technical expertise with genuine strategic thinking, so you get seo work handled by people who understand both the technical side and the practical, business focused side of what makes search optimization actually effective.",
-        "Ready to get found by the people searching for what you offer? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to get found by the people searching for what you offer? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -4672,7 +4672,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "AI social media automation extends this further, using artificial intelligence to assist with tasks like generating initial content drafts, suggesting optimal posting times based on genuine audience behavior data, and even helping identify which type of content is likely to perform best based on patterns in past performance. This does not replace genuine strategy and human oversight, but it can meaningfully reduce the time required to produce consistent, well timed content across multiple platforms."
         ],
         "ctas": [
-          "Ready to keep your social media consistent without the constant manual effort? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to keep your social media consistent without the constant manual effort? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4705,7 +4705,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Effective workflow automation reduces not just the time spent on individual tasks, but also the coordination overhead involved in managing a social media program across multiple platforms, team members, and approval steps, which often represents a meaningful and frequently underestimated portion of the total time a team spends on social media management overall."
         ],
         "ctas": [
-          "Managing multiple platforms manually and feeling the strain? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Managing multiple platforms manually and feeling the strain? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4742,7 +4742,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to reduce the manual effort behind your social media presence? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to reduce the manual effort behind your social media presence? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4830,7 +4830,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right social media automation agency is one of the most important decisions you will make for how sustainably your team can maintain a genuine, consistent social media presence. The right partner does not just automate everything indiscriminately, they build a thoughtful system that saves genuine time while still preserving the authenticity that makes social media actually effective.",
         "Whether you need basic scheduling automation, a more sophisticated AI powered system, or comprehensive workflow automation across multiple platforms, our team has the experience to help your business build something that genuinely works. We combine strategic thinking with real technical expertise, so you get an automated system built by people who understand both the efficiency side and the practical, authenticity focused side of what makes social media automation actually effective.",
-        "Ready to keep your social media consistent without the constant manual grind? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to keep your social media consistent without the constant manual grind? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -4871,7 +4871,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Professional social media management services also include the less visible work that makes accounts feel genuinely active and responsive, including monitoring comments and messages, engaging with followers, and staying on top of platform changes that can affect how content actually performs. Accounts that only post without any genuine engagement tend to feel one directional and often struggle to build the kind of real community that drives long term loyalty and word of mouth growth."
         ],
         "ctas": [
-          "Ready for social media that actually grows your business? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready for social media that actually grows your business? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4906,7 +4906,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Paid and organic social media work best when coordinated together rather than treated as entirely separate efforts. Strong organic content often performs well as paid advertising too, and insights gathered from paid campaign performance can inform what kind of organic content is likely to resonate with a specific audience, creating a feedback loop that improves both approaches over time."
         ],
         "ctas": [
-          "Curious whether paid social advertising could accelerate your results? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious whether paid social advertising could accelerate your results? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -4943,7 +4943,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to build a stronger social media presence? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to build a stronger social media presence? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5024,7 +5024,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right social media marketing agency is one of the most important decisions you will make for how effectively your brand connects with its audience online. The right partner does not just post content on a schedule, they build a genuine strategy designed to turn your social presence into a real driver of engagement, trust, and growth.",
         "Whether you need a complete social media strategy, platform specific management, paid social advertising, or a coordinated approach across multiple channels, our team has the experience to help your brand build a presence that actually matters. We combine creative content execution with genuine strategic thinking, so you get social media managed by people who understand both the creative side and the practical, results focused side of what makes social media marketing actually work.",
-        "Ready to build social media that actually drives real growth? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build social media that actually drives real growth? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -5065,7 +5065,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom ui ux design means the interface and experience are built specifically around your actual users and your actual product, rather than applying generic design patterns that may not fit how your specific audience thinks or behaves. This distinction matters enormously, since design decisions that work well for one type of product or audience can fail completely for another."
         ],
         "ctas": [
-          "Have a product that users find confusing or frustrating? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Have a product that users find confusing or frustrating? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5098,7 +5098,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "This process significantly reduces risk for businesses investing in a new product or a major redesign, since problems get caught and corrected during design and testing rather than after a fully built product has already launched to real users."
         ],
         "ctas": [
-          "Want to test your product idea before committing to full development? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Want to test your product idea before committing to full development? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5135,7 +5135,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to improve how your product looks and feels to use? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to improve how your product looks and feels to use? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5214,7 +5214,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right ui ux design agency is one of the most important decisions you will make for how your product actually performs once real users get their hands on it. The right partner does not just make things look attractive, they help you understand your users deeply and build an experience that genuinely works for the people you are trying to reach.",
         "Whether you need website ui ux design, mobile app ui ux design, SaaS product design, or a complete UX audit of an existing product, our team has the experience to guide your project thoughtfully. We combine research based strategy with strong visual execution, so you get design work created by people who understand both the creative side and the practical, user focused side of what makes a product genuinely successful.",
-        "Ready to improve how your product looks, feels, and performs? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to improve how your product looks, feels, and performs? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -5255,7 +5255,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Full service video production typically covers this entire process under one roof, from initial concept through final delivery, ensuring consistency and clear accountability throughout a project rather than requiring a business to coordinate separate vendors for scripting, filming, and editing independently, which often results in a disjointed final product that does not feel cohesive from start to finish."
         ],
         "ctas": [
-          "Ready to turn your story into video content people actually want to watch? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to turn your story into video content people actually want to watch? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5288,7 +5288,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Ecommerce video production applies these same principles specifically to online retail, often combining product demonstration with lifestyle context, helping online shoppers understand not just what a product looks like, but how it would genuinely function and fit into their actual life and use case."
         ],
         "ctas": [
-          "Curious what type of video would genuinely help explain or sell your product? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Curious what type of video would genuinely help explain or sell your product? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5325,7 +5325,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to start planning your video project? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to start planning your video project? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5413,7 +5413,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right video production company is one of the most important decisions you will make for how effectively your business connects with an audience through video. The right partner does not just point a camera and hit record, they help translate your message into something genuinely engaging that holds attention and communicates clearly.",
         "Whether you need a brand video, product demonstration, promotional content, or an ongoing social media video library, our team has the experience to bring your ideas to life professionally. We combine strong creative execution with genuine strategic thinking about pacing, storytelling, and platform, so you get video content created by people who understand both the artistic side and the practical, results focused side of what makes video production actually work.",
-        "Ready to turn your story into video content people actually want to watch? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to turn your story into video content people actually want to watch? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -5454,7 +5454,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Custom web application development goes a step further, building the application specifically around your business processes rather than adapting a generic template. This matters most when your workflows, data structure, or user roles do not fit neatly into an off the shelf tool, which is often the case once a business grows past its earliest stages."
         ],
         "ctas": [
-          "Have a process that needs a real web application instead of a spreadsheet? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Have a process that needs a real web application instead of a spreadsheet? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5487,7 +5487,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Both enterprise and SaaS projects benefit enormously from proper planning before development begins, since architecture decisions made early are far more difficult and expensive to change once the application is live and actively being used by real customers or employees."
         ],
         "ctas": [
-          "Planning an enterprise tool or a SaaS product? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Planning an enterprise tool or a SaaS product? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5524,7 +5524,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Ready to talk through your web application idea? Book a free consultation at https://bshsolutionss.com/book-consultation"
+          "Ready to talk through your web application idea? Book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5614,7 +5614,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right web application development company is one of the most important decisions you will make when investing in a serious business tool. The right partner does not just write code, they take the time to understand your actual workflows and build an application that genuinely fits how your business or your customers actually operate.",
         "Whether you need a custom business portal, a SaaS platform, an internal dashboard, or a fully custom web application built around your specific operations, our team has the experience to bring it to life. We combine deep frontend and backend expertise with a genuine understanding of how businesses actually use software, so you get an application built by people who understand both the technical side and the practical, day to day side of what makes software genuinely useful.",
-        "Ready to build a web application that fits how your business actually works? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to build a web application that fits how your business actually works? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [
@@ -5654,7 +5654,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "Many business owners think website development is only about how a site looks. In reality, a website can look beautiful and still fail to bring in customers if it loads slowly, is not mobile friendly, or is not built with search visibility in mind. This is why working with a professional website development company matters. A skilled team does not just design pages, they build a system that supports your business goals, whether that is generating leads, selling products, or building long term brand trust."
         ],
         "ctas": [
-          "If you are ready to build a website that actually supports your business goals, book a free consultation at https://bshsolutionss.com/book-consultation"
+          "If you are ready to build a website that actually supports your business goals, book a free consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5716,7 +5716,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           }
         ],
         "ctas": [
-          "Not sure which service fits your business? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Not sure which service fits your business? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5775,7 +5775,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
           "We offer clear website development packages so you know exactly what you are getting at each price point, whether you need a simple business site, a full ecommerce store, or a custom built platform. We also work with businesses that are searching for an affordable web development company without wanting to sacrifice quality, offering flexible packages that fit different budgets and business stages."
         ],
         "ctas": [
-          "Want a clear quote based on your actual project? Book a consultation at https://bshsolutionss.com/book-consultation"
+          "Want a clear quote based on your actual project? Book a consultation at https://bshsolutions.net/book-consultation"
         ]
       },
       {
@@ -5821,7 +5821,7 @@ export const SERVICE_ARTICLES: Record<string, ServiceArticle> = {
       "paragraphs": [
         "Choosing the right website development company is one of the most important decisions you will make for your business online. The right team will not just build you a website, they will build you a tool that supports your goals, represents your brand accurately, and gives your customers a reason to trust you from the moment they land on your homepage.",
         "Whether you need custom website development, an ecommerce store, a WordPress or Shopify build, a landing page for an upcoming campaign, or a full corporate website, our team is ready to help. We combine years of practical experience with a genuine focus on results, so you get a website built by people who understand both the technical side and the business side of what makes a website successful.",
-        "Ready to move forward? Book your free consultation today at https://bshsolutionss.com/book-consultation"
+        "Ready to move forward? Book your free consultation today at https://bshsolutions.net/book-consultation"
       ]
     },
     "faqs": [

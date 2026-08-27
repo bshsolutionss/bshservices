@@ -1,10 +1,12 @@
 import { formatBookingDateTime, type Lead } from "@/lib/leads";
+import { SITE_URL } from "@/lib/site";
 
 const BRAND_BLUE = "#1A14A5";
 const BRAND_DARK = "#231F20";
 const BRAND_BG = "#F4F7FE";
-const LOGO_URL = "https://bshsolutionss.com/android-chrome-192x192.png";
-const SITE_URL = "https://bshsolutionss.com";
+const LOGO_URL = `${SITE_URL}/android-chrome-192x192.png`;
+// Display-only text (no protocol) for the footer link's visible label.
+const SITE_HOST = new URL(SITE_URL).host;
 
 const SOCIAL_LINKS = [
   { label: "Facebook", href: "https://www.facebook.com/people/BSH-Solutions/61582682037084/" },
@@ -73,7 +75,7 @@ function wrapEmailLayout(opts: { preheader: string; bodyHtml: string }): string 
                 <div style="margin-bottom:14px;">${socialLinks}</div>
                 <p style="margin:0;font-size:12px;color:#8a8a8a;">
                   BSH Solutions — Business Smart Hub &middot; Karachi, Pakistan<br />
-                  <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;">bshsolutionss.com</a>
+                  <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;">${SITE_HOST}</a>
                 </p>
               </td>
             </tr>

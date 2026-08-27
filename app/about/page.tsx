@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     "IT company Pakistan",
     "software development team",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/about" },
+  alternates: { canonical: "/about" },
   openGraph: {
     title: "About BSH Solutions",
     description:
       "Meet the team behind BSH Solutions and our mission to build smart, scalable, future-ready digital solutions.",
-    url: "https://bshsolutionss.com/about",
+    url: "/about",
   },
 };
 

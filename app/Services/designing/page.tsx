@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     "UI/UX design",
     "graphic design services",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/Services/designing" },
+  alternates: { canonical: "/Services/designing" },
   openGraph: {
     title: "Creative Design Services | BSH Solutions",
     description:
       "Branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
-    url: "https://bshsolutionss.com/Services/designing",
+    url: "/Services/designing",
   },
 };
 

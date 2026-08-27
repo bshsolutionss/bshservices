@@ -14,12 +14,12 @@ export const metadata: Metadata = {
     "client case studies",
     "live websites",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/portfolio" },
+  alternates: { canonical: "/portfolio" },
   openGraph: {
     title: "Portfolio | BSH Solutions",
     description:
       "Real, live client projects — websites, dashboards, eCommerce stores, and SaaS platforms built by BSH Solutions.",
-    url: "https://bshsolutionss.com/portfolio",
+    url: "/portfolio",
   },
 };
 

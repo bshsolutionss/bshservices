@@ -5,6 +5,6 @@ export const metadata: Metadata = {
   description:
     "BSH Solutions is a Business Smart Hub providing IT, marketing, software, and digital transformation services.",
   alternates: {
-    canonical: "https://bshsolutionss.com/about",
+    canonical: "/about",
   },
 };

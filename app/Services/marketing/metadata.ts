@@ -3,6 +3,6 @@ export const metadata = {
   description:
     "SEO, SMM, PPC ads, and complete digital marketing solutions to grow your business online.",
   alternates: {
-    canonical: "https://bshsolutionss.com/Services/marketing",
+    canonical: "/Services/marketing",
   },
 };

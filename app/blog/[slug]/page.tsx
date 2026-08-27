@@ -1,6 +1,7 @@
 import { getPostBySlug, getFeaturedImage, wpToPlainText } from "@/lib/wp";
 import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { safeJsonLd } from "@/lib/json-ld";
+import { SITE_URL } from "@/lib/site";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,19 +36,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // "Post Title | BSH Solutions | BSH Solutions" <title> tag in production.
   // OpenGraph/Twitter titles aren't templated, so they use the full string.
   const fullTitle = `${postTitle} | BSH Solutions`;
-  const url = `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`;
+  // Relative — resolved against metadataBase for the <link rel="canonical">
+  // and OG url tags. The JSON-LD block below still needs the absolute form
+  // (schema.org isn't resolved against metadataBase), built separately.
+  const path = `/blog/${post.slug || resolvedParams.slug}`;
   const featuredImg = getFeaturedImage(post);
 
   return {
     title: postTitle,
     description,
     alternates: {
-      canonical: url,
+      canonical: path,
     },
     openGraph: {
       title: fullTitle,
       description,
-      url,
+      url: path,
       type: "article",
       siteName: "BSH Solutions",
       publishedTime: post.date,
@@ -147,7 +151,7 @@ export default async function Post({ params }: Props) {
               {
                 "@type": "Organization",
                 name: "BSH Solutions",
-                url: "https://bshsolutionss.com",
+                url: SITE_URL,
               },
             ],
             publisher: {
@@ -155,12 +159,12 @@ export default async function Post({ params }: Props) {
               name: "BSH Solutions",
               logo: {
                 "@type": "ImageObject",
-                url: "https://bshsolutionss.com/android-chrome-512x512.png",
+                url: `${SITE_URL}/android-chrome-512x512.png`,
               },
             },
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://bshsolutionss.com/blog/${post.slug || resolvedParams.slug}`,
+              "@id": `${SITE_URL}/blog/${post.slug || resolvedParams.slug}`,
             },
           }),
         }}

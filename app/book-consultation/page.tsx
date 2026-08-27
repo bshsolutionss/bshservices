@@ -13,11 +13,11 @@ export const metadata: Metadata = {
     "schedule a call",
     "book a meeting",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/book-consultation" },
+  alternates: { canonical: "/book-consultation" },
   openGraph: {
     title: "Book a Free Consultation | BSH Solutions",
     description: "Pick a date and time that works for you — no obligation, no pressure.",
-    url: "https://bshsolutionss.com/book-consultation",
+    url: "/book-consultation",
   },
 };
 

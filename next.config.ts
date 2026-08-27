@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import { SITE_URL } from "@/lib/site";
 
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
@@ -124,6 +125,20 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      // The project's Vercel-assigned preview/production domain — send
+      // anyone who still has it bookmarked/indexed to the real domain.
+      // (bshsolutionss.com → bshsolutions.net is already handled as a
+      // 308 at the Vercel domain level, outside this app.)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "bshservices-xi.vercel.app" }],
+        destination: `${SITE_URL}/:path*`,
+        permanent: true,
       },
     ];
   },

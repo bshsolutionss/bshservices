@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     "IT consulting contact",
     "Business Smart Hub contact",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/contact" },
+  alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact BSH Solutions",
     description:
       "Reach out to BSH Solutions for web development, software, marketing, or IT consulting inquiries.",
-    url: "https://bshsolutionss.com/contact",
+    url: "/contact",
   },
 };
 

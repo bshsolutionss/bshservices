@@ -3,6 +3,6 @@ export const metadata = {
   description:
     "Professional business photography, videography, and media production for branding and marketing.",
   alternates: {
-    canonical: "https://bshsolutionss.com/Services/photography",
+    canonical: "/Services/photography",
   },
 };

@@ -119,7 +119,7 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
                 drawing primitive, not an HTML <img>; it has no alt prop in its API. */}
             <Image src={{ data: logoBuffer, format: "png" }} style={styles.logo} />
             <Text style={styles.brandName}>BSH Solutions</Text>
-            <Text style={styles.brandTagline}>Business Smart Hub · bshsolutionss.com</Text>
+            <Text style={styles.brandTagline}>Business Smart Hub · bshsolutions.net</Text>
           </View>
           <View>
             <Text style={styles.invoiceTitle}>INVOICE</Text>
@@ -208,7 +208,7 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
         <View style={styles.footer} fixed>
           <Text style={styles.footerBrand}>BSH Solutions</Text>
           <Text style={styles.footerText}>Thank you for your business.</Text>
-          <Text style={styles.footerText}>bshsolutionss.com · bshsolutionss@gmail.com</Text>
+          <Text style={styles.footerText}>bshsolutions.net · bshsolutionss@gmail.com</Text>
         </View>
       </Page>
     </Document>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { safeJsonLd } from "@/lib/json-ld";
+import { SITE_URL } from "@/lib/site";
 
 export interface BreadcrumbItem {
   label: string;
@@ -23,7 +24,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `https://bshsolutionss.com${item.href}` } : {}),
+      ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
     })),
   };
 

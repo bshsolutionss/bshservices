@@ -32,12 +32,12 @@ export const metadata: Metadata = {
     "product photography",
     "brand shoots",
   ],
-  alternates: { canonical: "https://bshsolutionss.com/Services/photography" },
+  alternates: { canonical: "/Services/photography" },
   openGraph: {
     title: "Photography & Videography Services | BSH Solutions",
     description:
       "We capture moments, products, and stories with creativity, precision, and professional artistry.",
-    url: "https://bshsolutionss.com/Services/photography",
+    url: "/Services/photography",
   },
 };
 

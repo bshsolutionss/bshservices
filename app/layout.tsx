@@ -8,6 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { safeJsonLd } from "@/lib/json-ld";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bshsolutionss.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "BSH Solutions | Business Smart Hub",
     template: "%s | BSH Solutions",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     "Digital Marketing",
     "Tech Services",
   ],
-  authors: [{ name: "BSH Solutions", url: "https://bshsolutionss.com" }],
+  authors: [{ name: "BSH Solutions", url: SITE_URL }],
   robots: {
     index: true,
     follow: true,
@@ -49,17 +50,17 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://bshsolutionss.com",
+    canonical: "./",
   },
   openGraph: {
     title: "BSH Solutions | Business Smart Hub",
     description:
       "Smart, scalable, and future-ready digital solutions for growing businesses.",
-    url: "https://bshsolutionss.com",
+    url: "./",
     siteName: "BSH Solutions",
     images: [
       {
-        url: "https://bshsolutionss.com/android-chrome-512x512.png",
+        url: "/android-chrome-512x512.png",
         width: 1200,
         height: 630,
         alt: "BSH Solutions – Business Smart Hub",
@@ -73,7 +74,10 @@ export const metadata: Metadata = {
     title: "BSH Solutions | Business Smart Hub",
     description:
       "A hub for all business tech needs — powered by BSH Solutions.",
-    images: ["https://bshsolutionss.com/android-chrome-512x512.png"],
+    images: ["/android-chrome-512x512.png"],
+    // NOTE: this Twitter/X handle has an extra "s" ("BSHSolutionss") — not
+    // touched here since it's a social-media identity, not a domain
+    // reference; flagged separately, verify it's the account's actual @handle.
     creator: "@BSHSolutionss",
   },
   icons: {
@@ -130,8 +134,12 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "BSH Solutions",
-              url: "https://bshsolutionss.com",
-              logo: "https://bshsolutionss.com/android-chrome-512x512.png",
+              url: SITE_URL,
+              logo: `${SITE_URL}/android-chrome-512x512.png`,
+              // Social profile URLs — identities, not the site domain, so left
+              // as-is; flagged separately (instagram/x below still carry the
+              // old double-"s" handle while facebook/linkedin don't, worth
+              // confirming which are the real accounts).
               sameAs: [
                 "https://facebook.com/bshsolutions",
                 "https://www.instagram.com/bshsolutionss",
