@@ -4,6 +4,7 @@ import { sendLeadEmails } from "@/lib/email/resend";
 import { sendAdminPush } from "@/lib/push";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 import { isDateBookable } from "@/lib/availability";
+import { scoreLead } from "@/lib/lead-scoring";
 import type { Lead } from "@/lib/leads";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,6 +19,9 @@ interface BookingPayload {
   message?: string;
   booking_date: string;
   booking_time: string;
+  /** Carried over when the booking form was pre-filled from a service page or an earlier contact-form lead — see components/BookingForm.tsx. */
+  service_category?: string;
+  selected_service?: string;
   /** Honeypot — real users never fill this in. */
   company_website?: string;
 }
@@ -66,15 +70,36 @@ export async function POST(request: NextRequest) {
   }
 
   const now = new Date();
+  const phone = payload.phone?.trim().slice(0, 60) || null;
+  const message = payload.message?.trim().slice(0, 5000) || null;
+  // Only populated when the booking form was pre-filled — e.g. from a
+  // service page's "Book a Consultation" link, or continuing from an
+  // earlier contact-form submission. Picking an actual time slot is already
+  // the strongest intent signal on the site either way (see SOURCE_POINTS),
+  // so scoring still works fine when these are absent.
+  const service_category = payload.service_category?.trim().slice(0, 100) || null;
+  const selected_service = payload.selected_service?.trim().slice(0, 150) || null;
+
+  const { priority, expectedValue } = scoreLead({
+    source: "consultation_booking",
+    service_category,
+    selected_service,
+    message,
+    phone,
+  });
 
   const insertRow = {
     name: payload.name.trim().slice(0, 200),
     email: payload.email.trim().slice(0, 320),
-    phone: payload.phone?.trim().slice(0, 60) || null,
-    message: payload.message?.trim().slice(0, 5000) || null,
+    phone,
+    message,
+    service_category,
+    selected_service,
     source: "consultation_booking" as const,
     page_path: payload.page_path?.trim().slice(0, 300) || null,
     status: "new" as const,
+    priority,
+    expected_value: expectedValue,
     booking_date: payload.booking_date,
     booking_time: payload.booking_time,
     booking_status: "confirmed" as const,

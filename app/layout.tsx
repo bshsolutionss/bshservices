@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import ClarityInit from "@/components/ClarityInit";
 import { safeJsonLd } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site";
 
@@ -125,6 +126,7 @@ export default function RootLayout({
         {/* Analytics */}
         <Analytics />
         <SpeedInsights />
+        <ClarityInit />
 
         {/* Structured Data – Organization */}
         <script

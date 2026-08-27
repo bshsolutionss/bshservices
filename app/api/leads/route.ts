@@ -3,6 +3,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service";
 import { sendLeadEmails } from "@/lib/email/resend";
 import { sendAdminPush } from "@/lib/push";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
+import { scoreLead } from "@/lib/lead-scoring";
 import type { Lead, LeadSource } from "@/lib/leads";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,25 +64,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid email address." }, { status: 400 });
   }
 
-  if (payload.source !== "contact_form" && payload.source !== "service_form") {
+  const VALID_SOURCES: LeadSource[] = ["contact_form", "service_form", "lead_magnet"];
+  if (!VALID_SOURCES.includes(payload.source)) {
     return NextResponse.json({ ok: false, error: "Invalid source." }, { status: 400 });
   }
 
   const now = new Date();
 
+  const service_category = payload.service_category?.trim().slice(0, 100) || null;
+  const selected_service = payload.selected_service?.trim().slice(0, 150) || null;
+  const business_type = payload.business_type?.trim().slice(0, 100) || null;
+  const phone = payload.phone?.trim().slice(0, 60) || null;
+  const message = payload.message?.trim().slice(0, 5000) || null;
+
+  const { priority, expectedValue } = scoreLead({
+    source: payload.source,
+    service_category,
+    selected_service,
+    business_type,
+    message,
+    phone,
+  });
+
   const insertRow = {
     name: payload.name.trim().slice(0, 200),
     email: payload.email.trim().slice(0, 320),
-    phone: payload.phone?.trim().slice(0, 60) || null,
+    phone,
     business: payload.business?.trim().slice(0, 200) || null,
     best_time: payload.best_time?.trim().slice(0, 200) || null,
-    message: payload.message?.trim().slice(0, 5000) || null,
-    service_category: payload.service_category?.trim().slice(0, 100) || null,
-    selected_service: payload.selected_service?.trim().slice(0, 150) || null,
-    business_type: payload.business_type?.trim().slice(0, 100) || null,
+    message,
+    service_category,
+    selected_service,
+    business_type,
     source: payload.source,
     page_path: payload.page_path?.trim().slice(0, 300) || null,
     status: "new" as const,
+    priority,
+    expected_value: expectedValue,
     next_follow_up_at: new Date(now.getTime() + FOLLOW_UP_DELAY_MS).toISOString(),
     follow_up_stage: 0,
     follow_up_completed: false,

@@ -13,6 +13,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   contact_form: "Contact Form",
   service_form: "Service Form",
   consultation_booking: "Consultation Booking",
+  lead_magnet: "Lead Magnet Download",
 };
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {

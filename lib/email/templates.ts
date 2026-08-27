@@ -102,6 +102,10 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   contact_form: "Contact Form",
   service_form: "Service Form",
   consultation_booking: "Consultation Booking",
+  // Never actually sent through this module (app/api/lead-magnet/route.ts
+  // doesn't call sendLeadEmails — see its comment on why) — present only so
+  // this Record stays exhaustive over LeadSource.
+  lead_magnet: "Lead Magnet Download",
 };
 
 export function clientConfirmationEmail(lead: Lead): { subject: string; html: string } {

@@ -9,6 +9,8 @@ interface ServiceArticleProps {
   article: ServiceArticle;
   image: string;
   imageAlt: string;
+  /** Threaded into the closing CTA's booking link as ?service= — see ArticleClosingCta. */
+  serviceName: string;
 }
 
 /**
@@ -26,7 +28,7 @@ interface ServiceArticleProps {
  * The article's own FAQ section is intentionally not repeated here — it
  * renders via `FaqAccordion` below, with matching FAQPage schema.
  */
-export default function ServiceArticleSection({ article, image, imageAlt }: ServiceArticleProps) {
+export default function ServiceArticleSection({ article, image, imageAlt, serviceName }: ServiceArticleProps) {
   let bandIndex = 0;
 
   return (
@@ -49,7 +51,7 @@ export default function ServiceArticleSection({ article, image, imageAlt }: Serv
         }
       })}
 
-      <ArticleClosingCta closing={article.closing} index={bandIndex++} />
+      <ArticleClosingCta closing={article.closing} index={bandIndex++} serviceName={serviceName} />
     </>
   );
 }

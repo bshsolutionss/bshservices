@@ -18,6 +18,16 @@ const CATEGORIES: { id: PricingCategory; label: string }[] = [
   { id: "CUSTOM", label: "Custom Code" },
 ];
 
+// Feeds the contact form's service-context prefill (?category=&service=) —
+// see components/contactform.tsx. Retainers are a marketing-led bundle;
+// the other three are all built under the site's "Development" category.
+const CONTACT_CATEGORY_BY_PRICING: Record<PricingCategory, string> = {
+  RETAINER: "Marketing",
+  WORDPRESS: "Development",
+  ECOMMERCE: "Development",
+  CUSTOM: "Development",
+};
+
 export default function PricingSection({ region = "GLOBAL" }: PricingSectionProps) {
   const [activeCategory, setActiveCategory] = React.useState<PricingCategory>("RETAINER");
   const router = useRouter();
@@ -63,11 +73,17 @@ export default function PricingSection({ region = "GLOBAL" }: PricingSectionProp
         <div className="grid md:grid-cols-3 gap-8 relative mb-24">
           <AnimatePresence mode="wait">
             {tiers.map((tier, idx) => (
-              <PricingCard 
-                key={`${activeCategory}-${tier.name}`} 
-                tier={tier} 
-                index={idx} 
-                onCtaClick={() => router.push("/contact")}
+              <PricingCard
+                key={`${activeCategory}-${tier.name}`}
+                tier={tier}
+                index={idx}
+                onCtaClick={() => {
+                  const params = new URLSearchParams({
+                    category: CONTACT_CATEGORY_BY_PRICING[activeCategory],
+                    service: tier.name,
+                  });
+                  router.push(`/contact?${params.toString()}`);
+                }}
               />
             ))}
           </AnimatePresence>

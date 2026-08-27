@@ -54,11 +54,15 @@ const SUPABASE_ORIGIN = (() => {
 function buildCsp(): string {
   return [
     `default-src 'self'`,
-    `script-src 'self' 'unsafe-inline' https://elfsightcdn.com https://*.elfsight.com https://va.vercel-scripts.com https://widgets.sociablekit.com https://*.sociablekit.com`,
+    // https://www.clarity.ms — Microsoft Clarity (components/ClarityInit.tsx)
+    // injects its own <script src> tag rather than going through next/script.
+    `script-src 'self' 'unsafe-inline' https://elfsightcdn.com https://*.elfsight.com https://va.vercel-scripts.com https://widgets.sociablekit.com https://*.sociablekit.com https://www.clarity.ms`,
     `style-src 'self' 'unsafe-inline' https://widgets.sociablekit.com https://*.sociablekit.com https://fonts.googleapis.com`,
     `img-src 'self' data: blob: https://darkgrey-pelican-916395.hostingersite.com https://secure.gravatar.com https://api.dicebear.com https://*.elfsight.com https://*.elfsightcdn.com https://*.googleusercontent.com https://*.sociablekit.com https://lh3.googleusercontent.com https://maps.gstatic.com`,
     `font-src 'self' data: https://fonts.gstatic.com`,
-    `connect-src 'self' ${SUPABASE_ORIGIN} https://*.elfsight.com https://*.elfsightcdn.com https://vitals.vercel-insights.com https://*.sociablekit.com https://widgets.sociablekit.com`,
+    // Clarity's own telemetry beacons land on a handful of *.clarity.ms
+    // subdomains (region-sharded) — wildcarded rather than enumerated.
+    `connect-src 'self' ${SUPABASE_ORIGIN} https://*.elfsight.com https://*.elfsightcdn.com https://vitals.vercel-insights.com https://*.sociablekit.com https://widgets.sociablekit.com https://www.clarity.ms https://*.clarity.ms`,
     `frame-src 'self' https://www.google.com https://*.elfsight.com https://widgets.sociablekit.com https://*.sociablekit.com`,
     `object-src 'none'`,
     `base-uri 'self'`,

@@ -6,10 +6,12 @@ interface ArticleClosingCtaProps {
   closing: { heading: string; paragraphs: string[] };
   /** Position among sibling sections — drives the alternating band background. */
   index: number;
+  /** Carried into the booking link as ?service= so BookingForm arrives pre-filled/pre-scored with this page's service context. */
+  serviceName: string;
 }
 
 /** The source article's own closing pitch — its last heading + paragraph(s) — as a prominent banner. The trailing "Book ... at <url>" sentence loses its raw URL since the button right below already does that job. */
-export default function ArticleClosingCta({ closing, index: sectionIndex }: ArticleClosingCtaProps) {
+export default function ArticleClosingCta({ closing, index: sectionIndex, serviceName }: ArticleClosingCtaProps) {
   if (!closing.heading) return null;
   const bandBg = sectionIndex % 2 === 0 ? "bg-[#F4F7FE]" : "bg-white";
 
@@ -26,7 +28,7 @@ export default function ArticleClosingCta({ closing, index: sectionIndex }: Arti
             ))}
           </div>
           <Link
-            href="/book-consultation"
+            href={`/book-consultation?service=${encodeURIComponent(serviceName)}`}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-white text-[#1A14A5] font-semibold px-8 py-3.5 hover:bg-white/90 transition-colors"
           >
             Book Your Free Consultation <ArrowRight className="h-4 w-4" aria-hidden="true" />

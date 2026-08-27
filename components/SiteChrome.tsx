@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import InstallAppButton from "@/components/InstallAppButton";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import ExitIntentOffer from "@/components/ExitIntentOffer";
 
 /**
  * Wraps the public marketing Header/Footer around page content, except on
@@ -24,6 +26,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <main className="overflow-x-hidden">{children}</main>
       <Footer />
       <InstallAppButton variant="floating" />
+      <WhatsAppButton variant="floating" source="floating_button" />
+      <ExitIntentOffer />
     </>
   );
 }

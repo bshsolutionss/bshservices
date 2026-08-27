@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
+import { getServicesByCategory, type ServiceCategorySlug } from "@/lib/services-data";
 
 interface FormProps {
   serviceName:
@@ -11,15 +13,30 @@ interface FormProps {
     | "Marketing"
     | "Photography"
     | "AI Services";
+  /**
+   * The exact service this form is already embedded under (e.g. "SEO
+   * Optimization" on that service's own detail page) — pre-selects the
+   * dropdown so a visitor who's already on the SEO page isn't asked to
+   * re-pick "SEO Optimization" from a list a second time.
+   */
+  preselectedService?: string;
 }
 
-export default function Form({ serviceName }: FormProps) {
+const CATEGORY_SLUG_BY_LABEL: Record<FormProps["serviceName"], ServiceCategorySlug> = {
+  Development: "development",
+  Designing: "designing",
+  Marketing: "marketing",
+  Photography: "photography",
+  "AI Services": "ai",
+};
+
+export default function Form({ serviceName, preselectedService }: FormProps) {
   const pathname = usePathname();
   const [form, setForm] = useState({
     name: "",
     email: "",
     number: "",
-    selectedService: "",
+    selectedService: preselectedService ?? "",
     businessType: "",
     company_website: "", // honeypot — left blank by real users
   });
@@ -27,14 +44,11 @@ export default function Form({ serviceName }: FormProps) {
     "idle"
   );
 
-  // All Services
-  const servicesByCategory: Record<string, string[]> = {
-    Development: ["Website Development","E-commerce","Mobile Apps","Custom Software","Web Applications","Maintenance & Support"],
-    Designing: ["Branding","UI / UX","Graphic Design","Logo Design","Motion Graphics","Packaging Design"],
-    Marketing: ["PPC Advertising","Social Media Marketing","SEO Optimization","Email Marketing","Content Marketing","Influencer Marketing"],
-    Photography: ["Product Photography","Brand Shoots","Event Coverage","Video Production","Editing & Retouching","Drone Photography"],
-    "AI Services": ["AI Automation","AI Chatbots","AI Website Integration","AI Content Creation (SEO)","AI Social Media Automation","AI Video Automation"],
-  };
+  // Sourced from lib/services-data.ts (the single source of truth every
+  // service page is generated from) rather than a hand-maintained list —
+  // guarantees these options always match real service names/slugs, and
+  // that `preselectedService` above always finds a matching <option>.
+  const serviceOptions = getServicesByCategory(CATEGORY_SLUG_BY_LABEL[serviceName]).map((s) => s.name);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -67,6 +81,7 @@ export default function Form({ serviceName }: FormProps) {
       if (!res.ok) throw new Error("Request failed");
 
       setStatus("success");
+      trackEvent("service_form_submit", { service_category: serviceName });
       setForm({
         name: "",
         email: "",
@@ -96,7 +111,7 @@ export default function Form({ serviceName }: FormProps) {
 
           <motion.select whileFocus={{ scale: 1.02 }} name="selectedService" value={form.selectedService} onChange={handleChange} required className="w-full p-3 rounded-xl bg-white/70 border border-gray-300">
             <option value="">Select a {serviceName} Service</option>
-            {servicesByCategory[serviceName].map((srv) => (<option key={srv} value={srv}>{srv}</option>))}
+            {serviceOptions.map((srv) => (<option key={srv} value={srv}>{srv}</option>))}
           </motion.select>
 
           <div className="text-left">

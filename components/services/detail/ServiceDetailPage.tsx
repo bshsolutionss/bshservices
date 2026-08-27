@@ -6,6 +6,7 @@ import { SERVICE_ARTICLES, truncateForMeta } from "@/lib/services-articles";
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import LeadMagnetGate from "@/components/services/LeadMagnetGate";
 import Testimonial from "@/components/testimonial";
 
 import Breadcrumbs from "@/components/services/detail/Breadcrumbs";
@@ -97,10 +98,12 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
       {!article && <Benefits title={`Benefits of ${service.name}`} benefits={service.benefits} />}
 
       {article && (
-        <ServiceArticleSection article={article} image={service.image} imageAlt={heroTitle} />
+        <ServiceArticleSection article={article} image={service.image} imageAlt={heroTitle} serviceName={service.name} />
       )}
 
       {!articleHasProcess && <ProcessSteps steps={getProcessSteps(service)} />}
+
+      {service.leadMagnetSlug && <LeadMagnetGate slug={service.leadMagnetSlug} />}
 
       <WhyChooseUs serviceName={service.name} points={getWhyChooseUs(service.category)} />
 
@@ -114,7 +117,7 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
 
       <div className="bg-[#F4F7FE]">
         <ServiceCta heading={cta.heading} subtext={cta.subtext} />
-        <Form serviceName={FORM_SERVICE_NAME[service.category]} />
+        <Form serviceName={FORM_SERVICE_NAME[service.category]} preselectedService={service.name} />
       </div>
     </>
   );

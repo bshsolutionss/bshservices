@@ -3,6 +3,7 @@ import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
+import QuoteQuiz from "@/components/services/QuoteQuiz";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
 import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
@@ -201,6 +202,7 @@ export default function DevelopmentPage() {
         reverse
       />
       <FaqAccordion serviceName="Web Development" faqs={getCategoryFaqs("development")} />
+      <QuoteQuiz />
       <RelatedBlogPosts posts={CATEGORY_BLOG_LINKS.development} />
       <Testimonial />
       <section id="development-form">

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const serviceLinks = [
   { name: "Web & Software Development", href: "/Services/development" },
@@ -127,7 +128,7 @@ const Footer = () => {
                 href="tel:+923128994968"
                 className="block text-[#231F20]/75 hover:text-[#1A14A5] transition-colors"
               >
-                <span className="text-[#231F20]/50">Call / WhatsApp: </span>
+                <span className="text-[#231F20]/50">Call: </span>
                 +92 312 8994968
               </a>
               <p className="text-[#231F20]/75">
@@ -136,13 +137,17 @@ const Footer = () => {
               </p>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               <Link
                 href="/book-consultation"
                 className="inline-flex w-full items-center justify-center rounded-lg bg-[#1A14A5] hover:bg-[#0e0a7a] text-white text-sm font-semibold px-4 py-2.5 transition-colors"
               >
                 Book Free Consultation
               </Link>
+              <WhatsAppButton
+                source="footer"
+                className="w-full !px-4 !py-2.5 !rounded-lg text-sm"
+              />
             </div>
           </div>
         </div>

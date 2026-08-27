@@ -134,6 +134,8 @@ export interface ServiceDefinition {
   technologies: TechItem[];
   faqs: ServiceFaq[];
   keywords: string[];
+  /** Optional gated PDF download shown on this service's page — slug into lib/lead-magnets.ts's LEAD_MAGNETS. */
+  leadMagnetSlug?: string;
 }
 
 export const SERVICE_CATEGORIES: Record<ServiceCategorySlug, ServiceCategoryInfo> = {
@@ -676,6 +678,7 @@ export const SERVICES: ServiceDefinition[] = [
       { question: "Will you write content too?", answer: "Yes, keyword-driven content strategy and writing is part of our SEO service where it's needed." },
     ],
     keywords: ["SEO agency", "search engine optimization services", "technical SEO audit", "organic traffic growth"],
+    leadMagnetSlug: "seo-audit-checklist",
   },
   {
     slug: "email-marketing",
