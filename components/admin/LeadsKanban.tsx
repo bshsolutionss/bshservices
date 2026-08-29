@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DndContext, useDraggable, useDroppable, type DragEndEvent } from "@dnd-kit/core";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, LEAD_STATUS_COLORS, type LeadStatus } from "@/lib/leads";
+import { formatMoney, type Currency } from "@/lib/invoices";
 
 export interface KanbanLead {
   id: string;
@@ -14,6 +15,7 @@ export interface KanbanLead {
   status: LeadStatus;
   priority: string;
   expected_value: number | null;
+  expected_value_currency: Currency;
   selected_service: string | null;
   service_category: string | null;
 }
@@ -49,7 +51,7 @@ function KanbanCard({ lead }: { lead: KanbanLead }) {
       </p>
       {lead.expected_value !== null && (
         <p className="text-xs font-semibold text-[#1A14A5] mt-1.5">
-          ${Number(lead.expected_value).toLocaleString()}
+          {formatMoney(Number(lead.expected_value), lead.expected_value_currency)}
         </p>
       )}
     </div>

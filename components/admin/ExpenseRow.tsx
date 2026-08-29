@@ -6,9 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EXPENSE_CATEGORIES, EXPENSE_CATEGORY_COLORS, type Expense, type ExpenseCategory } from "@/lib/expenses";
 import { CURRENCIES, CURRENCY_LABELS, formatMoney, type Currency } from "@/lib/invoices";
+import VendorOrEmployeeField from "@/components/admin/VendorOrEmployeeField";
+
+interface ExpenseRowProps {
+  expense: Expense;
+  employees: { id: string; name: string }[];
+}
 
 /** Table row for the expenses list — display + inline edit toggle + delete, one component per row. */
-export default function ExpenseRow({ expense }: { expense: Expense }) {
+export default function ExpenseRow({ expense, employees }: ExpenseRowProps) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -91,7 +97,7 @@ export default function ExpenseRow({ expense }: { expense: Expense }) {
             </select>
             <Input type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
             <Input type="date" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} />
-            <Input placeholder="Vendor" value={vendor} onChange={(e) => setVendor(e.target.value)} />
+            <VendorOrEmployeeField category={category} value={vendor} onChange={setVendor} employees={employees} />
             <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="flex items-center gap-3 mt-3">

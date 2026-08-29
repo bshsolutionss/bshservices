@@ -12,11 +12,13 @@ import {
   type ProjectStage,
   type ProjectServiceCategory,
 } from "@/lib/projects";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface ProjectEditControlProps {
   projectId: string;
   initialStage: ProjectStage;
   initialBudget: number | null;
+  initialCurrency: Currency;
   initialStartDate: string | null;
   initialDueDate: string | null;
   initialServiceCategory: ProjectServiceCategory | null;
@@ -29,6 +31,7 @@ export default function ProjectEditControl({
   projectId,
   initialStage,
   initialBudget,
+  initialCurrency,
   initialStartDate,
   initialDueDate,
   initialServiceCategory,
@@ -39,6 +42,7 @@ export default function ProjectEditControl({
   const router = useRouter();
   const [stage, setStage] = useState<ProjectStage>(initialStage);
   const [budget, setBudget] = useState(initialBudget !== null ? String(initialBudget) : "");
+  const [currency, setCurrency] = useState<Currency>(initialCurrency);
   const [startDate, setStartDate] = useState(initialStartDate ?? "");
   const [dueDate, setDueDate] = useState(initialDueDate ?? "");
   const [serviceCategory, setServiceCategory] = useState<ProjectServiceCategory | "">(initialServiceCategory ?? "");
@@ -61,6 +65,7 @@ export default function ProjectEditControl({
         body: JSON.stringify({
           stage,
           budget: budget === "" ? null : Number(budget),
+          currency,
           start_date: startDate || null,
           due_date: dueDate || null,
           service_category: serviceCategory || null,
@@ -157,7 +162,27 @@ export default function ProjectEditControl({
 
       <div>
         <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Amount</label>
-        <Input type="number" min="0" step="0.01" value={budget} onChange={(e) => setBudget(e.target.value)} />
+        <div className="flex gap-2">
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            className="flex-1"
+          />
+          <select
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as Currency)}
+            className="rounded-lg border border-[#1A14A5]/20 px-2.5 text-sm bg-white"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">

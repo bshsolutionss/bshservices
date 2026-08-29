@@ -1,4 +1,5 @@
 /** Shared types/constants for projects — mirrors lib/leads.ts's shape. */
+import type { Currency } from "@/lib/invoices";
 
 export type ProjectStage = "planning" | "in_progress" | "review" | "completed";
 
@@ -13,6 +14,8 @@ export interface Project {
   lead_id: string | null;
   stage: ProjectStage;
   budget: number | null;
+  /** Defaults to PKR (the business's standard currency) — see supabase/migrations/0009_currency.sql. */
+  currency: Currency;
   start_date: string | null;
   due_date: string | null;
   service_category: ProjectServiceCategory | null;

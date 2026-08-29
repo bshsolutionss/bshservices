@@ -10,11 +10,13 @@ import {
   type ProjectStage,
   type ProjectServiceCategory,
 } from "@/lib/projects";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface UpdatePayload {
   name?: string;
   stage?: ProjectStage;
   budget?: number | null;
+  currency?: Currency;
   start_date?: string | null;
   due_date?: string | null;
   service_category?: ProjectServiceCategory | null;
@@ -58,6 +60,12 @@ export async function PATCH(
   }
   if (payload.budget !== undefined) {
     updates.budget = payload.budget === null ? null : Number(payload.budget);
+  }
+  if (payload.currency !== undefined) {
+    if (!(CURRENCIES as string[]).includes(payload.currency)) {
+      return NextResponse.json({ ok: false, error: "Invalid currency." }, { status: 400 });
+    }
+    updates.currency = payload.currency;
   }
   if (payload.start_date !== undefined) updates.start_date = payload.start_date || null;
   if (payload.due_date !== undefined) updates.due_date = payload.due_date || null;

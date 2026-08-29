@@ -12,11 +12,13 @@ import {
   type LeadPriority,
   type LeadLostReason,
 } from "@/lib/leads";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface UpdatePayload {
   status?: LeadStatus;
   notes?: string;
   expected_value?: number | null;
+  expected_value_currency?: Currency;
   priority?: LeadPriority;
   lost_reason?: LeadLostReason;
   /** Only meaningful for source === "consultation_booking" — cancelling frees the slot back up. */
@@ -86,6 +88,13 @@ export async function PATCH(
 
   if (payload.expected_value !== undefined) {
     updates.expected_value = payload.expected_value === null ? null : Number(payload.expected_value);
+  }
+
+  if (payload.expected_value_currency !== undefined) {
+    if (!(CURRENCIES as string[]).includes(payload.expected_value_currency)) {
+      return NextResponse.json({ ok: false, error: "Invalid currency." }, { status: 400 });
+    }
+    updates.expected_value_currency = payload.expected_value_currency;
   }
 
   if (payload.priority !== undefined) {

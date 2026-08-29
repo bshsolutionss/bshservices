@@ -16,6 +16,7 @@ import {
   type LeadPriority,
   type LeadLostReason,
 } from "@/lib/leads";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface LeadStatusControlProps {
   leadId: string;
@@ -23,6 +24,7 @@ interface LeadStatusControlProps {
   initialNotes: string | null;
   initialPriority: LeadPriority;
   initialExpectedValue: number | null;
+  initialExpectedValueCurrency: Currency;
   initialLostReason: LeadLostReason | null;
 }
 
@@ -37,6 +39,7 @@ export default function LeadStatusControl({
   initialNotes,
   initialPriority,
   initialExpectedValue,
+  initialExpectedValueCurrency,
   initialLostReason,
 }: LeadStatusControlProps) {
   const router = useRouter();
@@ -45,6 +48,7 @@ export default function LeadStatusControl({
   const [expectedValue, setExpectedValue] = useState(
     initialExpectedValue !== null ? String(initialExpectedValue) : ""
   );
+  const [expectedValueCurrency, setExpectedValueCurrency] = useState<Currency>(initialExpectedValueCurrency);
   const [lostReason, setLostReason] = useState<LeadLostReason | "">(initialLostReason ?? "");
   const [notes, setNotes] = useState(initialNotes ?? "");
   const [saving, setSaving] = useState(false);
@@ -65,6 +69,7 @@ export default function LeadStatusControl({
           notes,
           priority,
           expected_value: expectedValue === "" ? null : Number(expectedValue),
+          expected_value_currency: expectedValueCurrency,
           ...(lostReason ? { lost_reason: lostReason } : {}),
         }),
       });
@@ -145,14 +150,28 @@ export default function LeadStatusControl({
         </div>
         <div>
           <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Expected Value</label>
-          <Input
-            type="number"
-            min="0"
-            step="0.01"
-            value={expectedValue}
-            onChange={(e) => setExpectedValue(e.target.value)}
-            placeholder="0.00"
-          />
+          <div className="flex gap-2">
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={expectedValue}
+              onChange={(e) => setExpectedValue(e.target.value)}
+              placeholder="0.00"
+              className="flex-1"
+            />
+            <select
+              value={expectedValueCurrency}
+              onChange={(e) => setExpectedValueCurrency(e.target.value as Currency)}
+              className="rounded-lg border border-[#1A14A5]/20 px-2 text-sm bg-white"
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 

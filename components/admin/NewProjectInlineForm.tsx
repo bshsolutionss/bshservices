@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { PROJECT_SERVICE_CATEGORIES, type ProjectServiceCategory } from "@/lib/projects";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface NewProjectInlineFormProps {
   /** Fixed client (used on a client's own detail page) — hides the client picker. */
@@ -24,6 +25,7 @@ export default function NewProjectInlineForm({ clientId, clients, triggerVariant
   const [name, setName] = useState("");
   const [selectedClientId, setSelectedClientId] = useState(clientId ?? "");
   const [budget, setBudget] = useState("");
+  const [currency, setCurrency] = useState<Currency>("PKR");
   const [serviceCategory, setServiceCategory] = useState<ProjectServiceCategory | "">("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
@@ -42,6 +44,7 @@ export default function NewProjectInlineForm({ clientId, clients, triggerVariant
           name,
           client_id: clientId ?? selectedClientId,
           budget: budget === "" ? undefined : Number(budget),
+          currency,
           service_category: serviceCategory || undefined,
           description: description || undefined,
         }),
@@ -52,6 +55,7 @@ export default function NewProjectInlineForm({ clientId, clients, triggerVariant
       setName("");
       setSelectedClientId(clientId ?? "");
       setBudget("");
+      setCurrency("PKR");
       setServiceCategory("");
       setDescription("");
       setOpen(false);
@@ -110,7 +114,7 @@ export default function NewProjectInlineForm({ clientId, clients, triggerVariant
           onChange={(e) => setServiceCategory(e.target.value as ProjectServiceCategory)}
           className="text-sm rounded-lg border border-[#1A14A5]/20 px-2.5 py-2 bg-white"
         >
-          <option value="">Service…</option>
+          <option value="">Select Service…</option>
           {PROJECT_SERVICE_CATEGORIES.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -126,6 +130,17 @@ export default function NewProjectInlineForm({ clientId, clients, triggerVariant
           onChange={(e) => setBudget(e.target.value)}
           className="w-28"
         />
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as Currency)}
+          className="text-sm rounded-lg border border-[#1A14A5]/20 px-2.5 py-2 bg-white"
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
       </div>
       <Textarea
         placeholder="Description (optional)"

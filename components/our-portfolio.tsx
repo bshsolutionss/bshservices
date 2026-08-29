@@ -21,7 +21,7 @@ export interface PortfolioProject {
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
     title: "Migration Republic",
-    image: "/portfolio/migrationrepublic.png",
+    image: "/portfolio/migrationrepublic.webp",
     category: "Web Development",
     link: "https://migrationrepublic.com.au",
     views: "3.2K",
@@ -29,7 +29,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Migration Factor",
-    image: "/portfolio/migrationfactor.png",
+    image: "/portfolio/migrationfactor.webp",
     category: "Branding & Web",
     link: "https://migrationfactor.com.au",
     views: "2.1K",
@@ -37,7 +37,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Aisha Academy",
-    image: "/portfolio/aishaacademy.png",
+    image: "/portfolio/aishaacademy.webp",
     category: "EdTech Solution",
     link: "https://aisha-academy.com/",
     views: "1.9K",
@@ -45,7 +45,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Silwalo",
-    image: "/portfolio/silwalo.png",
+    image: "/portfolio/silwalo.webp",
     category: "eCommerce",
     link: "https://silwalo.com",
     views: "4.4K",
@@ -53,7 +53,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Admin Dashboard",
-    image: "/portfolio/admindashboard.png",
+    image: "/portfolio/admindashboard.webp",
     category: "Custom Software",
     link: "https://home-decor-admins.vercel.app/",
     views: "1.2K",
@@ -61,7 +61,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Almacca",
-    image: "/portfolio/almacca.png",
+    image: "/portfolio/almacca.webp",
     category: "Web Development",
     link: "https://almacca.com/",
     views: "980",
@@ -69,7 +69,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "Golden Shiruh LLC",
-    image: "/portfolio/migrationrepublic.png",
+    image: "/portfolio/migrationrepublic.webp",
     category: "Agency Website",
     link: "https://goldenshiruhllc.com/",
     views: "1.7K",
@@ -77,7 +77,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
   {
     title: "ANH Supplies",
-    image: "/portfolio/anhsupplies.png",
+    image: "/portfolio/anhsupplies.webp",
     category: "eCommerce",
     link: "https://anhsupplies.com/",
     views: "2.8K",

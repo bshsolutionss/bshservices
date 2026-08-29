@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EXPENSE_CATEGORIES, type ExpenseCategory } from "@/lib/expenses";
 import { CURRENCIES, CURRENCY_LABELS, type Currency } from "@/lib/invoices";
+import VendorOrEmployeeField from "@/components/admin/VendorOrEmployeeField";
 
-export default function NewExpenseInlineForm() {
+export default function NewExpenseInlineForm({ employees = [] }: { employees?: { id: string; name: string }[] }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<ExpenseCategory>("Office");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState<Currency>("USD");
+  // PKR is the business's standard currency — still freely changeable per expense.
+  const [currency, setCurrency] = useState<Currency>("PKR");
   const [expenseDate, setExpenseDate] = useState(new Date().toISOString().slice(0, 10));
   const [vendor, setVendor] = useState("");
   const [description, setDescription] = useState("");
@@ -86,7 +88,7 @@ export default function NewExpenseInlineForm() {
       </select>
       <Input type="number" min="0" step="0.01" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} required />
       <Input type="date" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} required />
-      <Input placeholder="Vendor (optional)" value={vendor} onChange={(e) => setVendor(e.target.value)} />
+      <VendorOrEmployeeField category={category} value={vendor} onChange={setVendor} employees={employees} />
       <Input placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} />
 
       <div className="sm:col-span-2 flex items-center gap-3">

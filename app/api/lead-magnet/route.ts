@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   const name = payload.name.trim().slice(0, 200);
   const email = payload.email.trim().slice(0, 320);
 
-  const { priority, expectedValue } = scoreLead({
+  const { priority, expectedValue, expectedValueCurrency } = scoreLead({
     source: "lead_magnet",
     selected_service: magnet.title,
   });
@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
       status: "new" as const,
       priority,
       expected_value: expectedValue,
+      expected_value_currency: expectedValueCurrency,
       // Lead-magnet downloads don't enter the automated email follow-up
       // drip (that's for real inquiries) — a "we noticed you grabbed our
       // checklist" nurture email is a reasonable follow-up to build later,

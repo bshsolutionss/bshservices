@@ -98,6 +98,7 @@ export default async function AdminProjectDetailPage({
                   defaultClientId={client.id}
                   defaultProjectId={project.id}
                   defaultAmount={project.budget ?? undefined}
+                  defaultCurrency={project.currency}
                   lockSelection
                   triggerLabel="+ Create Invoice"
                 />
@@ -137,6 +138,7 @@ export default async function AdminProjectDetailPage({
           projectId={project.id}
           initialStage={project.stage as ProjectStage}
           initialBudget={project.budget}
+          initialCurrency={project.currency}
           initialStartDate={project.start_date}
           initialDueDate={project.due_date}
           initialServiceCategory={project.service_category as ProjectServiceCategory | null}

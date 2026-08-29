@@ -28,8 +28,20 @@ const CONTACT_CATEGORY_BY_PRICING: Record<PricingCategory, string> = {
   CUSTOM: "Development",
 };
 
-export default function PricingSection({ region = "GLOBAL" }: PricingSectionProps) {
+export default function PricingSection({ region: regionProp = "GLOBAL" }: PricingSectionProps) {
   const [activeCategory, setActiveCategory] = React.useState<PricingCategory>("RETAINER");
+  // Server-rendered/statically-cached at "GLOBAL" (see app/page.tsx — no
+  // longer reading headers() there, which used to force the whole homepage
+  // to render dynamically on every single visit). The proxy already writes
+  // a `user-region` cookie (see proxy.ts) — read it once client-side after
+  // mount so PK visitors still get PK pricing, just a beat after first
+  // paint instead of costing a fresh server render for every request.
+  const [region, setRegion] = React.useState<"GLOBAL" | "PK">(regionProp);
+  React.useEffect(() => {
+    const match = document.cookie.match(/(?:^|; )user-region=(GLOBAL|PK)/);
+    if (match && match[1] !== region) setRegion(match[1] as "GLOBAL" | "PK");
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- read once on mount only
+  }, []);
   const router = useRouter();
   const tiers = PRICING_DATA[region][activeCategory];
 

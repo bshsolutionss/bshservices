@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   const service_category = payload.service_category?.trim().slice(0, 100) || null;
   const selected_service = payload.selected_service?.trim().slice(0, 150) || null;
 
-  const { priority, expectedValue } = scoreLead({
+  const { priority, expectedValue, expectedValueCurrency } = scoreLead({
     source: "consultation_booking",
     service_category,
     selected_service,
@@ -100,6 +100,7 @@ export async function POST(request: NextRequest) {
     status: "new" as const,
     priority,
     expected_value: expectedValue,
+    expected_value_currency: expectedValueCurrency,
     booking_date: payload.booking_date,
     booking_time: payload.booking_time,
     booking_status: "confirmed" as const,

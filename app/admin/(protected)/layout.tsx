@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminShell from "@/components/admin/AdminShell";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -24,10 +24,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
-      <AdminSidebar />
-      <main className="md:pl-64">
-        <div className="max-w-6xl mx-auto px-6 py-8">{children}</div>
-      </main>
+      <AdminShell userEmail={user.email ?? null}>{children}</AdminShell>
     </div>
   );
 }

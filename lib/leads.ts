@@ -1,4 +1,5 @@
 /** Shared types/constants for leads — used by API routes, the admin panel, and email templates. */
+import type { Currency } from "@/lib/invoices";
 
 export type LeadStatus =
   | "new"
@@ -42,6 +43,8 @@ export interface Lead {
   follow_up_completed: boolean;
   /** Deal fields — merged onto the lead rather than a separate `deals` table. */
   expected_value: number | null;
+  /** Defaults to USD — the auto lead-scorer (lib/lead-scoring.ts) derives estimates from lib/pricing-data.ts's GLOBAL/USD tiers. Switch to PKR manually for a local-currency deal. */
+  expected_value_currency: Currency;
   priority: LeadPriority;
   lost_reason: LeadLostReason | null;
   /** Set once this lead has a client (either pre-existing, for repeat business, or created on "won"). */

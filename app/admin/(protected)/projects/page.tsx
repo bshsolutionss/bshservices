@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { cn } from "@/lib/utils";
-import { PROJECT_STAGES, PROJECT_STAGE_LABELS, PROJECT_STAGE_COLORS, type Project, type ProjectStage } from "@/lib/projects";
+import { PROJECT_STAGES, PROJECT_STAGE_LABELS, type Project, type ProjectStage } from "@/lib/projects";
 import type { Client } from "@/lib/clients";
 import NewProjectInlineForm from "@/components/admin/NewProjectInlineForm";
+import ProjectsTable from "@/components/admin/projects/ProjectsTable";
 
 export const dynamic = "force-dynamic";
 
@@ -54,15 +55,12 @@ export default async function AdminProjectsPage({
             {projects.length} project{projects.length === 1 ? "" : "s"}
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href={showArchived ? stageHref(activeStage) : `/admin/projects?archived=1${activeStage ? `&stage=${activeStage}` : ""}`}
-            className="text-sm font-medium text-[#231F20]/60 hover:text-[#1A14A5]"
-          >
-            {showArchived ? "← Back to active projects" : "View archived →"}
-          </Link>
-          <NewProjectInlineForm clients={clientsData ?? []} triggerVariant="solid" />
-        </div>
+        <Link
+          href={showArchived ? stageHref(activeStage) : `/admin/projects?archived=1${activeStage ? `&stage=${activeStage}` : ""}`}
+          className="text-sm font-medium text-[#231F20]/60 hover:text-[#1A14A5]"
+        >
+          {showArchived ? "← Back to active projects" : "View archived →"}
+        </Link>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -89,57 +87,11 @@ export default async function AdminProjectsPage({
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#1A14A5]/10 text-left text-[#231F20]/50">
-              <th className="px-6 py-3 font-medium">Project</th>
-              <th className="px-6 py-3 font-medium">Client</th>
-              <th className="px-6 py-3 font-medium">Service</th>
-              <th className="px-6 py-3 font-medium">Amount</th>
-              <th className="px-6 py-3 font-medium">Due</th>
-              <th className="px-6 py-3 font-medium">Stage</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#1A14A5]/5">
-            {projects.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-[#231F20]/50">
-                  No {showArchived ? "archived" : ""} projects found.
-                </td>
-              </tr>
-            )}
-            {projects.map((project) => (
-              <tr key={project.id} className="hover:bg-[#F4F7FE] transition">
-                <td className="px-6 py-4">
-                  <Link href={`/admin/projects/${project.id}`} className="font-medium text-[#1A14A5] hover:underline">
-                    {project.name}
-                  </Link>
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/70">{clientNames.get(project.client_id) || "—"}</td>
-                <td className="px-6 py-4 text-[#231F20]/70">{project.service_category || "—"}</td>
-                <td className="px-6 py-4 text-[#231F20]/70">
-                  {project.budget !== null ? `$${Number(project.budget).toLocaleString()}` : "—"}
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/50 text-xs whitespace-nowrap">
-                  {project.due_date ? new Date(project.due_date).toLocaleDateString() : "—"}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
-                    style={{
-                      background: PROJECT_STAGE_COLORS[project.stage].bg,
-                      color: PROJECT_STAGE_COLORS[project.stage].text,
-                    }}
-                  >
-                    {PROJECT_STAGE_LABELS[project.stage]}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ProjectsTable
+        projects={projects.map((p) => ({ ...p, clientName: clientNames.get(p.client_id) || "—" }))}
+        toolbarExtra={<NewProjectInlineForm clients={clientsData ?? []} triggerVariant="solid" />}
+        emptyMessage={`No ${showArchived ? "archived " : ""}projects found.`}
+      />
     </div>
   );
 }

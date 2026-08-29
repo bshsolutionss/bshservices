@@ -2,23 +2,9 @@ import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { cn } from "@/lib/utils";
 import { todayInPkt } from "@/lib/availability";
-import {
-  LEAD_STATUS_LABELS,
-  LEAD_STATUS_COLORS,
-  BOOKING_STATUS_LABELS,
-  BOOKING_STATUS_COLORS,
-  formatBookingDateTime,
-  type Lead,
-  type LeadStatus,
-  type BookingStatus,
-} from "@/lib/leads";
+import BookingsTable, { type BookingListItem } from "@/components/admin/bookings/BookingsTable";
 
 export const dynamic = "force-dynamic";
-
-type BookingListItem = Pick<
-  Lead,
-  "id" | "name" | "email" | "phone" | "status" | "message" | "booking_date" | "booking_time" | "booking_status"
->;
 
 const FILTERS = ["upcoming", "past", "cancelled", "all"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -94,66 +80,10 @@ export default async function AdminBookingsPage({
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#1A14A5]/10 text-left text-[#231F20]/50">
-              <th className="px-6 py-3 font-medium">Name</th>
-              <th className="px-6 py-3 font-medium">Contact</th>
-              <th className="px-6 py-3 font-medium">Date &amp; Time</th>
-              <th className="px-6 py-3 font-medium">Lead Status</th>
-              <th className="px-6 py-3 font-medium">Booking</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#1A14A5]/5">
-            {bookings.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-6 py-10 text-center text-[#231F20]/50">
-                  No {filter !== "all" ? FILTER_LABELS[filter].toLowerCase() : ""} bookings found.
-                </td>
-              </tr>
-            )}
-            {bookings.map((booking) => (
-              <tr key={booking.id} className="hover:bg-[#F4F7FE] transition">
-                <td className="px-6 py-4">
-                  <Link href={`/admin/leads/${booking.id}`} className="font-medium text-[#1A14A5] hover:underline">
-                    {booking.name}
-                  </Link>
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/70">
-                  <div>{booking.email}</div>
-                  {booking.phone && <div className="text-xs text-[#231F20]/50">{booking.phone}</div>}
-                </td>
-                <td className="px-6 py-4 text-[#231F20]/70 whitespace-nowrap">
-                  {formatBookingDateTime(booking)}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
-                    style={{
-                      background: LEAD_STATUS_COLORS[booking.status as LeadStatus].bg,
-                      color: LEAD_STATUS_COLORS[booking.status as LeadStatus].text,
-                    }}
-                  >
-                    {LEAD_STATUS_LABELS[booking.status as LeadStatus]}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
-                    style={{
-                      background: BOOKING_STATUS_COLORS[booking.booking_status as BookingStatus].bg,
-                      color: BOOKING_STATUS_COLORS[booking.booking_status as BookingStatus].text,
-                    }}
-                  >
-                    {BOOKING_STATUS_LABELS[booking.booking_status as BookingStatus]}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <BookingsTable
+        bookings={bookings}
+        emptyMessage={`No ${filter !== "all" ? FILTER_LABELS[filter].toLowerCase() + " " : ""}bookings found.`}
+      />
     </div>
   );
 }

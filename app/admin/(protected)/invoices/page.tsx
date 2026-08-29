@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS, formatMoney, type Currency, type InvoiceBalance } from "@/lib/invoices";
+import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS, formatMoney, type InvoiceBalance } from "@/lib/invoices";
+import { sumToPKR } from "@/lib/currency";
+import { getExchangeRates } from "@/lib/admin/exchange-rates";
 import type { Client } from "@/lib/clients";
 import type { Project } from "@/lib/projects";
 import NewInvoiceInlineForm from "@/components/admin/NewInvoiceInlineForm";
@@ -10,10 +12,11 @@ export const dynamic = "force-dynamic";
 export default async function AdminInvoicesPage() {
   const supabase = createServiceRoleClient();
 
-  const [{ data: balancesData }, { data: clientsData }, { data: projectsData }] = await Promise.all([
+  const [{ data: balancesData }, { data: clientsData }, { data: projectsData }, rates] = await Promise.all([
     supabase.from("invoice_balances").select("*").order("due_date", { ascending: true, nullsFirst: false }),
     supabase.from("clients").select("id, company_name").order("company_name"),
     supabase.from("projects").select("id, name, client_id"),
+    getExchangeRates(),
   ]);
 
   const balances = (balancesData ?? []) as InvoiceBalance[];
@@ -25,17 +28,15 @@ export default async function AdminInvoicesPage() {
   const { data: invoicesData } = await supabase.from("invoices").select("id, invoice_number");
   const invoiceNumbers = new Map((invoicesData ?? []).map((i: { id: string; invoice_number: string }) => [i.id, i.invoice_number]));
 
-  // Outstanding totals can't be summed across currencies (PKR + USD isn't a
-  // meaningful number) — group by currency instead.
-  const outstandingByCurrency = new Map<Currency, number>();
-  for (const b of balances) {
-    if (b.status === "sent" || b.status === "partially_paid") {
-      outstandingByCurrency.set(b.currency, (outstandingByCurrency.get(b.currency) ?? 0) + Number(b.balance));
-    }
-  }
-  const outstandingSummary = Array.from(outstandingByCurrency.entries())
-    .map(([currency, amount]) => formatMoney(amount, currency))
-    .join(" + ");
+  // PKR is the business's standard currency — see the note on the dashboard's KPIs.
+  // Individual invoices below still show their own real currency.
+  const outstandingTotalPKR = sumToPKR(
+    balances
+      .filter((b) => b.status === "sent" || b.status === "partially_paid")
+      .map((b) => ({ amount: Number(b.balance), currency: b.currency })),
+    rates
+  );
+  const outstandingSummary = outstandingTotalPKR > 0 ? formatMoney(outstandingTotalPKR, "PKR") : "";
 
   return (
     <div className="space-y-6">

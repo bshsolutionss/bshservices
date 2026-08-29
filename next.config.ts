@@ -94,6 +94,15 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+    // AVIF first (smaller than WebP for most photographic content, at the
+    // cost of a slower first-time encode — a one-off cost since Vercel
+    // caches the result per size/format after that); WebP as the fallback
+    // for browsers/edge cases that don't negotiate AVIF.
+    formats: ["image/avif", "image/webp"],
+    // Default is 60s — these are static marketing/portfolio assets that
+    // only change on a deploy, not per-minute, so there's no reason to
+    // re-check/re-transform them anywhere near that often.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {
     const securityHeaders = [
@@ -129,6 +138,22 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+      // Everything under /public/images, /public/portfolio and /public/team
+      // is static — filenames only change by editing the repo and
+      // redeploying, never in place — so browsers/CDN can cache them
+      // indefinitely instead of re-validating on every repeat visit.
+      {
+        source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/portfolio/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/team/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];
   },

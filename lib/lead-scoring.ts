@@ -10,6 +10,7 @@
  * not a quote; the admin can always edit it on the lead/deal record.
  */
 import type { LeadPriority, LeadSource } from "@/lib/leads";
+import type { Currency } from "@/lib/invoices";
 
 export interface ScoreLeadInput {
   source: LeadSource;
@@ -23,6 +24,8 @@ export interface ScoreLeadInput {
 export interface LeadScore {
   priority: LeadPriority;
   expectedValue: number | null;
+  /** Always USD — VALUE_SIGNALS below are anchored to lib/pricing-data.ts's GLOBAL (USD) tiers. The admin can switch a specific lead to PKR manually if it's actually a local-currency deal. */
+  expectedValueCurrency: Currency;
 }
 
 /**
@@ -89,5 +92,5 @@ export function scoreLead(input: ScoreLeadInput): LeadScore {
 
   const priority: LeadPriority = points >= 70 ? "urgent" : points >= 45 ? "high" : points >= 25 ? "medium" : "low";
 
-  return { priority, expectedValue };
+  return { priority, expectedValue, expectedValueCurrency: "USD" };
 }

@@ -143,6 +143,7 @@ export default async function AdminLeadDetailPage({
             initialNotes={lead.notes}
             initialPriority={lead.priority as LeadPriority}
             initialExpectedValue={lead.expected_value}
+            initialExpectedValueCurrency={lead.expected_value_currency}
             initialLostReason={lead.lost_reason as LeadLostReason | null}
           />
 

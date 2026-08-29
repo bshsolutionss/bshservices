@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   const phone = payload.phone?.trim().slice(0, 60) || null;
   const message = payload.message?.trim().slice(0, 5000) || null;
 
-  const { priority, expectedValue } = scoreLead({
+  const { priority, expectedValue, expectedValueCurrency } = scoreLead({
     source: payload.source,
     service_category,
     selected_service,
@@ -101,6 +101,7 @@ export async function POST(request: NextRequest) {
     status: "new" as const,
     priority,
     expected_value: expectedValue,
+    expected_value_currency: expectedValueCurrency,
     next_follow_up_at: new Date(now.getTime() + FOLLOW_UP_DELAY_MS).toISOString(),
     follow_up_stage: 0,
     follow_up_completed: false,

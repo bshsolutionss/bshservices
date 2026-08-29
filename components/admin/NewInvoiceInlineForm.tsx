@@ -13,6 +13,8 @@ interface NewInvoiceInlineFormProps {
   defaultClientId?: string;
   defaultProjectId?: string;
   defaultAmount?: number;
+  /** Pre-selects the currency dropdown — e.g. a project's own currency when creating an invoice from its page. Still fully overridable; invoices aren't locked to any one currency. */
+  defaultCurrency?: Currency;
   lockSelection?: boolean;
   /** "+ New Invoice" by default; project pages want "+ Create Invoice". */
   triggerLabel?: string;
@@ -24,6 +26,7 @@ export default function NewInvoiceInlineForm({
   defaultClientId,
   defaultProjectId,
   defaultAmount,
+  defaultCurrency,
   lockSelection = false,
   triggerLabel = "+ New Invoice",
 }: NewInvoiceInlineFormProps) {
@@ -34,7 +37,9 @@ export default function NewInvoiceInlineForm({
   const [amount, setAmount] = useState(defaultAmount !== undefined ? String(defaultAmount) : "");
   const [tax, setTax] = useState("");
   const [discount, setDiscount] = useState("");
-  const [currency, setCurrency] = useState<Currency>("USD");
+  // PKR is the business's standard currency — invoices are still free to be
+  // billed in any of the four, this is just the starting selection.
+  const [currency, setCurrency] = useState<Currency>(defaultCurrency ?? "PKR");
   const [dueDate, setDueDate] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,4 +1,16 @@
 import Link from "next/link";
+import {
+  Users,
+  FolderKanban,
+  Contact,
+  CalendarCheck,
+  CheckSquare,
+  TrendingUp,
+  Receipt,
+  AlertTriangle,
+  Clock,
+  type LucideIcon,
+} from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import {
   LEAD_STATUSES,
@@ -8,7 +20,9 @@ import {
   type Lead,
   type LeadStatus,
 } from "@/lib/leads";
-import { formatByCurrency, type Currency } from "@/lib/invoices";
+import { formatMoney, type Currency } from "@/lib/invoices";
+import { sumToPKR } from "@/lib/currency";
+import { getExchangeRates } from "@/lib/admin/exchange-rates";
 import { todayInPkt } from "@/lib/availability";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +45,7 @@ async function getDashboardData() {
     { data: paymentsThisMonth },
     { data: outstandingInvoices },
     { data: expensesThisMonthData },
+    rates,
   ] = await Promise.all([
     // Consultation bookings have their own dashboard widget below — kept
     // out of the pipeline funnel/recent list so the two lead types don't
@@ -75,6 +90,7 @@ async function getDashboardData() {
       .from("expenses")
       .select("amount, currency")
       .gte("expense_date", startOfMonth.toISOString().slice(0, 10)),
+    getExchangeRates(),
   ]);
 
   const leads = (allLeads ?? []) as Pick<
@@ -100,23 +116,40 @@ async function getDashboardData() {
   const completedTasks = tasks.filter((t) => t.status === "completed").length;
   const taskCompletionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : null;
 
-  const revenueThisMonth = formatByCurrency(
-    (paymentsThisMonth ?? []).map((p: { amount: number; invoices: { currency: Currency } | { currency: Currency }[] | null }) => ({
-      amount: p.amount,
-      currency: (Array.isArray(p.invoices) ? p.invoices[0]?.currency : p.invoices?.currency) ?? "USD",
-    }))
+  // KPIs show one converted PKR figure rather than "$500 + PKR 20,000" —
+  // PKR is the business's standard currency; see lib/currency.ts and the
+  // admin-editable rates at /admin/settings/exchange-rates. Individual
+  // invoices/expenses/projects still keep and display their own real
+  // currency — this conversion is only for these aggregate totals.
+  const revenueThisMonth = formatMoney(
+    sumToPKR(
+      (paymentsThisMonth ?? []).map((p: { amount: number; invoices: { currency: Currency } | { currency: Currency }[] | null }) => ({
+        amount: p.amount,
+        currency: (Array.isArray(p.invoices) ? p.invoices[0]?.currency : p.invoices?.currency) ?? "PKR",
+      })),
+      rates
+    ),
+    "PKR"
   );
-  const totalOutstanding = formatByCurrency(
-    (outstandingInvoices ?? []).map((i: { balance: number; currency: Currency | null }) => ({
-      amount: i.balance,
-      currency: i.currency ?? "USD",
-    }))
+  const totalOutstanding = formatMoney(
+    sumToPKR(
+      (outstandingInvoices ?? []).map((i: { balance: number; currency: Currency | null }) => ({
+        amount: i.balance,
+        currency: i.currency ?? "PKR",
+      })),
+      rates
+    ),
+    "PKR"
   );
-  const expensesThisMonth = formatByCurrency(
-    (expensesThisMonthData ?? []).map((e: { amount: number; currency: Currency | null }) => ({
-      amount: e.amount,
-      currency: e.currency ?? "USD",
-    }))
+  const expensesThisMonth = formatMoney(
+    sumToPKR(
+      (expensesThisMonthData ?? []).map((e: { amount: number; currency: Currency | null }) => ({
+        amount: e.amount,
+        currency: e.currency ?? "PKR",
+      })),
+      rates
+    ),
+    "PKR"
   );
 
   return {
@@ -139,13 +172,34 @@ async function getDashboardData() {
   };
 }
 
-function StatTile({ value, label, color }: { value: string | number; label: string; color?: string }) {
+interface StatTileProps {
+  value: string | number;
+  label: string;
+  /** Small line under the value, e.g. "Total active clients" — layout modeled on a reference screenshot. */
+  description: string;
+  icon: LucideIcon;
+  /** Value text color. */
+  color?: string;
+  /** Icon badge background — kept distinct per tile so the row scans at a glance, same idea as the reference's varied teal/orange/red/purple badges. */
+  iconBg?: string;
+}
+
+function StatTile({ value, label, description, icon: Icon, color, iconBg }: StatTileProps) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#1A14A5]/10">
-      <p className="text-2xl font-extrabold break-words" style={{ color: color || "#1A14A5" }}>
-        {value}
-      </p>
-      <p className="text-sm text-[#231F20]/60 mt-1">{label}</p>
+    <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#1A14A5]/10 flex items-center justify-between gap-4">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-[#231F20]/70 truncate">{label}</p>
+        <p className="text-2xl font-extrabold mt-1 break-words" style={{ color: color || "#1A14A5" }}>
+          {value}
+        </p>
+        <p className="text-xs text-[#231F20]/50 mt-1 truncate">{description}</p>
+      </div>
+      <div
+        className="shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center"
+        style={{ backgroundColor: iconBg || "#1A14A5" }}
+      >
+        <Icon className="w-5 h-5 text-white" />
+      </div>
     </div>
   );
 }
@@ -178,15 +232,74 @@ export default async function AdminDashboardPage() {
       <div>
         <h2 className="text-sm font-bold text-[#231F20]/60 uppercase tracking-wide mb-3">Business Overview</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          <StatTile value={clientCount} label="Clients" />
-          <StatTile value={activeProjectCount} label="Active Projects" />
-          <StatTile value={activeEmployeeCount} label="Team Members" />
-          <StatTile value={upcomingBookingCount} label="Upcoming Bookings" color="#1A14A5" />
-          <StatTile value={taskCompletionRate !== null ? `${taskCompletionRate}%` : "—"} label="Tasks Completed" />
-          <StatTile value={revenueThisMonth} label="Revenue This Month" color="#065F46" />
-          <StatTile value={expensesThisMonth} label="Expenses This Month" color="#991B1B" />
-          <StatTile value={totalOutstanding} label="Outstanding" color="#92400E" />
-          <StatTile value={dueFollowUps} label="Due for Follow-up" color="#92400E" />
+          <StatTile
+            value={clientCount}
+            label="Clients"
+            description="Total active clients"
+            icon={Users}
+            iconBg="#0d9488"
+          />
+          <StatTile
+            value={activeProjectCount}
+            label="Active Projects"
+            description="Projects in progress"
+            icon={FolderKanban}
+            iconBg="#1A14A5"
+          />
+          <StatTile
+            value={activeEmployeeCount}
+            label="Team Members"
+            description="Active employees"
+            icon={Contact}
+            iconBg="#7c3aed"
+          />
+          <StatTile
+            value={upcomingBookingCount}
+            label="Upcoming Bookings"
+            description="Confirmed consultations"
+            icon={CalendarCheck}
+            color="#1A14A5"
+            iconBg="#1A14A5"
+          />
+          <StatTile
+            value={taskCompletionRate !== null ? `${taskCompletionRate}%` : "—"}
+            label="Tasks Completed"
+            description="Share of all tasks done"
+            icon={CheckSquare}
+            iconBg="#0d9488"
+          />
+          <StatTile
+            value={revenueThisMonth}
+            label="Revenue This Month"
+            description="Payments received"
+            icon={TrendingUp}
+            color="#065F46"
+            iconBg="#059669"
+          />
+          <StatTile
+            value={expensesThisMonth}
+            label="Expenses This Month"
+            description="Total spent"
+            icon={Receipt}
+            color="#991B1B"
+            iconBg="#dc2626"
+          />
+          <StatTile
+            value={totalOutstanding}
+            label="Outstanding"
+            description="Unpaid invoice balance"
+            icon={AlertTriangle}
+            color="#92400E"
+            iconBg="#f97316"
+          />
+          <StatTile
+            value={dueFollowUps}
+            label="Due for Follow-up"
+            description="Leads needing contact"
+            icon={Clock}
+            color="#92400E"
+            iconBg="#f97316"
+          />
         </div>
       </div>
 

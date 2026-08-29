@@ -5,7 +5,13 @@ import { LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/browser";
 import { cn } from "@/lib/utils";
 
-export default function SignOutButton({ className }: { className?: string }) {
+interface SignOutButtonProps {
+  className?: string;
+  /** "dark" (default) — for the navy sidebar. "light" — for a white dropdown/header. */
+  variant?: "dark" | "light";
+}
+
+export default function SignOutButton({ className, variant = "dark" }: SignOutButtonProps) {
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -19,7 +25,8 @@ export default function SignOutButton({ className }: { className?: string }) {
     <button
       onClick={handleSignOut}
       className={cn(
-        "flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition rounded-xl",
+        "flex items-center gap-3 text-sm font-medium transition rounded-xl",
+        variant === "dark" ? "text-white/70 hover:text-white hover:bg-white/10" : "text-[#231F20]/70 hover:text-[#231F20] hover:bg-[#F4F7FE]",
         className
       )}
     >
