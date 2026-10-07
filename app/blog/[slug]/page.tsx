@@ -45,6 +45,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     authors: [{ name: authorName }],
     alternates: { canonical: path },
+    ...(/noindex/i.test(post.yoast_head_json?.robots ?? "") && {
+      robots: { index: false, follow: !/nofollow/i.test(post.yoast_head_json?.robots ?? "") },
+    }),
     openGraph: {
       title: wpToPlainText(post.yoast_head_json?.og_title) || seoTitle,
       description: wpToPlainText(post.yoast_head_json?.og_description) || description,

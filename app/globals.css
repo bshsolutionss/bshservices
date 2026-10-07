@@ -151,3 +151,9 @@
 .pause-on-hover:hover .animate-marquee-reverse {
   animation-play-state: paused;
 }
+
+/* Hero heading typing caret */
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

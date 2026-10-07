@@ -54,6 +54,7 @@ export interface WPPost {
     twitter_title?: string;
     twitter_description?: string;
     twitter_image?: string;
+    robots?: string;
   };
 }
 
@@ -116,7 +117,57 @@ export async function getPostBySlug(slug: string): Promise<WPPost | null> {
     throw new Error(`Failed to fetch post by slug (${slug}): ${res.status} ${res.statusText}`);
   }
   const data = await res.json();
-  return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  const post: WPPost | null = Array.isArray(data) && data.length > 0 ? data[0] : null;
+  if (post && !post.yoast_head_json) {
+    const seo = await getRankMathHead(post.link);
+    if (seo) post.yoast_head_json = seo;
+  }
+  return post;
+}
+
+function headMeta(html: string, attr: "name" | "property", key: string): string {
+  const tag = html.match(
+    new RegExp(`<meta\\s[^>]*${attr}=["']${key}["'][^>]*>`, "i"),
+  )?.[0];
+  const content = tag?.match(/\scontent=(["'])([\s\S]*?)\1/i)?.[2];
+  return wpToPlainText(content);
+}
+
+// This WordPress exposes neither Yoast nor Rank Math SEO fields over REST,
+// but Rank Math renders them in the post's own <head>. Reading them from
+// there keeps the SEO title/description/robots/OG data in this site identical
+// to what editors set in Rank Math. Any failure returns null so callers fall
+// back to the post's own title/excerpt — it must never break a page.
+async function getRankMathHead(link: string | undefined): Promise<WPPost["yoast_head_json"] | null> {
+  try {
+    if (!link) return null;
+    const cms = new URL(BASE_URL);
+    const target = new URL(link);
+    if (target.hostname !== cms.hostname) return null;
+    const res = await fetch(target.toString(), {
+      headers: { ...REQUEST_HEADERS, Accept: "text/html" },
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const head = ((await res.text()).match(/<head[\s\S]*?<\/head>/i) ?? [""])[0];
+    if (!head) return null;
+    const title = wpToPlainText(head.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]);
+    const ogImage = headMeta(head, "property", "og:image");
+    return {
+      title: title || undefined,
+      description: headMeta(head, "name", "description") || undefined,
+      robots: headMeta(head, "name", "robots") || undefined,
+      og_title: headMeta(head, "property", "og:title") || undefined,
+      og_description: headMeta(head, "property", "og:description") || undefined,
+      og_image: ogImage ? [{ url: ogImage }] : undefined,
+      twitter_title: headMeta(head, "name", "twitter:title") || undefined,
+      twitter_description: headMeta(head, "name", "twitter:description") || undefined,
+      twitter_image: headMeta(head, "name", "twitter:image") || undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export function getFeaturedImage(post: WPPost | null | undefined): string | null {
@@ -151,15 +202,13 @@ export function getPostDescription(post: WPPost | null | undefined): string {
   const cmsDescription = wpToPlainText(post.yoast_head_json?.description);
   const excerpt = wpToPlainText(post.excerpt?.rendered);
   const content = wpToPlainText(post.content?.rendered);
-  return truncateAtWord(cmsDescription || excerpt || content, 155);
+  return cmsDescription || truncateAtWord(excerpt || content, 155);
 }
 
 export function getPostSeoTitle(post: WPPost | null | undefined): string {
-  const cmsSeoTitle = wpToPlainText(post?.yoast_head_json?.title)
-    .replace(/\s*[|\-]\s*BSH Solutions\s*$/i, "")
-    .trim();
-  const postTitle = wpToPlainText(post?.title?.rendered) || "BSH Solutions Blog";
-  const sourceTitle = cmsSeoTitle || postTitle;
+  const rankMathTitle = wpToPlainText(post?.yoast_head_json?.title);
+  if (rankMathTitle) return rankMathTitle;
+  const sourceTitle = wpToPlainText(post?.title?.rendered) || "BSH Solutions Blog";
   const branded = `${sourceTitle} | BSH Solutions`;
 
   if (branded.length <= 65) return branded;

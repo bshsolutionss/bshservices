@@ -113,7 +113,7 @@ type Layer = {
   y: number;
   glow: number;
   shown: number;
-  animate: (t: number, glow: number) => void;
+  animate: (t: number, glow: number, build: number) => void;
 };
 
 export default function HeroStack3D() {
@@ -368,9 +368,14 @@ export default function HeroStack3D() {
       };
     };
 
-    /** 3 · AI & Automation: a faceted AI core feeding a ring of nodes. */
+    /**
+     * 3 · AI & Automation: a faceted AI core that BUILDS itself piece by piece
+     * (stems grow, nodes pop in one by one, links draw, the core appears), then
+     * keeps moving: the node ring orbits the core and a glowing ball circles it.
+     */
     const buildBrain = (g: THREE.Group) => {
-      const pts: THREE.Vector3[] = [new THREE.Vector3(0, TOP + 0.62, 0)];
+      const core = new THREE.Vector3(0, TOP + 0.62, 0);
+      const pts: THREE.Vector3[] = [core];
       for (let i = 0; i < 6; i++) {
         const a = (i / 6) * Math.PI * 2 + 0.3;
         pts.push(new THREE.Vector3(Math.cos(a) * 0.86, TOP + 0.22 + (i % 2) * 0.2, Math.sin(a) * 0.86));
@@ -385,30 +390,39 @@ export default function HeroStack3D() {
         link(pts[0], pts[i]);
         link(pts[i], pts[(i % 6) + 1]);
       }
+
+      // everything that orbits lives in `spin` (the core sits on its axis, so links stay valid)
+      const spin = new THREE.Group();
+      g.add(spin);
+
       const lg = track(new THREE.BufferGeometry());
       lg.setAttribute("position", new THREE.Float32BufferAttribute(seg, 3));
       const lineMat = track(new THREE.LineBasicMaterial({ color: VIOLET, transparent: true, opacity: 0.6 }));
-      g.add(new THREE.LineSegments(lg, lineMat));
+      spin.add(new THREE.LineSegments(lg, lineMat));
 
-      // stems down to the layer
+      // stems down to the layer, stored relative to the slab so they can grow upward from it
+      const stemGroup = new THREE.Group();
+      stemGroup.position.y = TOP;
+      spin.add(stemGroup);
       const stems: number[] = [];
-      pts.forEach((p) => stems.push(p.x, p.y, p.z, p.x, TOP, p.z));
+      pts.forEach((p) => stems.push(p.x, p.y - TOP, p.z, p.x, 0, p.z));
       const sg = track(new THREE.BufferGeometry());
       sg.setAttribute("position", new THREE.Float32BufferAttribute(stems, 3));
-      g.add(new THREE.LineSegments(sg, track(new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.3 }))));
+      const stemMat = track(new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.3 }));
+      stemGroup.add(new THREE.LineSegments(sg, stemMat));
 
       // the AI core
       const coreMat = std(VIOLET, { flatShading: true, roughness: 0.3, emissive: VIOLET, emissiveIntensity: 0.25 });
       const aiCore = new THREE.Mesh(track(new THREE.IcosahedronGeometry(0.24, 0)), coreMat);
-      aiCore.position.copy(pts[0]);
+      aiCore.position.copy(core);
       g.add(aiCore);
       const cageSrc = new THREE.IcosahedronGeometry(0.36, 0);
       const cage = new THREE.LineSegments(track(new THREE.EdgesGeometry(cageSrc)), track(new THREE.LineBasicMaterial({ color: INDIGO, transparent: true, opacity: 0.7 })));
       cageSrc.dispose();
-      cage.position.copy(pts[0]);
+      cage.position.copy(core);
       g.add(cage);
       const halo = glowSprite(VIOLET, 1.5, 0.45);
-      halo.position.copy(pts[0]);
+      halo.position.copy(core);
       g.add(halo);
 
       const nodeGeo = track(new THREE.SphereGeometry(0.095, 24, 16));
@@ -417,21 +431,73 @@ export default function HeroStack3D() {
         holder.position.copy(p);
         holder.add(new THREE.Mesh(nodeGeo, track(new THREE.MeshBasicMaterial({ color: i % 2 ? CYAN : VIOLET }))));
         holder.add(glowSprite(i % 2 ? CYAN : VIOLET, 0.5, 0.5));
-        g.add(holder);
+        spin.add(holder);
         return holder;
       });
 
       const signals = [0, 1, 2].map((i) => {
         const sprite = glowSprite(CYAN, 0.26, 0.95);
-        g.add(sprite);
+        spin.add(sprite);
         return { sprite, edge: edges[i * 4], st: i / 3 };
       });
-      let last = 0;
 
-      return (t: number, glow: number) => {
+      // the orbiting ball: a hairline orbit around the core, a glowing ball and a fading trail
+      const orbit = new THREE.Group();
+      orbit.position.copy(core);
+      g.add(orbit);
+      const ORB_R = 0.64;
+      const ringPts: THREE.Vector3[] = [];
+      for (let i = 0; i < 96; i++) {
+        const a = (i / 96) * Math.PI * 2;
+        ringPts.push(new THREE.Vector3(Math.cos(a) * ORB_R, 0, Math.sin(a) * ORB_R));
+      }
+      const orbitMat = track(new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.3 }));
+      orbit.add(new THREE.LineLoop(track(new THREE.BufferGeometry().setFromPoints(ringPts)), orbitMat));
+      const ball = new THREE.Group();
+      orbit.add(ball);
+      ball.add(new THREE.Mesh(track(new THREE.SphereGeometry(0.075, 24, 16)), track(new THREE.MeshBasicMaterial({ color: 0x6fe3ff }))));
+      ball.add(glowSprite(CYAN, 0.55, 0.9));
+      const TRAIL = 8;
+      const trail = Array.from({ length: TRAIL }, (_, k) => {
+        const sprite = glowSprite(CYAN, 0.3 - k * 0.025, 0.55 - k * 0.065);
+        orbit.add(sprite);
+        return sprite;
+      });
+
+      let last = 0;
+      return (t: number, glow: number, b: number) => {
         const dt = Math.min(0.05, Math.max(0, t - last));
         last = t;
+
+        // build sequence (b = 0 to 1)
+        const stemP = ease(clamp01(b / 0.25));
+        stemGroup.scale.y = Math.max(stemP, 0.0001);
+        stemMat.opacity = 0.3 * stemP;
+        nodes.forEach((n, i) => {
+          const pop = easeOutBack(clamp01((b - (0.2 + i * 0.07)) / 0.18));
+          n.scale.setScalar(Math.max(pop * (1 + Math.sin(t * 2.2 + i) * 0.1 + glow * 0.22), 0.0001));
+        });
+        lg.setDrawRange(0, Math.floor(edges.length * ease(clamp01((b - 0.3) / 0.45))) * 2);
+        const coreP = easeOutBack(clamp01((b - 0.55) / 0.35));
+        aiCore.scale.setScalar(Math.max(coreP * (1 + Math.sin(t * 2.2) * 0.07 + glow * 0.18), 0.0001));
+        cage.scale.setScalar(Math.max(coreP, 0.0001));
+        halo.material.opacity = (0.35 + glow * 0.3) * clamp01(coreP);
+        const ballP = easeOutBack(clamp01((b - 0.8) / 0.2));
+        orbit.scale.setScalar(Math.max(ballP, 0.0001));
+        orbitMat.opacity = 0.3 * clamp01(ballP);
+
+        // continuous motion
+        spin.rotation.y = t * 0.5;
+        const ang = t * 2.4;
+        orbit.rotation.set(1.0, 0, 0.35 + Math.sin(t * 0.4) * 0.3);
+        ball.position.set(Math.cos(ang) * ORB_R, 0, Math.sin(ang) * ORB_R);
+        trail.forEach((sp, k) => {
+          const a2 = ang - (k + 1) * 0.16;
+          sp.position.set(Math.cos(a2) * ORB_R, 0, Math.sin(a2) * ORB_R);
+        });
+
         signals.forEach((sg2) => {
+          sg2.sprite.visible = b > 0.85;
           sg2.st += dt * (1.2 + glow * 1.3);
           if (sg2.st >= 1) {
             sg2.st = 0;
@@ -443,13 +509,9 @@ export default function HeroStack3D() {
         lineMat.opacity = 0.5 + glow * 0.45;
         aiCore.rotation.y = t * 0.7;
         aiCore.rotation.x = t * 0.4;
-        cage.rotation.y = -t * 0.35;
+        cage.rotation.y = -t * 0.35 + (1 - clamp01(coreP)) * 2.2;
         cage.rotation.z = t * 0.2;
-        const pulse = 1 + Math.sin(t * 2.2) * 0.07 + glow * 0.18;
-        aiCore.scale.setScalar(pulse);
         coreMat.emissiveIntensity = 0.2 + glow * 0.4;
-        halo.material.opacity = 0.35 + glow * 0.3;
-        nodes.forEach((n, i) => n.scale.setScalar(1 + Math.sin(t * 2.2 + i) * 0.1 + glow * 0.22));
       };
     };
 
@@ -587,6 +649,8 @@ export default function HeroStack3D() {
     let H = 1;
     let coreScale = 1;
     let baseY = 0;
+    let baseX = 0;
+    let visW = 1;
     const layout = () => {
       W = wrap.clientWidth || 1;
       H = wrap.clientHeight || 1;
@@ -595,6 +659,7 @@ export default function HeroStack3D() {
       camera.updateProjectionMatrix();
       const visH = 2 * Math.tan((FOV * Math.PI) / 360) * CAM;
       const unitsPerPx = visH / H;
+      visW = visH * (W / H);
       waveUniforms.uProj.value = H / (2 * Math.tan((FOV * Math.PI) / 360));
       const portrait = W < 1024 || W / H < 1.1;
       waves.position.set(0, -visH * 0.5 - (portrait ? 0.2 : 0.1), -1.5);
@@ -614,7 +679,8 @@ export default function HeroStack3D() {
       coreScale = (radiusPx * unitsPerPx) / OUTER;
       root.scale.setScalar(coreScale);
       baseY = (H / 2 - cy) * unitsPerPx;
-      root.position.set((cx - W / 2) * unitsPerPx, baseY, 0);
+      baseX = (cx - W / 2) * unitsPerPx;
+      root.position.set(baseX, baseY, 0);
       layers.forEach((l) => (l.labelW = l.label.offsetWidth || l.labelW));
     };
     layout();
@@ -659,34 +725,46 @@ export default function HeroStack3D() {
     window.addEventListener("pointerdown", onDown, { passive: true });
 
     // ───────────── loop ─────────────
+    // The start-up animation, the AI build-up and the orbiting always play.
+    // For users who ask the OS for reduced motion, the large ambient movement
+    // (view sway, mouse parallax, floating, the highlight cycling through layers)
+    // is switched off; `ambient` scales it.
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const motion = reduce ? 0 : 1;
+    const motion = 1;
+    const ambient = reduce ? 0 : 1;
     const timer = new THREE.Timer();
     const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
     const ease = (x: number) => 1 - Math.pow(1 - x, 4);
+    const easeOutBack = (x: number) => 1 + 2.70158 * Math.pow(x - 1, 3) + 1.70158 * Math.pow(x - 1, 2);
     let raf = 0;
     let running = false;
     let elapsed = 0;
-    let intro = reduce ? 1 : 0;
+    let introT = 0; // seconds since the scene started
     const targetY: number[] = [];
+    const landed: number[] = layers.map(() => 0);
 
     const draw = (dt: number) => {
       elapsed += dt;
-      if (intro < 1) intro = Math.min(1, intro + dt / 1.7);
+      introT += dt;
+      const intro = clamp01(introT / 1.6); // general fade-in (waves, rails, floor)
+      // the whole stack glides in from the left edge, spinning as it settles
+      const slideP = ease(clamp01(introT / 1.9));
+      root.position.x = baseX - (baseX + visW / 2 + 2.6 * coreScale) * (1 - slideP);
+      root.rotation.y = (1 - slideP) * 1.4;
       waveUniforms.uTime.value = elapsed;
       waveUniforms.uFade.value = ease(intro);
 
       // isometric three-quarter view that sways, plus pointer parallax
-      const ry = Math.PI / 4 + Math.sin(elapsed * 0.3) * 0.5 * motion + px * 0.45;
-      const rx = 0.42 + Math.sin(elapsed * 0.4) * 0.04 * motion + py * 0.16;
-      tilt.rotation.y += (ry - tilt.rotation.y) * (reduce ? 1 : 0.05);
-      tilt.rotation.x += (rx - tilt.rotation.x) * (reduce ? 1 : 0.05);
-      root.position.y = baseY + Math.sin(elapsed * 0.8) * 0.05 * motion;
+      const ry = Math.PI / 4 + (Math.sin(elapsed * 0.3) * 0.5 + px * 0.45) * ambient;
+      const rx = 0.42 + (Math.sin(elapsed * 0.4) * 0.04 + py * 0.16) * ambient;
+      tilt.rotation.y += (ry - tilt.rotation.y) * 0.05;
+      tilt.rotation.x += (rx - tilt.rotation.x) * 0.05;
+      root.position.y = baseY + Math.sin(elapsed * 0.8) * 0.05 * ambient;
       dust.rotation.y = elapsed * 0.05;
       dust.position.y = Math.sin(elapsed * 0.5) * 0.1;
 
       // which layer is highlighted: hovered/tapped one, else cycle through them
-      const active = hovered ?? Math.floor(elapsed / CYCLE_S) % layers.length;
+      const active = hovered ?? (reduce ? layers.length - 1 : Math.floor(elapsed / CYCLE_S) % layers.length);
 
       // open a wide gap above the active layer so nothing covers it; the other
       // gaps tighten, so the stack keeps its overall height
@@ -699,16 +777,20 @@ export default function HeroStack3D() {
 
       layers.forEach((l, i) => {
         const on = active === i ? 1 : 0;
-        l.glow += (on - l.glow) * (reduce ? 1 : 0.1);
-        const breathe = (i - 1.5) * Math.sin(elapsed * 0.9) * 0.02 * motion;
-        l.y += (targetY[i] + breathe - l.y) * (reduce ? 1 : 0.08);
-        const drop = 1 - ease(clamp01(intro * 1.5 - i * 0.14));
+        l.glow += (on - l.glow) * 0.1;
+        const breathe = (i - 1.5) * Math.sin(elapsed * 0.9) * 0.02 * ambient;
+        l.y += (targetY[i] + breathe - l.y) * 0.08;
+        // layers land one after another, bottom to top
+        const lp = clamp01((introT - (0.15 + i * 0.55)) / 0.9);
+        landed[i] = lp;
+        const drop = 1 - ease(lp);
         l.group.position.y = l.y + drop * 2.6;
         l.group.scale.setScalar(Math.max(1 - drop * 0.5, 0.0001));
         l.group.visible = drop < 0.999;
         l.slabMat.emissiveIntensity = l.glow * (i === 0 ? 0.5 : 0.16);
         l.rimMat.opacity = 0.28 + l.glow * 0.72;
-        l.animate(elapsed, l.glow);
+        // the top (AI) layer then builds itself piece by piece after it lands
+        l.animate(elapsed, l.glow, i === layers.length - 1 ? clamp01((introT - 2.5) / 2.0) : 1);
       });
 
       const bottom = layers[0].group.position.y;
@@ -737,7 +819,7 @@ export default function HeroStack3D() {
         v.x += HALF * 1.36 * coreScale;
         v.project(camera);
         // every layer keeps its name visible; the highlighted one is brighter and a touch larger
-        l.shown += (ease(intro) * (0.68 + 0.32 * l.glow) - l.shown) * (reduce ? 1 : 0.15);
+        l.shown += (ease(landed[layers.indexOf(l)]) * (0.68 + 0.32 * l.glow) - l.shown) * 0.15;
         const x = Math.max(8, Math.min(W - l.labelW - 8, (v.x * 0.5 + 0.5) * W));
         const y = (-v.y * 0.5 + 0.5) * H;
         l.label.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(0, -50%) scale(${(1 + 0.07 * l.glow).toFixed(3)})`;
@@ -751,7 +833,7 @@ export default function HeroStack3D() {
       draw(Math.min(timer.getDelta(), 0.05));
     };
     const start = () => {
-      if (running || reduce) return;
+      if (running) return;
       running = true;
       timer.update();
       raf = requestAnimationFrame(frame);
@@ -761,11 +843,9 @@ export default function HeroStack3D() {
       cancelAnimationFrame(raf);
     };
 
-    if (reduce) draw(0);
-
     const resizeObserver = new ResizeObserver(() => {
       layout();
-      if (reduce || !running) draw(0);
+      if (!running) draw(0);
     });
     resizeObserver.observe(wrap);
     const stageEl = getStage();
