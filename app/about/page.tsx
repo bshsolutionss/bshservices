@@ -54,6 +54,7 @@ const page = () => {
         id="bilal"
         name="Muhammad Bilal"
         role="Full Stack Developer & SEO Specialist"
+        email="bilal@bshsolutions.net"
         about="Bilal is a skilled full stack developer with a strong command of modern web technologies. He also specializes in SEO, helping businesses grow organically through smart optimization strategies."
         image="/team/bilal.jpeg"
         tech={[
@@ -69,6 +70,7 @@ const page = () => {
         id="shahzaib"
         name="Muhammad Shahzaib"
         role="Website Developer & Digital Marketer"
+        email="shahzaib@bshsolutions.net"
         about="Shahzaib builds high-performance websites and creates effective digital marketing strategies that help brands grow faster and stronger. He delivers results with clean designs and smart marketing."
         image="/team/shahzaib.jpeg"
         reverse

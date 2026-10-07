@@ -3,13 +3,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import HeroLogo from "./HeroLogo";
+import HeroScene from "./HeroScene";
 import TypedHeading from "@/components/TypedHeading";
 import Link from "next/link";
 
 const Heros: React.FC = () => {
   return (
-    <section className="relative w-full overflow-hidden min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-10 lg:px-16 bg-[#F4F7FE] overflow-hidden pt-20 lg:pt-32 pb-20">
+    <section className="relative w-full overflow-hidden min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between lg:gap-10 px-6 sm:px-10 lg:px-16 bg-[#F4F7FE] overflow-hidden pt-20 lg:pt-32 pb-20">
+      {/* Interactive 3D backdrop (AI / tech neural core) — sits behind the copy */}
+      <HeroScene />
+
       {/* Left Content */}
       <div className="max-w-2xl text-center lg:text-left space-y-6 relative z-10 mt-12 lg:mt-0">
         <TypedHeading />
@@ -70,9 +73,16 @@ const Heros: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Right 3D Logo */}
-      <div className="relative flex-1 flex justify-center items-center mt-10 lg:mt-0 w-full max-w-[600px] sm:max-w-[700px]">
-        <HeroLogo />
+      {/* Right: square slot the 3D core centres itself on (like the About hub,
+          it sizes to its column, so alignment holds at every screen size).
+          On mobile it renders above the copy (the section is flex-col-reverse). */}
+      <div className="relative z-10 flex w-full flex-1 items-center justify-center lg:justify-center">
+        <div
+          data-hero-stage
+          role="img"
+          aria-label="Interactive 3D visual: an AI network core orbited by Web, Apps, Cloud, Data, AI and Automation"
+          className="aspect-square w-[min(84vw,400px)] sm:w-[min(70vw,460px)] lg:w-full lg:max-w-[560px]"
+        />
       </div>
     </section>
   );

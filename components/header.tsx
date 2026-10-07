@@ -74,6 +74,7 @@ const Header = () => {
             alt="BSH Solutions logo"
             width={56}
             height={56}
+            style={{ width: "auto" }}
             className="h-12 w-auto object-contain rounded-md drop-shadow-md transition-transform hover:scale-105"
           />
         </Link>

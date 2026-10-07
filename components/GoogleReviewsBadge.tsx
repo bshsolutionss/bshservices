@@ -12,6 +12,13 @@ interface GoogleReviewsBadgeProps {
 }
 
 /**
+ * Temporarily switched off (also removes the "SociableKIT Google Reviews
+ * Widget" attribution link). Set to true to restore the badge and its script
+ * on the contact and booking forms.
+ */
+const SHOW_GOOGLE_REVIEWS = false;
+
+/**
  * SociableKit's Google Reviews widget (embed 25707203) — distinct from the
  * broader multi-source reviews widget already on the homepage
  * (components/testimonial.tsx, embed 25707200). Meant to sit directly next
@@ -19,6 +26,7 @@ interface GoogleReviewsBadgeProps {
  */
 export default function GoogleReviewsBadge({ variant = "card", className = "" }: GoogleReviewsBadgeProps) {
   useEffect(() => {
+    if (!SHOW_GOOGLE_REVIEWS) return;
     // Same dedupe pattern as components/testimonial.tsx — safe to mount
     // this component more than once on a page (e.g. contact form + booking
     // form) without loading the script twice.
@@ -29,6 +37,8 @@ export default function GoogleReviewsBadge({ variant = "card", className = "" }:
     script.defer = true;
     document.body.appendChild(script);
   }, []);
+
+  if (!SHOW_GOOGLE_REVIEWS) return null;
 
   const widget = <div className="sk-ww-google-reviews" data-embed-id="25707203" />;
 

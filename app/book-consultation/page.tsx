@@ -32,6 +32,16 @@ export default function BookConsultationPage() {
 
       <section className="py-20 px-6 bg-[#F4F7FE]">
         <BookingForm />
+
+        <div className="max-w-xl mx-auto mt-8 text-center text-sm text-[#231F20]/75">
+          Prefer to discuss via email or share RFP specifications directly? Reach our sales team at{" "}
+          <a
+            href="mailto:sales@bshsolutions.net"
+            className="font-semibold text-[#1A14A5] hover:underline"
+          >
+            sales@bshsolutions.net
+          </a>
+        </div>
       </section>
 
       <Testimonial />

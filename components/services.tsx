@@ -1,47 +1,24 @@
 "use client";
 
-import React, { useState, JSX } from "react";
-import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import {
-  Globe,
-  BarChart3,
-  Brush,
-  CameraIcon,
-  ShoppingCart,
-  Smartphone,
-  Cpu,
-  Monitor,
-  Paintbrush,
-  Palette,
-  PenTool,
-  Megaphone,
-  DollarSign,
-  Users,
-  ChartBar,
-  Camera,
-  ImageIcon,
-  Video,
-  SlidersHorizontal,
-  Aperture,
-} from "lucide-react";
-import { MessageSquare } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import React, { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 type ServiceItem = {
   title: string;
+  /** Two-line pitch shown under the image when this service is selected. */
   desc: string;
-  icon: React.ElementType;
-  /** Canonical slug from lib/services-data.ts — used to link to the real service detail page (with its full content, FAQs, and schema) instead of a category-page anchor. */
+  /** Canonical slug from lib/services-data.ts — links to the real service detail page. */
   slug: string;
+  image: string;
 };
 
 type Tab = {
   id: string;
   title: string;
-  icon: React.ElementType;
+  /** URL segment under /Services (the "design" tab id predates the "designing" route). */
+  path: string;
   items: ServiceItem[];
 };
 
@@ -49,228 +26,219 @@ const TABS: Tab[] = [
   {
     id: "development",
     title: "Development",
-    icon: Globe,
+    path: "development",
     items: [
       {
         title: "Website Development",
-        desc: "Fast, secure, and scalable web solutions.",
-        icon: Monitor,
         slug: "website-development",
+        image: "/images/development/1.png",
+        desc: "Fast, secure and scalable websites built around your goals, designed to load quickly, rank well and convert visitors into customers.",
       },
       {
         title: "E-commerce",
-        desc: "Custom online stores with secure payment gateways.",
-        icon: ShoppingCart,
         slug: "ecommerce-development",
+        image: "/images/development/2.png",
+        desc: "Custom online stores with secure payment gateways, smooth checkout and inventory tools that help you sell more, everywhere.",
       },
       {
         title: "Mobile Apps",
-        desc: "Cross-platform apps built for performance.",
-        icon: Smartphone,
         slug: "mobile-app-development",
+        image: "/images/development/3.png",
+        desc: "Cross-platform mobile apps for iOS and Android, built for performance, reliability and an experience your users keep coming back to.",
       },
       {
         title: "Custom Software",
-        desc: "Tailored systems to automate and optimize business.",
-        icon: Cpu,
         slug: "custom-software-development",
+        image: "/images/development/4.png",
+        desc: "Tailored systems that automate manual work, connect your tools and give your team the software your business actually needs.",
       },
       {
         title: "Web Applications",
-        desc: "Dynamic, API-integrated web apps.",
-        icon: ChartBar,
         slug: "web-application-development",
+        image: "/images/development/5.png",
+        desc: "Dynamic, API-integrated web applications and dashboards that stay fast and secure as your users and data grow.",
       },
       {
         title: "Maintenance & Support",
-        desc: "Ongoing updates, fixes, and technical support.",
-        icon: SlidersHorizontal,
         slug: "website-maintenance-support",
+        image: "/images/development/6.png",
+        desc: "Ongoing updates, security patches, backups and technical support so your website stays fast, safe and always online.",
       },
     ],
   },
   {
     id: "design",
     title: "Designing",
-    icon: Brush,
+    path: "designing",
     items: [
       {
         title: "Branding",
-        desc: "Complete visual identity design.",
-        icon: Paintbrush,
         slug: "brand-identity-design",
+        image: "/images/Designing/1.png",
+        desc: "A complete visual identity (logo, colours, typography and guidelines) that makes your business recognisable and trusted.",
       },
       {
         title: "UI / UX",
-        desc: "Designs that delight and convert.",
-        icon: Monitor,
         slug: "ui-ux-design",
+        image: "/images/Designing/2.png",
+        desc: "Research-led interface and experience design that feels effortless to use and turns more visitors into customers.",
       },
       {
         title: "Graphic Design",
-        desc: "Creative visuals for print and digital.",
-        icon: Palette,
         slug: "graphic-design",
+        image: "/images/Designing/3.png",
+        desc: "Creative visuals for print and digital, from social posts and brochures to presentations that keep your brand consistent.",
       },
       {
         title: "Logo Design",
-        desc: "Unique, memorable brand marks.",
-        icon: PenTool,
         slug: "logo-design",
+        image: "/images/Designing/4.png",
+        desc: "Unique, memorable logo marks crafted to work everywhere, from a favicon to a storefront sign.",
       },
       {
         title: "Motion Graphics",
-        desc: "Animated visuals and video graphics.",
-        icon: Video,
         slug: "motion-graphics-design",
+        image: "/images/Designing/5.png",
+        desc: "Animated visuals, explainers and video graphics that explain ideas quickly and hold attention on every platform.",
       },
       {
         title: "Packaging Design",
-        desc: "Professional product packaging designs.",
-        icon: ChartBar,
         slug: "packaging-design",
+        image: "/images/Designing/6.png",
+        desc: "Professional product packaging that stands out on the shelf, protects what is inside and tells your brand story.",
       },
     ],
   },
   {
     id: "marketing",
     title: "Marketing",
-    icon: BarChart3,
+    path: "marketing",
     items: [
       {
         title: "PPC Advertising",
-        desc: "Targeted paid ad campaigns for high ROI.",
-        icon: DollarSign,
         slug: "ppc-advertising",
+        image: "/images/Marketing/1.png",
+        desc: "Targeted paid campaigns on Google and social platforms, optimised continuously for qualified leads and a high return on spend.",
       },
       {
         title: "Social Media Marketing",
-        desc: "Growth through creative social campaigns.",
-        icon: Users,
         slug: "social-media-marketing",
+        image: "/images/Marketing/2.png",
+        desc: "Creative, consistent social campaigns that grow your audience, build community and drive real enquiries.",
       },
       {
         title: "SEO Optimization",
-        desc: "Rank higher with data-driven SEO.",
-        icon: Megaphone,
         slug: "seo-optimization",
+        image: "/images/Marketing/3.png",
+        desc: "Data-driven technical, on-page and content SEO that helps you rank higher and earn steady organic traffic.",
       },
       {
         title: "Email Marketing",
-        desc: "Automated and personalized email flows.",
-        icon: ChartBar,
         slug: "email-marketing",
+        image: "/images/Marketing/4.png",
+        desc: "Automated, personalised email flows and campaigns that nurture leads and bring customers back.",
       },
       {
         title: "Content Marketing",
-        desc: "Engaging blog, video, and media strategies.",
-        icon: PenTool,
         slug: "content-marketing",
+        image: "/images/Marketing/5.png",
+        desc: "Engaging blog, video and media strategies that build authority and attract the customers you want.",
       },
       {
         title: "Influencer Marketing",
-        desc: "Collaborate with trusted voices in your niche.",
-        icon: Users,
         slug: "influencer-marketing",
+        image: "/images/Marketing/6.png",
+        desc: "Collaborations with trusted voices in your niche to reach new audiences with credibility.",
       },
     ],
   },
   {
     id: "photography",
     title: "Photography",
-    icon: CameraIcon,
+    path: "photography",
     items: [
       {
         title: "Product Photography",
-        desc: "High-quality product visuals for online stores.",
-        icon: Camera,
         slug: "product-photography",
+        image: "/images/Photography/1.png",
+        desc: "High-quality, consistent product visuals for online stores and catalogues that make buyers click “add to cart”.",
       },
       {
         title: "Brand Shoots",
-        desc: "Professional shoots that tell your brand’s story.",
-        icon: ImageIcon,
         slug: "brand-shoots",
+        image: "/images/Photography/2.png",
+        desc: "Professional shoots that tell your brand’s story through people, places and products.",
       },
       {
         title: "Event Coverage",
-        desc: "Capture events with precision and creativity.",
-        icon: CameraIcon,
         slug: "event-coverage",
+        image: "/images/Photography/3.png",
+        desc: "Photo and video coverage that captures the moments that matter, with precision and creativity.",
       },
       {
         title: "Video Production",
-        desc: "Full-scale promotional and brand videos.",
-        icon: Video,
         slug: "video-production",
+        image: "/images/Photography/4.png",
+        desc: "Full-scale promotional, brand and product videos from concept and shooting to final edit.",
       },
       {
         title: "Editing & Retouching",
-        desc: "Expert editing for stunning final results.",
-        icon: Aperture,
         slug: "photo-editing-retouching",
+        image: "/images/Photography/5.png",
+        desc: "Expert colour correction, retouching and editing that turn good shots into stunning final results.",
       },
       {
         title: "Drone Photography",
-        desc: "Aerial shots with cinematic quality.",
-        icon: Camera,
         slug: "drone-photography",
+        image: "/images/Photography/6.png",
+        desc: "Cinematic aerial photos and video that show your property, project or event from a new angle.",
       },
     ],
   },
   {
     id: "ai",
     title: "AI Services",
-    icon: Cpu,
+    path: "ai",
     items: [
       {
         title: "AI Automation",
-        desc: "Automate workflows, customer service, and operations using AI.",
-        icon: SlidersHorizontal,
         slug: "ai-automation",
+        image: "/images/ai/1.png",
+        desc: "Automate workflows, customer service and operations with AI agents that give your team back real time.",
       },
       {
         title: "AI Chatbots",
-        desc: "24/7 intelligent chatbots for websites, WhatsApp & social media.",
-        icon: MessageSquare,
         slug: "ai-chatbots",
+        image: "/images/ai/3.png",
+        desc: "24/7 intelligent chatbots for your website, WhatsApp and social media that answer, qualify and book.",
       },
       {
         title: "AI Website Integration",
-        desc: "Integrate AI search, chatbot, personalization & automation.",
-        icon: Monitor,
         slug: "ai-website-integration",
+        image: "/images/ai/4.png",
+        desc: "Add AI search, chat, personalisation and automation to your website without rebuilding it.",
       },
       {
         title: "AI Social Media Automation",
-        desc: "AI-driven content creation, scheduling & auto-replies.",
-        icon: Megaphone,
         slug: "social-media-automation",
+        image: "/images/ai/2.png",
+        desc: "AI-driven content creation, scheduling and auto-replies that keep your social channels active.",
       },
       {
         title: "AI Video Automation",
-        desc: "Auto-generated ads, reels & product videos using AI tools.",
-        icon: Video,
         slug: "ai-video-automation",
+        image: "/images/ai/6.png",
+        desc: "Auto-generated ads, reels and product videos made with AI tools, at a fraction of the usual time.",
       },
       {
         title: "AEO",
-        desc: "AI-powered SEO, content generation & search ranking improvement.",
-        icon: BarChart3,
         slug: "aeo-ai-enablement",
+        image: "/images/ai/5.png",
+        desc: "Answer-engine optimisation so your business is the one AI assistants and search engines recommend.",
       },
     ],
   },
 ];
-
-/** Tab id → the actual URL path segment under /Services (the "design" tab id predates the "designing" route slug). */
-const CATEGORY_PATH: Record<string, string> = {
-  development: "development",
-  design: "designing",
-  marketing: "marketing",
-  photography: "photography",
-  ai: "ai",
-};
 
 interface ServicesProps {
   /**
@@ -284,189 +252,171 @@ interface ServicesProps {
 }
 
 export default function Services({ headingLevel = "h2" }: ServicesProps): JSX.Element {
-  const [active, setActive] = useState<string>(TABS[0].id);
-  const activeTab = TABS.find((t) => t.id === active) ?? TABS[0];
-  const router = useRouter();
+  const [tabIndex, setTabIndex] = useState(0);
+  const [itemIndex, setItemIndex] = useState(0);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const mounted = useRef(false);
   const Heading = headingLevel;
 
-  const imageMap: Record<string, string> = {
-    development: "/images/Development.png",
-    design: "/images/Designing.png",
-    marketing: "/images/Marketing.png",
-    photography: "/images/Photography.png",
-    ai: "/images/ai/ai.png",
+  const tab = TABS[tabIndex];
+  const item = tab.items[itemIndex];
+
+  const selectTab = useCallback((i: number) => {
+    setTabIndex(i);
+    setItemIndex(0);
+  }, []);
+
+  // Centre the active tab / service chip inside their horizontally scrolling
+  // rows. Scrolls the row itself (never the page — scrollIntoView could drag
+  // the whole page down to this section on load) and skips the first render.
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    const centre = (row: HTMLElement | null, i: number) => {
+      const el = row?.children[i] as HTMLElement | undefined;
+      if (!row || !el || row.scrollWidth <= row.clientWidth + 4) return;
+      row.scrollTo({ left: el.offsetLeft - (row.clientWidth - el.clientWidth) / 2, behavior: "smooth" });
+    };
+    centre(tabsRef.current, tabIndex);
+    centre(listRef.current, itemIndex);
+  }, [tabIndex, itemIndex]);
+
+  // Arrow: scroll the bar if it overflows, otherwise step to the next category.
+  const onNext = () => {
+    const el = tabsRef.current;
+    if (el && el.scrollWidth > el.clientWidth + 4 && el.scrollLeft + el.clientWidth < el.scrollWidth - 4) {
+      el.scrollBy({ left: 220, behavior: "smooth" });
+    } else {
+      selectTab((tabIndex + 1) % TABS.length);
+    }
   };
 
   return (
-    <section
-      id="services"
-      className="relative py-20 px-6 lg:px-16 bg-[#F4F7FE] overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* ====== Section Heading ====== */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <Heading className="text-4xl lg:text-5xl font-extrabold text-[#1A14A5] drop-shadow-sm">
-            Our <span className="text-[#231F20]">Services</span>
-          </Heading>
-          <p className="mt-4 text-lg text-[#231F20]/80 max-w-2xl mx-auto">
-            Business Smart Hub (BSH) provides future-ready solutions to help
-            businesses design, develop, market, and scale in the digital age.
-          </p>
-        </motion.div>
+    <section id="services" className="relative bg-[#F4F7FE] px-4 py-16 sm:px-6 lg:px-16 lg:py-20">
+      <div className="mx-auto max-w-7xl">
+        {/* ====== Heading ====== */}
+        <Heading className="max-w-xl text-3xl font-bold leading-[1.15] tracking-tight text-[#231F20] sm:text-4xl lg:text-5xl">
+          Our services to help you unlock new possibilities
+        </Heading>
 
-        {/* ====== Tabs ====== */}
-        <div className="mt-10">
+        {/* ====== Tab bar ====== */}
+        <div className="mt-8 flex items-center rounded-full border border-[#231F20]/20 bg-white/60 p-1 sm:p-1.5 lg:mt-12">
           <div
-            className="flex gap-3 flex-wrap justify-center"
+            ref={tabsRef}
             role="tablist"
-            aria-label="Services tabs"
+            aria-label="Service categories"
+            className="relative flex flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none] md:justify-between md:gap-2 [&::-webkit-scrollbar]:hidden"
           >
-            {TABS.map((tab) => (
+            {TABS.map((t, i) => (
               <button
-                key={tab.id}
+                key={t.id}
                 role="tab"
-                aria-selected={active === tab.id}
-                onClick={() => setActive(tab.id)}
-                className={`flex items-center gap-3 px-5 py-3 rounded-2xl focus:outline-none transition-all ${
-                  active === tab.id
-                    ? "bg-white shadow-lg text-[#1A14A5]"
-                    : "bg-white/60 hover:bg-white/90 text-[#231F20]"
+                aria-selected={i === tabIndex}
+                onClick={() => selectTab(i)}
+                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1A14A5] sm:px-6 sm:py-3 sm:text-base ${
+                  i === tabIndex
+                    ? "font-bold text-[#231F20]"
+                    : "font-medium text-[#231F20]/65 hover:text-[#1A14A5]"
                 }`}
               >
-                <tab.icon className="w-5 h-5" />
-                <span className="font-semibold">{tab.title}</span>
+                {t.title}
               </button>
             ))}
           </div>
-
-          {/* ====== Tab Content ====== */}
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mt-12 space-y-12"
+          <button
+            type="button"
+            aria-label="Next category"
+            onClick={onNext}
+            className="ml-1.5 grid h-10 w-10 shrink-0 sm:ml-2 sm:h-11 sm:w-11 place-items-center rounded-full border border-[#231F20]/20 bg-white text-[#231F20] transition-colors hover:border-[#1A14A5] hover:text-[#1A14A5] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1A14A5]"
           >
-            {/* ====== Main Service Card ====== */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl shadow-2xl group w-full h-[400px] sm:h-[500px] md:h-[550px] perspective-1000"
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* ====== Content card ====== */}
+        <div className="mt-5 rounded-3xl border border-[#231F20]/15 bg-gradient-to-tr from-[#D5D3F5] via-[#EDEEFB] to-[#F6F7FD] p-4 sm:mt-6 sm:rounded-[2rem] sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.6fr)] lg:gap-10">
+            {/* ---- Left: service list ---- */}
+            <ul
+              ref={listRef}
+              className="relative -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:p-0 [&::-webkit-scrollbar]:hidden"
+              aria-label={`${tab.title} services`}
             >
-              {/* Background Image */}
-              <div className="relative w-full h-full transform-gpu group-hover:scale-[1.04] transition-transform duration-700 ease-out">
+              {tab.items.map((it, i) => {
+                const selected = i === itemIndex;
+                return (
+                  <li key={it.slug} className="shrink-0 lg:shrink">
+                    <button
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setItemIndex(i)}
+                      className={`flex items-center gap-3 whitespace-nowrap rounded-full px-4 py-2.5 text-left text-sm font-medium text-[#231F20] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231F20] lg:w-full lg:justify-between lg:px-5 lg:py-3.5 lg:text-[15px] ${
+                        selected
+                          ? "bg-white shadow-md"
+                          : "border border-[#1A14A5]/10 bg-white/40 hover:bg-white/70 lg:border-transparent lg:bg-transparent lg:hover:bg-white/50"
+                      }`}
+                    >
+                      {it.title}
+                      <ChevronRight className="hidden h-4 w-4 shrink-0 lg:block" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* ---- Right: image + description ---- */}
+            <div>
+              {/* The illustrations are 3:2 (AI ones 1:1): show them whole (contain) over a
+                  blurred copy of themselves so any side space blends in — no cropping. */}
+              <div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-[#DAD7F3] sm:aspect-[16/10] lg:aspect-auto lg:h-[440px]">
                 <Image
-                  src={imageMap[active]}
-                  alt={`${activeTab.title} service illustration`}
+                  key={`bg-${item.image}`}
+                  src={item.image}
+                  alt=""
+                  aria-hidden="true"
                   fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                  className="object-cover"
+                  sizes="64px"
+                  className="scale-110 object-cover opacity-50 blur-2xl"
+                />
+                <Image
+                  key={item.image}
+                  src={item.image}
+                  alt={`${item.title} service`}
+                  fill
+                  priority={tabIndex === 0 && itemIndex === 0}
+                  sizes="(max-width: 1024px) 100vw, 760px"
+                  className="animate-in fade-in object-contain duration-500"
                 />
               </div>
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/60 group-hover:from-black/70 group-hover:via-black/30 group-hover:to-black/70 transition-all duration-500" />
+              <p
+                key={item.slug}
+                className="animate-in fade-in mt-4 min-h-[3.5rem] max-w-4xl text-[15px] leading-relaxed text-[#231F20] duration-500 sm:mt-5 sm:text-base"
+              >
+                {item.desc}
+              </p>
 
-              {/* Centered Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6 sm:p-10 z-20">
-                <div className="flex flex-col items-center gap-3 mb-4 px-8 py-6 rounded-3xl bg-black/10 backdrop-blur-[2px] border border-white/10">
-                  <activeTab.icon className="w-12 h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                  <h3 className="text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-md">
-                    {activeTab.title}
-                  </h3>
-                </div>
-
-                <p className="text-white/90 mb-8 text-sm sm:text-base md:text-lg max-w-2xl drop-shadow-sm font-medium">
-                  Explore our {activeTab.title.toLowerCase()} services and
-                  discover how we can bring your vision to life with quality and
-                  innovation.
-                </p>
-
-                <Button
-                  size="lg"
-                  className="bg-[#1A14A5] text-white font-semibold hover:bg-black px-8 py-4 rounded-xl transition-all duration-300 w-fit shadow-lg"
-                  onClick={() => {
-                    if (active === "development")
-                      router.push("/Services/development#development-form");
-                    else if (active === "design")
-                      router.push("/Services/designing#designing-form");
-                    else if (active === "marketing")
-                      router.push("/Services/marketing#marketing-form");
-                    else if (active === "photography")
-                      router.push("/Services/photography#photography-form");
-                    else if (active === "ai")
-                      router.push("/Services/ai#ai-form");
-                  }}
+              <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
+                <Link
+                  href={`/Services/${tab.path}/${item.slug}`}
+                  className="inline-flex items-center gap-1.5 text-sm font-bold text-[#1A14A5] hover:underline"
                 >
-                  Get a Quote
-                </Button>
+                  Learn more about {item.title}
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={`/Services/${tab.path}#${tab.path}-form`}
+                  className="rounded-full border border-[#231F20]/30 bg-white px-5 py-2 text-sm font-semibold text-[#231F20] transition-colors hover:border-[#1A14A5] hover:text-[#1A14A5]"
+                >
+                  Get a quote
+                </Link>
               </div>
-            </motion.div>
-
-            {/* ====== Sub-Service Grid ====== */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-              {activeTab.items.map((item, idx) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 flex flex-col justify-between text-center"
-                >
-                  <div>
-                    <item.icon className="w-12 h-12 text-[#1A14A5] mb-4 mx-auto" />
-                    <h4 className="text-xl font-semibold text-[#231F20] mb-2">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-[#231F20]/75 mb-6">
-                      {item.desc}
-                    </p>
-                  </div>
-
-                  {/* Learn More Button → the service's own canonical detail page (full content, FAQs, and schema), not a category-page anchor */}
-                  <Button
-                    onClick={() => {
-                      const categoryPath = CATEGORY_PATH[active] ?? active;
-                      router.push(`/Services/${categoryPath}/${item.slug}`);
-                    }}
-                    className="mt-auto bg-[#1A14A5] text-white hover:bg-[#0e0a7a] px-6 py-3 rounded-xl font-medium mx-auto transition-all"
-                  >
-                    Learn More
-                  </Button>
-                </motion.div>
-              ))}
             </div>
-          </motion.div>
+          </div>
         </div>
-
-        {/* ====== CTA Section ====== */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mt-12 text-center"
-        >
-          <h3 className="text-2xl lg:text-3xl font-semibold text-[#231F20] mb-4">
-            Let’s Work Together 🚀
-          </h3>
-          <Button
-            size="lg"
-            className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white px-10 py-6 text-lg rounded-2xl shadow-lg hover:shadow-xl transition"
-            onClick={() => router.push("/contact")}
-          >
-            Contact Us
-          </Button>
-        </motion.div>
       </div>
     </section>
   );

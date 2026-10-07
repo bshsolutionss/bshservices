@@ -11,8 +11,8 @@ import {
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.RESEND_API || "";
 
-const FROM = "BSH Solutions <info@bshsolutionss.com>";
-const ADMIN_EMAIL = "bshsolutionss@gmail.com";
+const FROM = process.env.EMAIL_FROM || "BSH Solutions <info@bshsolutions.net>";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@bshsolutions.net";
 
 function getResendClient(): Resend {
   if (!RESEND_API_KEY) {

@@ -3,8 +3,16 @@
 import React, { useEffect } from "react";
 import { Star, MessageSquare } from "lucide-react";
 
+/**
+ * Temporarily switched off: the SociableKit reviews widget fails to load its
+ * stylesheet (it requests it from our own origin). Set to true to bring the
+ * whole "What Our Clients Say" section — and its script — back on every page.
+ */
+const SHOW_TESTIMONIALS = false;
+
 const Testimonial: React.FC = () => {
   useEffect(() => {
+    if (!SHOW_TESTIMONIALS) return;
     // Dynamically inject SociableKit script so it reliably executes on initial load & SPA navigation
     const scriptSrc = "https://widgets.sociablekit.com/reviews/widget.js";
     const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
@@ -16,6 +24,8 @@ const Testimonial: React.FC = () => {
       document.body.appendChild(script);
     }
   }, []);
+
+  if (!SHOW_TESTIMONIALS) return null;
 
   return (
     <section id="testimonials" className="py-20 bg-[#F4F7FE]/50 px-4 sm:px-6 lg:px-12 border-t border-gray-100">

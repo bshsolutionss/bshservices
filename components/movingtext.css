@@ -6,13 +6,13 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-60%);
+    transform: translateX(-50%);
   }
 }
 
 @keyframes move-reverse {
   0% {
-    transform: translateX(-60%);
+    transform: translateX(-50%);
   }
   100% {
     transform: translateX(0);
@@ -30,29 +30,24 @@
 
 /* Pause on hover + slight brightness boost */
 .animate-move:hover,
-.animate-move-reverse:hover {
+.animate-move-reverse:hover,
+.animate-move:focus-within,
+.animate-move-reverse:focus-within {
   animation-play-state: paused;
-  filter: brightness(1.3);
 }
 
-/* Neon glow for icons */
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 8px #0ef, 0 0 20px #0ef, 0 0 40px #0ef;
-    transform: scale(1);
-  }
-  50% {
-    text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 60px #00ffff;
-    transform: scale(1.05);
-  }
-  100% {
-    text-shadow: 0 0 8px #0ef, 0 0 20px #0ef, 0 0 40px #0ef;
-    transform: scale(1);
+/* Honour the OS "reduce motion" setting: no scrolling, no glow pulse. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-move,
+  .animate-move-reverse {
+    animation: none;
   }
 }
 
+/* Neon glow for icons — static: animating a filter on ~60 moving icons
+   forces a repaint every frame, which isn't worth it for a subtle effect. */
 .icon-glow {
-  animation: glow 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(0, 238, 255, 0.55));
 }
 
 /* Subtle gradient glow background behind moving rows */

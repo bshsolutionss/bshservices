@@ -100,34 +100,43 @@ const MovingText: React.FC = () => {
       {/* Background glow layer */}
       <div className="moving-bg"></div>
 
-      <div className="relative flex flex-col gap-8">
+      <div className="relative flex flex-col gap-5 sm:gap-8">
         {services.map((category, idx) => (
           <div
             key={category.id}
-            className={`flex items-center gap-8 ${
+            // Two identical halves + translateX(-50%) = a seamless loop.
+            className={`flex w-max items-center ${
               idx % 2 === 0 ? "animate-move" : "animate-move-reverse"
             }`}
           >
-            {category.items.map((item, i) => {
-              const Icon = item.icon;
-              // Canonical service detail page (full content, FAQs, schema) —
-              // not a heading, and not a category-page anchor.
-              const href = `/Services/${category.category}/${item.slug}`;
+            {[0, 1].map((copy) => (
+              <div
+                key={copy}
+                className="flex items-center gap-4 pr-4 sm:gap-8 sm:pr-8"
+                // The second half is a visual duplicate only.
+                aria-hidden={copy === 1 ? true : undefined}
+              >
+                {category.items.map((item) => {
+                  const Icon = item.icon;
+                  // Canonical service detail page (full content, FAQs, schema).
+                  const href = `/Services/${category.category}/${item.slug}`;
 
-              return (
-                <Link
-                  key={i}
-                  href={href}
-                  className="flex items-center gap-3 bg-white/10 dark:bg-white/5 px-6 py-3 rounded-full shadow-lg
-                             hover:scale-105 hover:bg-[#0ef]/10 transition-transform duration-300 cursor-pointer"
-                >
-                  <Icon className="w-6 h-6 text-[#1A14A5] icon-glow" />
-                  <span className="text-[2vw] font-semibold whitespace-nowrap text-[#1A14A5] dark:text-[#0ef]">
-                    {item.title}
-                  </span>
-                </Link>
-              );
-            })}
+                  return (
+                    <Link
+                      key={item.slug}
+                      href={href}
+                      tabIndex={copy === 1 ? -1 : undefined}
+                      className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#0ef]/10 focus-visible:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A14A5] dark:bg-white/5 sm:gap-3 sm:px-6 sm:py-3"
+                    >
+                      <Icon aria-hidden="true" className="icon-glow h-5 w-5 text-[#1A14A5] sm:h-6 sm:w-6" />
+                      <span className="whitespace-nowrap text-[clamp(0.95rem,2vw,1.6rem)] font-semibold text-[#1A14A5] dark:text-[#0ef]">
+                        {item.title}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         ))}
       </div>

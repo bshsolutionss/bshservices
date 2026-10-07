@@ -1,7 +1,7 @@
 import type { ServiceCategorySlug, ServiceDefinition } from "@/lib/services-data";
 import { SERVICE_CATEGORIES, getRelatedServices } from "@/lib/services-data";
 import { getProcessSteps, getWhyChooseUs, getCtaContent } from "@/lib/services-content";
-import { SERVICE_ARTICLES, truncateForMeta } from "@/lib/services-articles";
+import { SERVICE_ARTICLES } from "@/lib/services-articles";
 
 import Hero from "@/components/services/Hero";
 import ServiceSection from "@/components/services/ServiceSection";
@@ -58,7 +58,9 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
   // (still generic) services-data.ts fields only for the one service that
   // has no content file yet.
   const heroTitle = article?.title ?? service.name;
-  const heroSubtitle = article ? truncateForMeta(article.intro.join(" "), 220) : service.shortDescription;
+  // Hero copy ends on a full sentence — a hard character cut left it
+  // trailing off mid-thought ("...how..."). Meta tags still use truncateForMeta.
+  const heroSubtitle = article ? firstSentences(article.intro.join(" "), 220) || service.shortDescription : service.shortDescription;
   const faqs = article?.faqs ?? service.faqs;
 
   return (
@@ -121,4 +123,15 @@ export default function ServiceDetailPage({ service }: ServiceDetailPageProps) {
       </div>
     </>
   );
+}
+
+/** Whole sentences from the start of `text`, up to `max` chars; "" if even the first doesn't fit. */
+function firstSentences(text: string, max: number): string {
+  const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) ?? [];
+  let out = "";
+  for (const sentence of sentences) {
+    if ((out + sentence).trim().length > max) break;
+    out += sentence;
+  }
+  return out.trim();
 }

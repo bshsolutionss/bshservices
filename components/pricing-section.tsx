@@ -83,7 +83,7 @@ export default function PricingSection({ region: regionProp = "GLOBAL" }: Pricin
 
         {/* ====== Pricing Grid ====== */}
         <div className="grid md:grid-cols-3 gap-8 relative mb-24">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {tiers.map((tier, idx) => (
               <PricingCard
                 key={`${activeCategory}-${tier.name}`}

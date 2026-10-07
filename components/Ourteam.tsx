@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import React from "react";
-import { FileDown } from "lucide-react";
+import { FileDown, Mail } from "lucide-react";
 
 interface TeamProps {
   id?: string;
@@ -14,6 +14,7 @@ interface TeamProps {
   image: string;
   reverse?: boolean;
   cvLink?: string;
+  email?: string;
 }
 
 export default function OurTeamSection({
@@ -25,6 +26,7 @@ export default function OurTeamSection({
   image,
   reverse = false,
   cvLink,
+  email,
 }: TeamProps) {
   return (
     <section id={id} className="py-20 bg-background border-b border-border">
@@ -66,18 +68,32 @@ export default function OurTeamSection({
 
           <p className="text-muted-foreground mb-6 leading-relaxed">{about}</p>
 
-          {/* ==== CV BUTTON — only rendered when a real file is actually provided ==== */}
-          {cvLink && (
-            <a
-              href={cvLink}
-              download
-              className="inline-flex items-center gap-2 bg-[#1A14A5] hover:bg-[#0f0b7a]
-                         text-white px-6 py-3 rounded-lg font-medium transition"
-            >
-              <FileDown className="w-5 h-5" />
-              Download CV
-            </a>
-          )}
+          {/* ==== ACTIONS (EMAIL & CV) ==== */}
+          <div className="flex flex-wrap items-center gap-3">
+            {email && (
+              <a
+                href={`mailto:${email}`}
+                className="inline-flex items-center gap-2 bg-[#1A14A5]/10 hover:bg-[#1A14A5]
+                           text-[#1A14A5] hover:text-white px-5 py-3 rounded-lg font-semibold
+                           text-sm transition-all duration-300 border border-[#1A14A5]/20 group shadow-sm hover:shadow-md"
+              >
+                <Mail className="w-4 h-4 text-[#1A14A5] group-hover:text-white transition-colors" />
+                <span>{email}</span>
+              </a>
+            )}
+
+            {cvLink && (
+              <a
+                href={cvLink}
+                download
+                className="inline-flex items-center gap-2 bg-[#1A14A5] hover:bg-[#0f0b7a]
+                           text-white px-6 py-3 rounded-lg font-medium transition"
+              >
+                <FileDown className="w-5 h-5" />
+                Download CV
+              </a>
+            )}
+          </div>
         </motion.div>
       </div>
 

@@ -137,7 +137,7 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
             <Text style={styles.partyLabel}>From</Text>
             <Text style={styles.partyName}>BSH Solutions</Text>
             <Text style={styles.partyLine}>Karachi, Pakistan</Text>
-            <Text style={styles.partyLine}>bshsolutionss@gmail.com</Text>
+            <Text style={styles.partyLine}>info@bshsolutions.net</Text>
             <Text style={styles.partyLine}>+92 312 8994968</Text>
           </View>
           <View style={styles.partyBlock}>
@@ -208,7 +208,7 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
         <View style={styles.footer} fixed>
           <Text style={styles.footerBrand}>BSH Solutions</Text>
           <Text style={styles.footerText}>Thank you for your business.</Text>
-          <Text style={styles.footerText}>bshsolutions.net · bshsolutionss@gmail.com</Text>
+          <Text style={styles.footerText}>bshsolutions.net · info@bshsolutions.net</Text>
         </View>
       </Page>
     </Document>

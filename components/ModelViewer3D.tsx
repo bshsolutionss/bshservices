@@ -8,13 +8,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 interface ModelViewer3DProps {
   className?: string;
+  /** Fired once the model has been parsed and added to the scene. */
+  onReady?: () => void;
 }
 
-export default function ModelViewer3D({ className = "" }: ModelViewer3DProps) {
+export default function ModelViewer3D({ className = "", onReady }: ModelViewer3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const onReadyRef = useRef(onReady);
+  onReadyRef.current = onReady;
+
+  useEffect(() => {
+    if (!loading && !error) onReadyRef.current?.();
+  }, [loading, error]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -44,7 +52,7 @@ export default function ModelViewer3D({ className = "" }: ModelViewer3DProps) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setClearColor(0x000000, 0);
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.25;
 

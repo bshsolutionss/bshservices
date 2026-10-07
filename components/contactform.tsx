@@ -168,19 +168,65 @@ const ContactformInner = () => {
           </p>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-3 text-[#231F20]/90">
-              <Mail className="text-[#1A14A5] w-6 h-6" />
-              <span>bshsolutionss@gmail.com</span>
+            {/* Department Emails */}
+            <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-[#1A14A5]/15 shadow-sm space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#1A14A5] block">
+                Official Email Channels
+              </span>
+
+              <div className="space-y-2">
+                <a
+                  href="mailto:info@bshsolutions.net"
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-[#1A14A5]/5 transition group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="text-[#1A14A5] w-4 h-4 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm font-medium text-[#231F20]/75">General:</span>
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold text-[#1A14A5] group-hover:underline">
+                    info@bshsolutions.net
+                  </span>
+                </a>
+
+                <a
+                  href="mailto:sales@bshsolutions.net"
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-[#1A14A5]/5 transition group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="text-[#1A14A5] w-4 h-4 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm font-medium text-[#231F20]/75">Sales & Projects:</span>
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold text-[#1A14A5] group-hover:underline">
+                    sales@bshsolutions.net
+                  </span>
+                </a>
+
+                <a
+                  href="mailto:support@bshsolutions.net"
+                  className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-[#1A14A5]/5 transition group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="text-[#1A14A5] w-4 h-4 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm font-medium text-[#231F20]/75">Client Support:</span>
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold text-[#1A14A5] group-hover:underline">
+                    support@bshsolutions.net
+                  </span>
+                </a>
+              </div>
             </div>
-            <div className="flex items-center gap-3 text-[#231F20]/90">
-              <Phone className="text-[#1A14A5] w-6 h-6" />
-              <span>+92 312 8994968</span>
+
+            <div className="flex items-center gap-3 text-[#231F20]/90 px-1">
+              <Phone className="text-[#1A14A5] w-5 h-5 flex-shrink-0" />
+              <a href="tel:+923128994968" className="hover:text-[#1A14A5] transition-colors font-medium">
+                +92 312 8994968
+              </a>
             </div>
-            <div className="flex items-center gap-3 text-[#231F20]/90">
-              <MapPin className="text-[#1A14A5] w-6 h-6" />
-              <span>Karachi, Pakistan</span>
+            <div className="flex items-center gap-3 text-[#231F20]/90 px-1">
+              <MapPin className="text-[#1A14A5] w-5 h-5 flex-shrink-0" />
+              <span className="font-medium">Karachi, Pakistan</span>
             </div>
-                <div className="flex gap-5 mt-4">
+                <div className="flex gap-5 mt-4 px-1">
             <Link href="https://www.facebook.com/bshsolutions" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-[#1A14A5]/10 shadow-lg hover:scale-110 transition">
               <Facebook className="text-[#1A14A5]" />
             </Link>

@@ -118,11 +118,25 @@ const Footer = () => {
             </h3>
             <div className="space-y-2.5 text-sm">
               <a
-                href="mailto:bshsolutionss@gmail.com"
+                href="mailto:info@bshsolutions.net"
                 className="block text-[#231F20]/75 hover:text-[#1A14A5] transition-colors"
               >
-                <span className="text-[#231F20]/50">Email: </span>
-                bshsolutionss@gmail.com
+                <span className="text-[#231F20]/50">General: </span>
+                info@bshsolutions.net
+              </a>
+              <a
+                href="mailto:sales@bshsolutions.net"
+                className="block text-[#231F20]/75 hover:text-[#1A14A5] transition-colors"
+              >
+                <span className="text-[#231F20]/50">Sales: </span>
+                sales@bshsolutions.net
+              </a>
+              <a
+                href="mailto:support@bshsolutions.net"
+                className="block text-[#231F20]/75 hover:text-[#1A14A5] transition-colors"
+              >
+                <span className="text-[#231F20]/50">Support: </span>
+                support@bshsolutions.net
               </a>
               <a
                 href="tel:+923128994968"

@@ -40,3 +40,8 @@ alter table public.projects add column if not exists currency text not null defa
 -- PKR manually when it's actually a local-currency deal.
 alter table public.leads add column if not exists expected_value_currency text not null default 'USD'
   check (expected_value_currency in ('USD', 'PKR', 'CAD', 'AUD'));
+
+-- Make PostgREST pick up the new columns immediately; without this the API
+-- can keep failing with PGRST204 "Could not find the 'currency' column ... in
+-- the schema cache" until the cache refreshes on its own.
+notify pgrst, 'reload schema';

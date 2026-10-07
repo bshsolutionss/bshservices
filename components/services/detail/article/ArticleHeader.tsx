@@ -22,6 +22,7 @@ export default function ArticleHeader({ intro, image, imageAlt }: ArticleHeaderP
               src={image}
               alt={imageAlt}
               fill
+              priority
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 40vw"
             />

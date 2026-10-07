@@ -1,8 +1,14 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+
+// three.js is ~hundreds of KB — load it client-side only, after first paint.
+const BshHub3D = dynamic(() => import("@/components/BshHub3D"), {
+  ssr: false,
+  loading: () => <div className="aspect-square w-full" aria-hidden="true" />,
+});
 
 const About = () => {
   return (
@@ -18,18 +24,8 @@ const About = () => {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="flex justify-center"
         >
-          <div className="relative w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] md:w-[480px] md:h-[480px] lg:w-[500px] lg:h-[500px] overflow-hidden">
-            {/* Background Blue Glow */}
-            <div className="absolute inset-0 w-full -z-10 rounded-full"></div>
-
-            {/* Image fills entire glass background */}
-            <Image
-              src="/images/3dlogobgrewtx.png"
-              alt="BSH Solutions - Business Smart Hub"
-              fill
-              priority
-              className="object-cover rounded-2xl scale-100 transition-transform duration-700 ease-out hover:scale-100 drop-shadow-2xl"
-            />
+          <div className="relative w-[320px] sm:w-[420px] md:w-[480px] lg:w-[500px]">
+            <BshHub3D />
           </div>
         </motion.div>
 

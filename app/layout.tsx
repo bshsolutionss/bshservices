@@ -115,6 +115,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-white text-[#231F20]`}
       >
         {/* Client-side smooth scroll only */}
@@ -138,6 +139,27 @@ export default function RootLayout({
               name: "BSH Solutions",
               url: SITE_URL,
               logo: `${SITE_URL}/android-chrome-512x512.png`,
+              email: "info@bshsolutions.net",
+              contactPoint: [
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+92 312 8994968",
+                  contactType: "general inquiries",
+                  email: "info@bshsolutions.net",
+                },
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+92 312 8994968",
+                  contactType: "sales",
+                  email: "sales@bshsolutions.net",
+                },
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+92 312 8994968",
+                  contactType: "customer support",
+                  email: "support@bshsolutions.net",
+                },
+              ],
               // Social profile URLs — identities, not the site domain, so left
               // as-is; flagged separately (instagram/x below still carry the
               // old double-"s" handle while facebook/linkedin don't, worth

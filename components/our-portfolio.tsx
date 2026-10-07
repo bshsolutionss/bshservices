@@ -1,11 +1,9 @@
-"use client";
-
 import React from "react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Eye, Heart, ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
 export interface PortfolioProject {
@@ -13,8 +11,6 @@ export interface PortfolioProject {
   image: string;
   category: string;
   link: string;
-  views: string;
-  likes: string;
 }
 
 // Real, live client projects only.
@@ -24,64 +20,48 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     image: "/portfolio/migrationrepublic.webp",
     category: "Web Development",
     link: "https://migrationrepublic.com.au",
-    views: "3.2K",
-    likes: "540",
   },
   {
     title: "Migration Factor",
     image: "/portfolio/migrationfactor.webp",
     category: "Branding & Web",
     link: "https://migrationfactor.com.au",
-    views: "2.1K",
-    likes: "312",
   },
   {
     title: "Aisha Academy",
     image: "/portfolio/aishaacademy.webp",
     category: "EdTech Solution",
     link: "https://aisha-academy.com/",
-    views: "1.9K",
-    likes: "280",
   },
   {
     title: "Silwalo",
     image: "/portfolio/silwalo.webp",
     category: "eCommerce",
     link: "https://silwalo.com",
-    views: "4.4K",
-    likes: "761",
   },
   {
     title: "Admin Dashboard",
     image: "/portfolio/admindashboard.webp",
     category: "Custom Software",
     link: "https://home-decor-admins.vercel.app/",
-    views: "1.2K",
-    likes: "190",
   },
   {
     title: "Almacca",
     image: "/portfolio/almacca.webp",
     category: "Web Development",
     link: "https://almacca.com/",
-    views: "980",
-    likes: "120",
   },
   {
     title: "Golden Shiruh LLC",
     image: "/portfolio/migrationrepublic.webp",
     category: "Agency Website",
     link: "https://goldenshiruhllc.com/",
-    views: "1.7K",
-    likes: "260",
   },
   {
     title: "ANH Supplies",
     image: "/portfolio/anhsupplies.webp",
     category: "eCommerce",
     link: "https://anhsupplies.com/",
-    views: "2.8K",
-    likes: "420",
   },
 ];
 
@@ -104,110 +84,76 @@ export function OurPortfolio({
   const projects = typeof limit === "number" ? PORTFOLIO_PROJECTS.slice(0, limit) : PORTFOLIO_PROJECTS;
 
   return (
-    <section id="portfolio" className={cn("py-20 px-6 lg:px-12 bg-[#F4F7FE]", className)}>
-      <div className="max-w-7xl mx-auto">
+    <section id="portfolio" className={cn("bg-[#F4F7FE] px-4 py-16 sm:px-6 lg:px-12 lg:py-20", className)}>
+      <div className="mx-auto max-w-7xl">
         {showHeading && (
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              viewport={{ once: true }}
-              className="max-w-2xl"
-            >
-              <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A14A5]">
+          <div className="mb-10 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-[#1A14A5] sm:text-4xl lg:text-5xl">
                 Our <span className="text-[#231F20]">Portfolio</span>
               </h2>
-              <p className="text-[#231F20]/70 text-lg mt-4 leading-relaxed">
+              <p className="mt-4 text-base leading-relaxed text-[#231F20]/70 sm:text-lg">
                 Real live websites, dashboards, SaaS platforms, and scalable digital
                 experiences crafted for our clients worldwide.
               </p>
-            </motion.div>
+            </div>
 
             {showViewAll && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-                viewport={{ once: true }}
+              <Button
+                asChild
+                className="h-auto w-fit gap-2 rounded-full bg-[#1A14A5] px-8 py-4 font-bold text-white hover:bg-[#0e0a7a]"
               >
-                <Button
-                  asChild
-                  className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-full px-8 py-6 h-auto font-bold gap-2"
-                >
-                  <Link href="/portfolio">
-                    View Full Portfolio <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </Button>
-              </motion.div>
+                <Link href="/portfolio">
+                  View Full Portfolio <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
             )}
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-8">
           {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: (index % 6) * 0.05 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="rounded-3xl overflow-hidden border border-[#1A14A5]/10 bg-white hover:border-[#1A14A5]/30 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl">
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block relative overflow-hidden"
-                >
-                  <div className="relative h-[240px] md:h-[260px] w-full bg-[#F4F7FE] overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover object-top transition-all duration-[5000ms] ease-in-out group-hover:object-bottom"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-[#1A14A5]/0 group-hover:bg-[#1A14A5]/20 transition-all duration-500 flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-all duration-500 bg-[#1A14A5] text-white px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg translate-y-4 group-hover:translate-y-0">
-                      View Live Site
-                    </span>
-                  </div>
-                </a>
-
-                <div className="p-6">
-                  <span className="text-[10px] uppercase tracking-[3px] font-bold text-[#1A14A5]">
+            <Reveal as="li" key={project.title} delay={(index % 3) * 70}>
+              <article className="group relative h-full overflow-hidden rounded-3xl border border-[#1A14A5]/10 bg-white shadow-sm transition-all duration-300 focus-within:ring-2 focus-within:ring-[#1A14A5] hover:-translate-y-1.5 hover:border-[#1A14A5]/30 hover:shadow-xl">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F4F7FE]">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} website screenshot`}
+                    fill
+                    // The first row is above the fold on the homepage.
+                    priority={index < 3 && typeof limit === "number"}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="object-cover object-top transition-[object-position] duration-[4000ms] ease-in-out group-hover:object-bottom"
+                  />
+                  <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#1A14A5] shadow-sm backdrop-blur">
                     {project.category}
                   </span>
-                  <div className="flex items-start justify-between gap-4 mt-2">
-                    <h3 className="text-xl font-bold leading-snug text-[#231F20]">
-                      {project.title}
-                    </h3>
+                </div>
+
+                <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+                  <h3 className="text-lg font-bold leading-snug text-[#231F20] sm:text-xl">
+                    {/* Stretched link: the whole card is one accessible target. */}
                     <a
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-[#1A14A5]/5 hover:bg-[#1A14A5] flex items-center justify-center transition group/icon shrink-0"
+                      className="after:absolute after:inset-0 after:content-[''] focus:outline-none"
                     >
-                      <ExternalLink className="w-4 h-4 text-[#1A14A5] group-hover/icon:text-white transition" />
+                      {project.title}
+                      <span className="sr-only"> (opens live site in a new tab)</span>
                     </a>
-                  </div>
-                  <div className="flex items-center gap-5 mt-4 text-sm text-[#231F20]/60 font-medium">
-                    <div className="flex items-center gap-1.5">
-                      <Eye className="w-4 h-4 text-[#1A14A5]" />
-                      {project.views}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Heart className="w-4 h-4 text-[#1A14A5]" />
-                      {project.likes}
-                    </div>
-                  </div>
+                  </h3>
+                  <span
+                    aria-hidden="true"
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1A14A5]/5 text-[#1A14A5] transition-colors group-hover:bg-[#1A14A5] group-hover:text-white"
+                  >
+                    <ArrowUpRight className="h-5 w-5" />
+                  </span>
                 </div>
-              </div>
-            </motion.div>
+              </article>
+            </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

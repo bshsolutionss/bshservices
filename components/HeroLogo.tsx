@@ -1,42 +1,72 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
-import { motion } from "framer-motion"
+import Image from "next/image"
 
-// three.js + its OBJ/MTL loaders + OrbitControls are a heavy dependency
-// (a few hundred KB gzipped) that only this one component needs — code-split
-// it into its own chunk instead of bundling it into the homepage's main JS.
-// ssr:false because WebGL only exists in the browser anyway (the component
-// already does all its real work inside a useEffect/canvas ref).
-const ModelViewer3D = dynamic(() => import("./ModelViewer3D"), {
-  ssr: false,
-  loading: () => (
-    <div className="relative w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] lg:w-[480px] lg:h-[480px] flex items-center justify-center">
-      <div className="relative flex items-center justify-center">
-        <div className="w-24 h-24 rounded-full border-2 border-[#1A14A5]/30 border-t-[#1A14A5] animate-spin" />
-        <div className="absolute w-12 h-12 rounded-full bg-[#1A14A5]/20 backdrop-blur-md animate-pulse" />
-      </div>
-    </div>
-  ),
-})
+// three.js + its loaders + a ~5.5 MB OBJ model are the heaviest things on the
+// homepage. They are code-split AND loaded only after the page is idle (and
+// only when the device/connection can afford it); until then — and forever on
+// Save-Data, slow connections or reduced-motion — a lightweight poster of the
+// same mark is shown, so the hero paints immediately and LCP is a small image.
+const ModelViewer3D = dynamic(() => import("./ModelViewer3D"), { ssr: false })
+
+type NetworkInfo = { saveData?: boolean; effectiveType?: string }
+
+function canAffordModel(): boolean {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false
+  const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection
+  if (conn?.saveData) return false
+  if (conn?.effectiveType && /(^|-)2g$/.test(conn.effectiveType)) return false
+  return true
+}
+
+const SIZE = "w-[260px] h-[260px] sm:w-[380px] sm:h-[380px] lg:w-[480px] lg:h-[480px]"
 
 const HeroLogo = () => {
+  const [mount3D, setMount3D] = useState(false)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    if (!canAffordModel()) return
+    const start = () => setMount3D(true)
+    // Wait for the page to finish loading, then give the main thread a beat.
+    const schedule = () => {
+      const id = window.setTimeout(start, 1200)
+      return () => window.clearTimeout(id)
+    }
+    let cancel: (() => void) | undefined
+    if (document.readyState === "complete") cancel = schedule()
+    else {
+      const onLoad = () => { cancel = schedule() }
+      window.addEventListener("load", onLoad, { once: true })
+      return () => { window.removeEventListener("load", onLoad); cancel?.() }
+    }
+    return () => cancel?.()
+  }, [])
+
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 80 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1, delay: 0.4 }}
-      className="relative mt-10 lg:mt-0 flex justify-center items-center"
-    >
-      {/* 3D Interactive Main Logo */}
-      <div className="relative z-10">
-        <ModelViewer3D />
+    <div className="relative mt-10 flex items-center justify-center lg:mt-0">
+      <div className={`relative z-10 ${SIZE}`}>
+        {/* Poster: instant, tiny, and what low-power devices keep */}
+        <Image
+          src="/images/3dlogobgre.png"
+          alt="BSH Solutions logo"
+          fill
+          priority
+          sizes="(max-width: 640px) 260px, (max-width: 1024px) 380px, 480px"
+          className={`object-contain transition-opacity duration-700 ${ready ? "opacity-0" : "opacity-100"}`}
+        />
+        {mount3D && (
+          <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
+            <ModelViewer3D onReady={() => setReady(true)} />
+          </div>
+        )}
       </div>
 
-      {/* Blue Glow Behind */}
-      <div className="absolute -z-10 w-[450px] h-[450px] rounded-full bg-[#1A14A5]/30 blur-3xl pointer-events-none"></div>
-    </motion.div>
+      {/* Blue glow behind */}
+      <div className="pointer-events-none absolute -z-10 h-[300px] w-[300px] rounded-full bg-[#1A14A5]/30 blur-3xl sm:h-[450px] sm:w-[450px]" />
+    </div>
   )
 }
 

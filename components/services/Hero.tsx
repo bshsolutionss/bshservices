@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,78 +8,50 @@ interface HeroProps {
   image: string;
 }
 
+/**
+ * Server component (no animation library — the entrance is CSS only).
+ * Reused across ~38 pages. `pt-28` clears the fixed site header, and the
+ * height is `min-h` rather than a fixed vh so long titles never overflow
+ * or collide with the header on short or narrow screens.
+ */
 export default function Hero({ title, subtitle, image }: HeroProps) {
   return (
     <section
-      className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden bg-gray-900"
+      className="relative isolate flex min-h-[60vh] w-full items-center justify-center overflow-hidden bg-gray-900 px-4 pb-16 pt-28 sm:px-6 md:min-h-[65vh] md:pb-20 md:pt-32"
       aria-label={`${title} Hero Section`}
     >
-      
-      {/* ====== Background Image ====== */}
       <Image
         src={image}
-        alt={`${title} background`}
+        alt=""
         fill
         priority
+        fetchPriority="high"
         sizes="100vw"
-        className="object-cover object-center brightness-75"
+        className="-z-20 object-cover object-center"
       />
+      {/* Single overlay keeps text readable on any image */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
 
-      {/* ====== Overlay (dark gradient) ====== */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/80" />
-
-      {/* ====== Animated Content ====== */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="relative z-10 text-center px-6"
-      >
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.9, ease: "easeOut" }}
-          className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]"
-        >
+      <div className="mx-auto w-full max-w-4xl text-center">
+        <h1 className="animate-in fade-in slide-in-from-bottom-4 text-balance text-3xl font-extrabold leading-tight tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] duration-700 sm:text-4xl md:text-5xl lg:text-6xl">
           {title}
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.9, ease: "easeOut" }}
-          className="mt-4 text-lg sm:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed"
-        >
+        <p className="animate-in fade-in slide-in-from-bottom-4 mx-auto mt-5 max-w-2xl text-pretty text-base leading-relaxed text-gray-200 duration-700 [animation-delay:150ms] [animation-fill-mode:backwards] sm:text-lg md:text-xl">
           {subtitle}
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="mt-8 flex justify-center"
-        >
-          {/* This Hero is reused across ~38 pages (service detail, category,
-              about, contact, book-consultation) that have no `#services`
-              element of their own — that anchor only exists on the homepage,
-              which doesn't even render this component. Linking to the real
-              /Services page works everywhere it's actually used. */}
+        <div className="animate-in fade-in slide-in-from-bottom-4 mt-8 flex justify-center duration-700 [animation-delay:300ms] [animation-fill-mode:backwards]">
+          {/* This Hero is reused across ~38 pages that have no `#services`
+              element of their own, so link to the real /Services page. */}
           <Link
             href="/Services"
-            className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="rounded-xl bg-[#1A14A5] px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-[#0e0a7a] hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Explore Services
           </Link>
-        </motion.div>
-      </motion.div>
-
-      {/* ====== Subtle Parallax Floating Shape (optional aesthetic) ====== */}
-      <motion.div
-        className="absolute bottom-10 right-10 w-32 h-32 bg-[#1A14A5]/40 rounded-full blur-3xl"
-        animate={{ y: [0, -15, 0] }}
-        transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-      />
+        </div>
+      </div>
     </section>
   );
 }

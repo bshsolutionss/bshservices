@@ -21,7 +21,7 @@ const faqs = [
   {
     question: "How can I get started?",
     answer:
-      "Simply contact us through our form or email. Our team will schedule a free consultation to understand your needs and recommend the best solutions.",
+      "Simply contact us through our form or email us at info@bshsolutions.net (or sales@bshsolutions.net for project proposals). Our team will schedule a free consultation to understand your needs and recommend the best solutions.",
   },
 ]
 
@@ -65,6 +65,24 @@ const Faq = () => {
             )}
           </div>
         ))}
+      </div>
+
+      <div className="mt-10 text-center text-sm text-gray-600">
+        Still have questions or need technical assistance? Reach our support team at{" "}
+        <a
+          href="mailto:support@bshsolutions.net"
+          className="text-[#1A14A5] font-semibold hover:underline"
+        >
+          support@bshsolutions.net
+        </a>{" "}
+        or general inquiries at{" "}
+        <a
+          href="mailto:info@bshsolutions.net"
+          className="text-[#1A14A5] font-semibold hover:underline"
+        >
+          info@bshsolutions.net
+        </a>
+        .
       </div>
     </section>
   )
