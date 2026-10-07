@@ -4,6 +4,8 @@
  * crashes inside Vercel Serverless Functions.
  */
 
+import { SITE_URL } from "@/lib/site";
+
 // Dangerous tags that should be completely stripped including their inner content
 const DANGEROUS_TAGS_WITH_CONTENT =
   /<(script|style|object|embed|applet|meta|base|form|input|textarea|button)[^>]*>[\s\S]*?<\/\1>/gi;
@@ -22,6 +24,18 @@ export function sanitizeWpHtml(html: string): string {
   if (!html || typeof html !== "string") return "";
 
   let clean = html;
+
+  // The frontend owns all public URLs. Keep CMS-authored anchor text and
+  // content, but remove redirect hops through the retired domain and prevent
+  // visitors from being sent to duplicate WordPress-rendered article pages.
+  clean = clean.replace(/href=(['"])(https?:\/\/[^'"\s>]+)\1/gi, (_match, quote, href) => {
+    return `href=${quote}${normalizeCmsHref(href)}${quote}`;
+  });
+
+  // The page template supplies the one primary H1 from the CMS post title.
+  // Any H1 pasted into the CMS body becomes an H2 so the hierarchy remains
+  // valid without deleting or rewriting the editor's wording.
+  clean = clean.replace(/<h1(\s[^>]*)?>/gi, "<h2$1>").replace(/<\/h1>/gi, "</h2>");
 
   // 1. Remove dangerous blocks (scripts, forms, objects, etc.)
   clean = clean.replace(DANGEROUS_TAGS_WITH_CONTENT, "");
@@ -49,4 +63,31 @@ export function sanitizeWpHtml(html: string): string {
   });
 
   return clean;
+}
+
+function normalizeCmsHref(href: string): string {
+  try {
+    const url = new URL(href);
+    const hostname = url.hostname.toLowerCase();
+
+    if (
+      hostname === "bshsolutionss.com" ||
+      hostname === "www.bshsolutionss.com" ||
+      hostname === "www.bshsolutions.net"
+    ) {
+      return `${SITE_URL}${url.pathname}${url.search}${url.hash}`;
+    }
+
+    if (hostname === "darkgrey-pelican-916395.hostingersite.com") {
+      const path = url.pathname.replace(/^\/+|\/+$/g, "");
+      if (!path) return `${SITE_URL}/${url.search}${url.hash}`;
+      if (!path.startsWith("wp-")) {
+        return `${SITE_URL}/blog/${path}${url.search}${url.hash}`;
+      }
+    }
+  } catch {
+    return href;
+  }
+
+  return href;
 }

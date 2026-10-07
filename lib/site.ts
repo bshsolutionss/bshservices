@@ -1,11 +1,13 @@
 /**
- * Canonical site origin — the single source of truth for every absolute
- * URL this app emits (OpenGraph/Twitter meta, JSON-LD, sitemap.xml,
- * robots.txt, transactional emails).
- *
- * Override via NEXT_PUBLIC_SITE_URL if the canonical domain ever changes
- * again — nothing else in the codebase should hardcode it. No trailing
- * slash (matches new URL(...).origin's shape, and keeps `${SITE_URL}/path`
- * concatenation simple).
+ * Canonical production origin. It is intentionally fixed so a deployment
+ * variable cannot make canonical URLs, feeds, or structured data drift to a
+ * preview or legacy hostname. Keep it without a trailing slash.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bshsolutions.net";
+export const SITE_URL = "https://bshsolutions.net";
+
+export const DEFAULT_OG_IMAGE = {
+  url: "/images/Banner.png",
+  width: 1915,
+  height: 709,
+  alt: "BSH Solutions digital, software, marketing, AI, and media services",
+} as const;

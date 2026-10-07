@@ -6,6 +6,7 @@ import Faq from "@/components/faq";
 import Contactform from "@/components/contactform";
 import OurTeamSection from "@/components/Ourteam";
 import Testimonial from "@/components/testimonial";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 // ==== ICONS IMPORTS ====
 import {
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
     description:
       "Meet the team behind BSH Solutions and our mission to build smart, scalable, future-ready digital solutions.",
     url: "/about",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

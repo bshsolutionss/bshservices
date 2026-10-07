@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import Typed from "typed.js";
 
 const TypedHeading: React.FC = () => {
@@ -9,7 +8,7 @@ const TypedHeading: React.FC = () => {
 
   useEffect(() => {
     const options = {
-      strings: ["BSH SOLUTIONS", "Creative Agency", "Digital Experts", "Automation Experts"],
+      strings: ["Creative Agency", "Digital Experts", "Automation Experts"],
       typeSpeed: 70,
       backSpeed: 40,
       backDelay: 1200,
@@ -24,14 +23,14 @@ const TypedHeading: React.FC = () => {
   }, []);
 
   return (
-    <motion.h1
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+    <h1
       className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#1A14A5] drop-shadow-sm tracking-tight"
     >
-      <span ref={typedRef}></span>
-    </motion.h1>
+      BSH SOLUTIONS
+      <span ref={typedRef} className="block min-h-[1.2em] text-[#231F20]">
+        Creative Agency
+      </span>
+    </h1>
   );
 };
 

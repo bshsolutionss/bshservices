@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Hero from "@/components/services/Hero";
 import Testimonial from "@/components/testimonial";
 import BookingForm from "@/components/BookingForm";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Book a Free Consultation",
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     title: "Book a Free Consultation | BSH Solutions",
     description: "Pick a date and time that works for you — no obligation, no pressure.",
     url: "/book-consultation",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

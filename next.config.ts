@@ -159,6 +159,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...["www.bshsolutions.net", "bshsolutionss.com", "www.bshsolutionss.com"].map((host) => ({
+        source: "/:path*",
+        has: [{ type: "host" as const, value: host }],
+        destination: `${SITE_URL}/:path*`,
+        permanent: true,
+      })),
       // The project's Vercel-assigned preview/production domain — send
       // anyone who still has it bookmarked/indexed to the real domain.
       // (bshsolutionss.com → bshsolutions.net is already handled as a

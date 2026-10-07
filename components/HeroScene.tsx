@@ -10,7 +10,8 @@ const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
 type NetworkInfo = { saveData?: boolean; effectiveType?: string };
 
 function canAfford3D(): boolean {
-  // Reduced motion still gets the scene (as a still frame); weak networks don't.
+  if (window.innerWidth < 768) return false;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection;
   if (conn?.saveData) return false;
   if (conn?.effectiveType && /(^|-)2g$/.test(conn.effectiveType)) return false;

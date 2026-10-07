@@ -5,6 +5,7 @@ import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 // Icons
 import { FaRobot, FaCogs, FaVideo, FaSearch } from "react-icons/fa";
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     description:
       "AI automation, chatbots, video automation, and AI website integration for modern businesses.",
     url: "/Services/ai",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

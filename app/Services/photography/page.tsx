@@ -6,6 +6,7 @@ import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 // ==== ICONS ====
 import {
@@ -38,6 +39,7 @@ export const metadata: Metadata = {
     description:
       "We capture moments, products, and stories with creativity, precision, and professional artistry.",
     url: "/Services/photography",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

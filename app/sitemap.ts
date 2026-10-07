@@ -1,67 +1,66 @@
 import { MetadataRoute } from "next";
-import { getPosts } from "@/lib/wp";
+import { getAllPosts } from "@/lib/wp";
 import { SERVICES, getServicePath } from "@/lib/services-data";
 import { SITE_URL } from "@/lib/site";
+import { PORTFOLIO_PROJECTS, getProjectPath } from "@/lib/portfolio-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getPosts(1, 100);
+  const posts = await getAllPosts();
 
   const blogPostsEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.modified || post.date),
   }));
 
-  // All 30 sub-service pages, generated from the same data file the pages render from.
+  // Static/service dates are deliberately omitted: emitting the current time
+  // on every sitemap request makes lastmod untrustworthy to search engines.
   const servicePageEntries: MetadataRoute.Sitemap = SERVICES.map((service) => ({
     url: `${SITE_URL}${getServicePath(service)}`,
-    lastModified: new Date(),
+  }));
+
+  // One case-study page per portfolio project.
+  const portfolioEntries: MetadataRoute.Sitemap = PORTFOLIO_PROJECTS.map((project) => ({
+    url: `${SITE_URL}${getProjectPath(project)}`,
   }));
 
   return [
     {
       url: SITE_URL,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/about`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/contact`,
-      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/book-consultation`,
     },
     {
       url: `${SITE_URL}/portfolio`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services/development`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services/designing`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services/marketing`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services/photography`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/Services/ai`,
-      lastModified: new Date(),
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: new Date(),
     },
+    ...portfolioEntries,
     ...servicePageEntries,
     ...blogPostsEntries,
   ];

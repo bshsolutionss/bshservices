@@ -5,6 +5,7 @@ import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 // 🎨 React Icons Imports
 import {
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
     description:
       "Branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
     url: "/Services/designing",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

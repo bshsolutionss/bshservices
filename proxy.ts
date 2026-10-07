@@ -3,6 +3,14 @@ import type { NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/services" || pathname.startsWith("/services/")) {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.pathname = `/Services${pathname.slice("/services".length)}`;
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
+
   // 1. Check for manual override via cookie
   let detectedRegion: "GLOBAL" | "PK" = "GLOBAL";
   const cookieRegion = request.cookies.get('user-region')?.value;
@@ -45,7 +53,6 @@ export async function proxy(request: NextRequest) {
   // Admin route guard — redirect unauthenticated requests to the login page.
   // (Admin mutation API routes independently re-check auth themselves too;
   // this is the fast, page-level guard.)
-  const { pathname } = request.nextUrl;
   if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !user) {
     const loginUrl = new URL('/admin/login', request.url);
     return NextResponse.redirect(loginUrl);

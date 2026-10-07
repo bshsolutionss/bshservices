@@ -6,6 +6,7 @@ import Faq from "@/components/faq";
 import Contactform from "@/components/contactform";
 
 import GoogleMap from "@/components/googlemap";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     description:
       "Reach out to BSH Solutions for web development, software, marketing, or IT consulting inquiries.",
     url: "/contact",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

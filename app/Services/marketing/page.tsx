@@ -7,6 +7,7 @@ import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
 import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
 import { CATEGORY_BLOG_LINKS } from "@/lib/blog-links";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 import {
   SiGoogleads,
@@ -47,6 +48,7 @@ export const metadata: Metadata = {
     description:
       "Grow, engage, and convert through data-driven digital marketing strategies.",
     url: "/Services/marketing",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

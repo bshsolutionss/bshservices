@@ -71,6 +71,37 @@ function roundedSquare(h: number, r: number, into: THREE.Shape | THREE.Path = ne
   return into;
 }
 
+/** Backdrop: a flowing field of dots across the whole hero, like a rolling 3D floor. */
+const WAVE_VERT = /* glsl */ `
+  uniform float uTime;
+  uniform float uSize;
+  uniform float uProj;
+  uniform float uPR;
+  varying float vAlpha;
+  void main() {
+    vec3 p = position;
+    p.y += sin(p.x * 0.55 + uTime * 1.0) * 0.28
+         + sin(p.x * 1.3 - uTime * 0.75 + p.z * 0.9) * 0.14
+         + sin(p.z * 0.8 + uTime * 0.6) * 0.12;
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = uSize * uProj * uPR / -mv.z;
+    float edge = 1.0 - smoothstep(0.55, 1.0, abs(position.x) / 9.0);
+    float far = smoothstep(-5.0, 1.0, position.z);
+    vAlpha = edge * (0.13 + 0.5 * far) * (0.6 + 0.4 * sin(p.y * 4.0 + uTime));
+  }
+`;
+
+const WAVE_FRAG = /* glsl */ `
+  uniform float uFade;
+  varying float vAlpha;
+  void main() {
+    float r = length(gl_PointCoord - 0.5);
+    if (r > 0.5) discard;
+    gl_FragColor = vec4(0.294, 0.208, 1.0, smoothstep(0.5, 0.1, r) * vAlpha * uFade);
+  }
+`;
+
 type Layer = {
   group: THREE.Group;
   slab: THREE.Mesh;
@@ -445,7 +476,7 @@ export default function HeroStack3D() {
       const label = document.createElement("div");
       Object.assign(label.style, {
         position: "absolute", left: "0", top: "0", display: "flex", alignItems: "center", gap: "6px",
-        opacity: "0", willChange: "transform, opacity",
+        opacity: "0", willChange: "transform, opacity", transformOrigin: "0 50%",
       });
       const lead = document.createElement("span");
       Object.assign(lead.style, { width: "20px", height: "1.5px", background: "rgba(26,20,165,.45)", borderRadius: "2px" });
@@ -519,6 +550,38 @@ export default function HeroStack3D() {
       dust.add(new THREE.Points(dg, track(new THREE.PointsMaterial({ map: glowMap, color: VIOLET, size: 0.08, transparent: true, opacity: 0.5, depthWrite: false }))));
     }
 
+    // backdrop: dot-wave floor across the full hero width
+    const waveUniforms = {
+      uTime: { value: 0 },
+      uSize: { value: 0.048 },
+      uProj: { value: 1000 },
+      uPR: { value: renderer.getPixelRatio() },
+      uFade: { value: 0 },
+    };
+    const waves = new THREE.Group();
+    scene.add(waves);
+    {
+      const cols = small ? 70 : 130;
+      const rows = small ? 26 : 46;
+      const pos = new Float32Array(cols * rows * 3);
+      let k = 0;
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          pos[k++] = (i / (cols - 1) - 0.5) * 18;
+          pos[k++] = 0;
+          pos[k++] = (j / (rows - 1)) * 7 - 5;
+        }
+      }
+      const wgeo = track(new THREE.BufferGeometry());
+      wgeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      waves.add(
+        new THREE.Points(
+          wgeo,
+          track(new THREE.ShaderMaterial({ vertexShader: WAVE_VERT, fragmentShader: WAVE_FRAG, transparent: true, depthWrite: false, uniforms: waveUniforms })),
+        ),
+      );
+    }
+
     // ───────────── layout: centre the stack on the stage slot ─────────────
     let W = 1;
     let H = 1;
@@ -532,6 +595,10 @@ export default function HeroStack3D() {
       camera.updateProjectionMatrix();
       const visH = 2 * Math.tan((FOV * Math.PI) / 360) * CAM;
       const unitsPerPx = visH / H;
+      waveUniforms.uProj.value = H / (2 * Math.tan((FOV * Math.PI) / 360));
+      const portrait = W < 1024 || W / H < 1.1;
+      waves.position.set(0, -visH * 0.5 - (portrait ? 0.2 : 0.1), -1.5);
+      waves.scale.setScalar(portrait ? 0.7 : 1);
 
       const stage = getStage();
       let cx = W * 0.72;
@@ -606,6 +673,8 @@ export default function HeroStack3D() {
     const draw = (dt: number) => {
       elapsed += dt;
       if (intro < 1) intro = Math.min(1, intro + dt / 1.7);
+      waveUniforms.uTime.value = elapsed;
+      waveUniforms.uFade.value = ease(intro);
 
       // isometric three-quarter view that sways, plus pointer parallax
       const ry = Math.PI / 4 + Math.sin(elapsed * 0.3) * 0.5 * motion + px * 0.45;
@@ -667,10 +736,11 @@ export default function HeroStack3D() {
         l.group.getWorldPosition(v);
         v.x += HALF * 1.36 * coreScale;
         v.project(camera);
-        l.shown += (l.glow * ease(intro) - l.shown) * (reduce ? 1 : 0.15);
+        // every layer keeps its name visible; the highlighted one is brighter and a touch larger
+        l.shown += (ease(intro) * (0.68 + 0.32 * l.glow) - l.shown) * (reduce ? 1 : 0.15);
         const x = Math.max(8, Math.min(W - l.labelW - 8, (v.x * 0.5 + 0.5) * W));
         const y = (-v.y * 0.5 + 0.5) * H;
-        l.label.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(0, -50%)`;
+        l.label.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(0, -50%) scale(${(1 + 0.07 * l.glow).toFixed(3)})`;
         l.label.style.opacity = l.shown.toFixed(3);
       });
     };

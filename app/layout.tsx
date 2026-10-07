@@ -9,7 +9,7 @@ import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import ClarityInit from "@/components/ClarityInit";
 import { safeJsonLd } from "@/lib/json-ld";
-import { SITE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,10 +61,10 @@ export const metadata: Metadata = {
     siteName: "BSH Solutions",
     images: [
       {
-        url: "/android-chrome-512x512.png",
-        width: 1200,
-        height: 630,
-        alt: "BSH Solutions – Business Smart Hub",
+        url: DEFAULT_OG_IMAGE.url,
+        width: DEFAULT_OG_IMAGE.width,
+        height: DEFAULT_OG_IMAGE.height,
+        alt: DEFAULT_OG_IMAGE.alt,
       },
     ],
     locale: "en_US",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     title: "BSH Solutions | Business Smart Hub",
     description:
       "A hub for all business tech needs — powered by BSH Solutions.",
-    images: ["/android-chrome-512x512.png"],
+    images: [DEFAULT_OG_IMAGE.url],
     // NOTE: this Twitter/X handle has an extra "s" ("BSHSolutionss") — not
     // touched here since it's a social-media identity, not a domain
     // reference; flagged separately, verify it's the account's actual @handle.
@@ -129,16 +129,23 @@ export default function RootLayout({
         <SpeedInsights />
         <ClarityInit />
 
-        {/* Structured Data – Organization */}
+        {/* Site-wide entities used by page and article structured data. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: safeJsonLd({
               "@context": "https://schema.org",
               "@type": "Organization",
+              "@id": `${SITE_URL}/#organization`,
               name: "BSH Solutions",
+              alternateName: "Business Smart Hub",
               url: SITE_URL,
-              logo: `${SITE_URL}/android-chrome-512x512.png`,
+              logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/android-chrome-512x512.png`,
+                width: 512,
+                height: 512,
+              },
               email: "info@bshsolutions.net",
               contactPoint: [
                 {
@@ -170,6 +177,21 @@ export default function RootLayout({
                 "https://www.linkedin.com/company/bshsolutions/",
                 "https://x.com/BSHSolutionss",
               ],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLd({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              url: SITE_URL,
+              name: "BSH Solutions",
+              alternateName: "Business Smart Hub",
+              publisher: { "@id": `${SITE_URL}/#organization` },
+              inLanguage: "en",
             }),
           }}
         />

@@ -10,6 +10,7 @@ import ProcessFlow from "@/components/ProcessFlow";
 import { OurPortfolio } from "@/components/our-portfolio";
 
 import OurTechnologies from "@/components/Ourtechnologies";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     description:
       "Web & software development, design, marketing, AI automation, and photography services built to scale your business.",
     url: "/Services",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

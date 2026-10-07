@@ -8,6 +8,7 @@ import FaqAccordion from "@/components/services/detail/FaqAccordion";
 import { getCategoryFaqs } from "@/lib/services-data";
 import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
 import { CATEGORY_BLOG_LINKS } from "@/lib/blog-links";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 import {
   SiJavascript,
@@ -53,6 +54,7 @@ export const metadata: Metadata = {
     description:
       "Fast, scalable, and beautiful web experiences tailored to your business.",
     url: "/Services/development",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
