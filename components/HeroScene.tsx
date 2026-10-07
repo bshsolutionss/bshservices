@@ -11,7 +11,8 @@ type NetworkInfo = { saveData?: boolean; effectiveType?: string };
 
 function canAfford3D(): boolean {
   if (window.innerWidth < 768) return false;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  // Reduced motion still gets the scene: HeroScene3D draws it as a still frame
+  // (no animation), so the hero is never empty. Only weak networks skip it.
   const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection;
   if (conn?.saveData) return false;
   if (conn?.effectiveType && /(^|-)2g$/.test(conn.effectiveType)) return false;
