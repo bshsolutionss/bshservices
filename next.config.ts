@@ -56,14 +56,17 @@ function buildCsp(): string {
     `default-src 'self'`,
     // https://www.clarity.ms — Microsoft Clarity (components/ClarityInit.tsx)
     // injects its own <script src> tag rather than going through next/script.
-    `script-src 'self' 'unsafe-inline' https://elfsightcdn.com https://*.elfsight.com https://va.vercel-scripts.com https://widgets.sociablekit.com https://*.sociablekit.com https://www.clarity.ms`,
+    // https://www.googletagmanager.com — Google Analytics 4 (components/GoogleAnalytics.tsx)
+    `script-src 'self' 'unsafe-inline' https://elfsightcdn.com https://*.elfsight.com https://va.vercel-scripts.com https://widgets.sociablekit.com https://*.sociablekit.com https://www.clarity.ms https://www.googletagmanager.com`,
     `style-src 'self' 'unsafe-inline' https://widgets.sociablekit.com https://*.sociablekit.com https://fonts.googleapis.com`,
-    `img-src 'self' data: blob: https://darkgrey-pelican-916395.hostingersite.com https://secure.gravatar.com https://api.dicebear.com https://*.elfsight.com https://*.elfsightcdn.com https://*.googleusercontent.com https://*.sociablekit.com https://lh3.googleusercontent.com https://maps.gstatic.com`,
+    `img-src 'self' data: blob: https://darkgrey-pelican-916395.hostingersite.com https://secure.gravatar.com https://api.dicebear.com https://*.elfsight.com https://*.elfsightcdn.com https://*.googleusercontent.com https://*.sociablekit.com https://lh3.googleusercontent.com https://maps.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com`,
     `font-src 'self' data: https://fonts.gstatic.com`,
     // Clarity's own telemetry beacons land on a handful of *.clarity.ms
     // subdomains (region-sharded) — wildcarded rather than enumerated.
-    `connect-src 'self' ${SUPABASE_ORIGIN} https://*.elfsight.com https://*.elfsightcdn.com https://vitals.vercel-insights.com https://*.sociablekit.com https://widgets.sociablekit.com https://www.clarity.ms https://*.clarity.ms`,
-    `frame-src 'self' https://www.google.com https://*.elfsight.com https://widgets.sociablekit.com https://*.sociablekit.com`,
+    // GA4 measurement beacons go to *.google-analytics.com and analytics.google.com.
+    `connect-src 'self' ${SUPABASE_ORIGIN} https://*.elfsight.com https://*.elfsightcdn.com https://vitals.vercel-insights.com https://*.sociablekit.com https://widgets.sociablekit.com https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com`,
+    // GTM's <noscript> fallback loads ns.html inside an iframe.
+    `frame-src 'self' https://www.google.com https://www.googletagmanager.com https://*.elfsight.com https://widgets.sociablekit.com https://*.sociablekit.com`,
     `object-src 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,

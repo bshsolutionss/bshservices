@@ -8,6 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import ClarityInit from "@/components/ClarityInit";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { GoogleTagManager, GoogleTagManagerNoScript } from "@/components/GoogleTagManager";
 import { safeJsonLd } from "@/lib/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 
@@ -118,6 +120,10 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-white text-[#231F20]`}
       >
+        {/* Google Tag Manager — script loads early, noscript fallback sits right after <body> */}
+        <GoogleTagManager />
+        <GoogleTagManagerNoScript />
+
         {/* Client-side smooth scroll only */}
         <SmoothScrollProvider>
           {/* Public Header/Footer — hidden on /admin, which renders its own shell */}
@@ -128,6 +134,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         <ClarityInit />
+        <GoogleAnalytics />
 
         {/* Site-wide entities used by page and article structured data. */}
         <script

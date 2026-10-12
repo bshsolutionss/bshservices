@@ -13,11 +13,12 @@ import Clarity from "@microsoft/clarity";
  *    inside the CSP, shows up in the existing Vercel dashboard immediately.
  *  - Microsoft Clarity (`@microsoft/clarity`) — session replay/heatmaps;
  *    `Clarity.event()` tags the session so a drop-off can be watched back.
+ *  - Google Analytics 4 (`window.gtag`, loaded by components/GoogleAnalytics.tsx)
+ *    — the event shows up under Reports → Engagement → Events.
  *
- * No GA4 / Meta Pixel calls here — those need real Measurement/Pixel IDs
- * this codebase doesn't have. Add them the same way if/when those IDs
- * exist (see components/ClarityInit.tsx for the "no-op until configured"
- * pattern to follow).
+ * No Meta Pixel calls here — that needs a Pixel ID this codebase doesn't
+ * have. Add it the same way if/when that ID exists (see
+ * components/ClarityInit.tsx for the "no-op until configured" pattern).
  *
  * Never throws — analytics failing must never break the funnel it's
  * trying to measure.
@@ -35,5 +36,13 @@ export function trackEvent(name: string, properties?: Record<string, string | nu
     Clarity.event(name);
   } catch {
     // Clarity not initialized (no project ID configured yet) — ignore.
+  }
+
+  try {
+    // GA4 event names must be snake_case and ≤40 chars; all names here already are.
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.("event", name, properties);
+  } catch {
+    // GA not loaded (no measurement ID configured yet) — ignore.
   }
 }
