@@ -5,6 +5,7 @@
  */
 
 import { SITE_URL } from "@/lib/site";
+import { toPublicUrl } from "@/lib/wp-urls";
 
 // Dangerous tags that should be completely stripped including their inner content
 const DANGEROUS_TAGS_WITH_CONTENT =
@@ -28,9 +29,8 @@ export function sanitizeWpHtml(html: string): string {
   // The frontend owns all public URLs. Keep CMS-authored anchor text and
   // content, but remove redirect hops through the retired domain and prevent
   // visitors from being sent to duplicate WordPress-rendered article pages.
-  clean = clean.replace(/href=(['"])(https?:\/\/[^'"\s>]+)\1/gi, (_match, quote, href) => {
-    return `href=${quote}${normalizeCmsHref(href)}${quote}`;
-  });
+  // Links that become internal also lose any `nofollow` the editor set.
+  clean = clean.replace(/<a\s[^>]*>/gi, rewriteAnchor);
 
   // The page template supplies the one primary H1 from the CMS post title.
   // Any H1 pasted into the CMS body becomes an H2 so the hierarchy remains
@@ -65,6 +65,24 @@ export function sanitizeWpHtml(html: string): string {
   return clean;
 }
 
+function rewriteAnchor(tag: string): string {
+  const hrefMatch = tag.match(/\shref=(["'])(https?:\/\/[^"'\s>]+)\1/i);
+  if (!hrefMatch) return tag;
+
+  const [whole, quote, href] = hrefMatch;
+  const normalized = normalizeCmsHref(href);
+  if (normalized === href) return tag;
+
+  let rewritten = tag.replace(whole, ` href=${quote}${normalized}${quote}`);
+  if (normalized === SITE_URL || normalized.startsWith(`${SITE_URL}/`)) {
+    rewritten = rewritten.replace(/\srel=(["'])([^"']*)\1/i, (_attr, q: string, value: string) => {
+      const kept = value.split(/\s+/).filter((token) => token && !/^nofollow$/i.test(token));
+      return kept.length ? ` rel=${q}${kept.join(" ")}${q}` : "";
+    });
+  }
+  return rewritten;
+}
+
 function normalizeCmsHref(href: string): string {
   try {
     const url = new URL(href);
@@ -78,16 +96,14 @@ function normalizeCmsHref(href: string): string {
       return `${SITE_URL}${url.pathname}${url.search}${url.hash}`;
     }
 
-    if (hostname === "darkgrey-pelican-916395.hostingersite.com") {
-      const path = url.pathname.replace(/^\/+|\/+$/g, "");
-      if (!path) return `${SITE_URL}/${url.search}${url.hash}`;
-      if (!path.startsWith("wp-")) {
-        return `${SITE_URL}/blog/${path}${url.search}${url.hash}`;
-      }
-    }
+    // WordPress origin: post permalinks → /blog/{slug}; wp-content/wp-json
+    // stay untouched. Category/tag/author/pagination pages have no public
+    // equivalent, so they go to the blog index rather than a 404.
+    const mapped = toPublicUrl(href);
+    if (hostname === new URL(SITE_URL).hostname) return href;
+    if (mapped === null) return `${SITE_URL}/blog`;
+    return mapped;
   } catch {
     return href;
   }
-
-  return href;
 }

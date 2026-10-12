@@ -4,9 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { buildPublicPostSchema } from "@/lib/rankmath";
 import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { SITE_URL } from "@/lib/site";
 import {
+  DEFAULT_AUTHOR_NAME,
   getFeaturedImage,
   getFeaturedImageAlt,
   getPostAuthorName,
@@ -33,10 +35,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const postTitle = wpToPlainText(post.title?.rendered) || "Blog Post";
+  const seo = post.seo;
   const seoTitle = getPostSeoTitle(post);
   const description = getPostDescription(post);
-  const path = `/blog/${post.slug || slug}`;
-  const featuredImage = post.yoast_head_json?.og_image?.[0]?.url || getFeaturedImage(post);
+  // Always the public domain — never the WordPress origin Rank Math reports.
+  const canonical = `${SITE_URL}/blog/${post.slug || slug}`;
+  const ogImage = seo?.ogImage;
+  const featuredImage = ogImage?.url || getFeaturedImage(post);
+  const imageAlt = ogImage?.alt || getFeaturedImageAlt(post) || postTitle;
   const authorName = getPostAuthorName(post);
   const categories = getPostCategories(post);
 
@@ -44,29 +50,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: seoTitle },
     description,
     authors: [{ name: authorName }],
-    alternates: { canonical: path },
-    ...(/noindex/i.test(post.yoast_head_json?.robots ?? "") && {
-      robots: { index: false, follow: !/nofollow/i.test(post.yoast_head_json?.robots ?? "") },
-    }),
+    alternates: { canonical },
+    // Indexability is decided here, not by WordPress: the CMS is noindexed on
+    // purpose, and Rank Math's REST output says noindex for every post.
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
     openGraph: {
-      title: wpToPlainText(post.yoast_head_json?.og_title) || seoTitle,
-      description: wpToPlainText(post.yoast_head_json?.og_description) || description,
-      url: path,
+      title: seo?.ogTitle || seoTitle,
+      description: seo?.ogDescription || description,
+      url: canonical,
       type: "article",
       siteName: "BSH Solutions",
+      locale: "en_US",
       publishedTime: post.date,
       modifiedTime: post.modified || post.date,
       authors: [authorName],
       section: categories[0],
       ...(featuredImage && {
-        images: [{ url: featuredImage, alt: getFeaturedImageAlt(post) || postTitle }],
+        images: [
+          {
+            url: featuredImage,
+            alt: imageAlt,
+            ...(ogImage?.url === featuredImage && { width: ogImage.width, height: ogImage.height }),
+          },
+        ],
       }),
     },
     twitter: {
       card: "summary_large_image",
-      title: wpToPlainText(post.yoast_head_json?.twitter_title) || seoTitle,
-      description: wpToPlainText(post.yoast_head_json?.twitter_description) || description,
-      ...(featuredImage && { images: [post.yoast_head_json?.twitter_image || featuredImage] }),
+      title: seo?.twitterTitle || seo?.ogTitle || seoTitle,
+      description: seo?.twitterDescription || seo?.ogDescription || description,
+      ...(featuredImage && { images: [seo?.twitterImage || featuredImage] }),
     },
   };
 }
@@ -87,8 +106,11 @@ export default async function Post({ params }: Props) {
   const wasUpdated = Boolean(post.modified && post.modified !== post.date);
   const articleUrl = `${SITE_URL}/blog/${post.slug || slug}`;
 
-  const articleSchema = {
-    "@context": "https://schema.org",
+  // Rank Math's structured data (URLs mapped to the public domain, author PII
+  // removed) when available; otherwise this page's own BlogPosting. Either way
+  // the page emits exactly one BlogPosting and one BreadcrumbList —
+  // Organization/WebSite come once, site-wide, from the root layout.
+  const fallbackArticle = {
     "@type": "BlogPosting",
     "@id": `${articleUrl}#article`,
     headline: cleanTitle,
@@ -99,22 +121,35 @@ export default async function Post({ params }: Props) {
     inLanguage: "en",
     articleSection: categories,
     author: {
-      "@type": authorName === "BSH Solutions Editorial Team" ? "Organization" : "Person",
+      "@type": authorName === DEFAULT_AUTHOR_NAME ? "Organization" : "Person",
       name: authorName,
-      ...(authorName === "BSH Solutions Editorial Team" ? { url: SITE_URL } : {}),
+      ...(authorName === DEFAULT_AUTHOR_NAME ? { url: SITE_URL } : {}),
     },
     publisher: { "@id": `${SITE_URL}/#organization` },
     isPartOf: { "@id": `${SITE_URL}/#website` },
     mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
+  const breadcrumb = {
     "@type": "BreadcrumbList",
+    "@id": `${articleUrl}#breadcrumb`,
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
       { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
       { "@type": "ListItem", position: 3, name: cleanTitle, item: articleUrl },
+    ],
+  };
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      ...(buildPublicPostSchema(post.seo ?? null, {
+        articleUrl,
+        title: cleanTitle,
+        authorName,
+        defaultAuthorName: DEFAULT_AUTHOR_NAME,
+      }) ?? [fallbackArticle]),
+      breadcrumb,
     ],
   };
 
@@ -171,11 +206,7 @@ export default async function Post({ params }: Props) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }}
       />
     </div>
   );
