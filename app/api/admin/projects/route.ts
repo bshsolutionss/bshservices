@@ -2,7 +2,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
-import { PROJECT_SERVICE_CATEGORIES, PROJECT_STAGES, type ProjectServiceCategory, type ProjectStage } from "@/lib/projects";
+import {
+  PROJECT_BILLING_TYPES,
+  PROJECT_STAGES,
+  type ProjectBillingType,
+  type ProjectServiceCategory,
+  type ProjectStage,
+} from "@/lib/projects";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface CreatePayload {
@@ -15,6 +21,10 @@ interface CreatePayload {
   due_date?: string;
   service_category?: ProjectServiceCategory;
   description?: string;
+  billing_type?: ProjectBillingType;
+  monthly_fee?: number | null;
+  billing_day?: number;
+  auto_invoice?: boolean;
 }
 
 export async function POST(request: NextRequest) {
@@ -32,7 +42,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Name and client are required." }, { status: 400 });
   }
 
-  if (payload.service_category && !PROJECT_SERVICE_CATEGORIES.includes(payload.service_category)) {
+  if (payload.service_category && payload.service_category.length > 80) {
     return NextResponse.json({ ok: false, error: "Invalid service category." }, { status: 400 });
   }
 
@@ -42,6 +52,19 @@ export async function POST(request: NextRequest) {
 
   if (payload.stage && !(PROJECT_STAGES as string[]).includes(payload.stage)) {
     return NextResponse.json({ ok: false, error: "Invalid stage." }, { status: 400 });
+  }
+
+  if (payload.billing_type && !PROJECT_BILLING_TYPES.includes(payload.billing_type)) {
+    return NextResponse.json({ ok: false, error: "Invalid billing type." }, { status: 400 });
+  }
+  const billingType = payload.billing_type || "one_time";
+  const monthlyFee = payload.monthly_fee != null ? Number(payload.monthly_fee) : null;
+  if (billingType === "monthly" && (monthlyFee === null || !Number.isFinite(monthlyFee) || monthlyFee <= 0)) {
+    return NextResponse.json({ ok: false, error: "Enter the monthly fee for a monthly project." }, { status: 400 });
+  }
+  const billingDay = Number(payload.billing_day ?? 1);
+  if (!Number.isInteger(billingDay) || billingDay < 1 || billingDay > 28) {
+    return NextResponse.json({ ok: false, error: "Billing day must be between 1 and 28." }, { status: 400 });
   }
 
   if (payload.start_date && payload.due_date && payload.due_date < payload.start_date) {
@@ -62,6 +85,10 @@ export async function POST(request: NextRequest) {
       due_date: payload.due_date || null,
       service_category: payload.service_category || null,
       description: payload.description?.trim() || null,
+      billing_type: billingType,
+      monthly_fee: billingType === "monthly" ? monthlyFee : null,
+      billing_day: billingDay,
+      auto_invoice: billingType === "monthly" && !!payload.auto_invoice,
     })
     .select("id")
     .single();

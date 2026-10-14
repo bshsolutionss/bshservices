@@ -1,4 +1,4 @@
-import { Contact, UserCheck, UserMinus } from "lucide-react";
+import { Briefcase, Laptop, UserCheck, UserMinus } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Employee } from "@/lib/employees";
 import { PageHeader, StatCard } from "@/components/admin/ui";
@@ -12,27 +12,34 @@ export default async function AdminEmployeesPage() {
   const { data } = await supabase.from("employees").select("*").order("name");
 
   const employees = (data ?? []) as Employee[];
-  const active = employees.filter((e) => e.status === "active").length;
-  const departments = new Set(employees.map((e) => e.department).filter(Boolean)).size;
+  const active = employees.filter((e) => e.status === "active");
+  const freelancers = active.filter((e) => e.employment_type === "freelance").length;
+  const staff = active.length - freelancers;
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Employees"
-        subtitle={`${employees.length} on record · ${active} active`}
-        actions={<EmployeeFormModal />}
+        title="Team"
+        subtitle={`${employees.length} on record · ${active.length} active`}
+        actions={
+          <>
+            <EmployeeFormModal variant="outline" defaultType="freelance" label="Add freelancer" />
+            <EmployeeFormModal label="Add employee" />
+          </>
+        }
       />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-        <StatCard label="Active" value={active} description="Currently with the company" icon={UserCheck} iconBg="#0d9488" />
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard label="Staff (job)" value={staff} description="Active salaried team" icon={Briefcase} iconBg="#1A14A5" />
+        <StatCard label="Freelancers" value={freelancers} description="Active, paid per project/hour" icon={Laptop} iconBg="#ea580c" />
+        <StatCard label="Active" value={active.length} description="Currently working with us" icon={UserCheck} iconBg="#0d9488" />
         <StatCard
           label="Inactive"
-          value={employees.length - active}
+          value={employees.length - active.length}
           description="Left or on hold"
           icon={UserMinus}
           iconBg="#6B7280"
         />
-        <StatCard label="Departments" value={departments} description="Distinct departments" icon={Contact} iconBg="#7c3aed" />
       </div>
 
       <EmployeesTable employees={employees} />

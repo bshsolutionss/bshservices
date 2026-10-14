@@ -14,7 +14,7 @@ const SOCIAL_LINKS = [
   { label: "LinkedIn", href: "https://www.linkedin.com/company/bsh-solutionss/" },
 ];
 
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -23,7 +23,7 @@ function escapeHtml(value: string): string {
 }
 
 /** One data row, omitted entirely when the value is empty — keeps emails free of "N/A" clutter. */
-function row(label: string, value: string | null | undefined): string {
+export function row(label: string, value: string | null | undefined): string {
   if (!value) return "";
   return `
     <tr>
@@ -38,7 +38,7 @@ function row(label: string, value: string | null | undefined): string {
  * the email-safe equivalent of the site's brand look: solid header bar,
  * white card, brand-blue accents, text-pill social links.
  */
-function wrapEmailLayout(opts: { preheader: string; bodyHtml: string }): string {
+export function wrapEmailLayout(opts: { preheader: string; bodyHtml: string }): string {
   const { preheader, bodyHtml } = opts;
 
   const socialLinks = SOCIAL_LINKS.map(
@@ -107,6 +107,7 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   // this Record stays exhaustive over LeadSource.
   lead_magnet: "Lead Magnet Download",
   chatbot: "Website Chatbot",
+  manual: "Added manually",
 };
 
 export function clientConfirmationEmail(lead: Lead): { subject: string; html: string } {
@@ -265,5 +266,84 @@ export function followUpEmail(lead: Lead, stage: 1 | 2 | 3): { subject: string; 
   return {
     subject: copy.subject,
     html: wrapEmailLayout({ preheader: copy.body, bodyHtml }),
+  };
+}
+
+/* ── Internal / team emails (admin panel) ─────────────────────────────── */
+
+export function taskAssignedEmail(input: {
+  assigneeName: string;
+  taskTitle: string;
+  description: string | null;
+  projectName: string | null;
+  clientName: string | null;
+  priorityLabel: string;
+  dueDate: string | null;
+  estimatedHours: number | null;
+  /** True when an existing task was reassigned rather than newly created. */
+  reassigned?: boolean;
+}): { subject: string; html: string } {
+  const firstName = input.assigneeName.split(" ")[0] || input.assigneeName;
+  const bodyHtml = `
+    <h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">Hi ${escapeHtml(firstName)}, ${input.reassigned ? "a task was assigned to you" : "you have a new task"} ✅</h1>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND_DARK};">Here are the details:</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BG};border-radius:12px;padding:16px 20px;">
+      ${row("Task", input.taskTitle)}
+      ${row("Project", input.projectName)}
+      ${row("Client", input.clientName)}
+      ${row("Priority", input.priorityLabel)}
+      ${row("Due date", input.dueDate)}
+      ${row("Estimated hours", input.estimatedHours != null ? String(input.estimatedHours) : null)}
+      ${row("Details", input.description)}
+    </table>
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">Questions? Just reply to this email.</p>`;
+  return {
+    subject: `New task: ${input.taskTitle}`,
+    html: wrapEmailLayout({ preheader: `${input.taskTitle} — ${input.priorityLabel} priority`, bodyHtml }),
+  };
+}
+
+export function invoiceEmail(input: {
+  clientName: string;
+  invoiceNumber: string;
+  totalLabel: string;
+  dueLabel: string | null;
+  message: string | null;
+}): { subject: string; html: string } {
+  const bodyHtml = `
+    <h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">Invoice ${escapeHtml(input.invoiceNumber)}</h1>
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${BRAND_DARK};">Hi ${escapeHtml(input.clientName)},</p>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND_DARK};white-space:pre-line;">${escapeHtml(
+      input.message || "Please find your invoice attached. Thank you for your business!"
+    )}</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND_BG};border-radius:12px;padding:16px 20px;">
+      ${row("Invoice", input.invoiceNumber)}
+      ${row("Amount due", input.totalLabel)}
+      ${row("Due date", input.dueLabel)}
+    </table>
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">The invoice is attached as a PDF. Reply to this email with any questions.</p>`;
+  return {
+    subject: `Invoice ${input.invoiceNumber} from BSH Solutions`,
+    html: wrapEmailLayout({ preheader: `Invoice ${input.invoiceNumber} — ${input.totalLabel}`, bodyHtml }),
+  };
+}
+
+export function testEmail(): { subject: string; html: string } {
+  return {
+    subject: "Test email from your BSH admin panel",
+    html: wrapEmailLayout({
+      preheader: "Your email connection works.",
+      bodyHtml: `<h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">It works 🎉</h1>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:${BRAND_DARK};">Your email connection is set up correctly. Task assignments and invoices will be sent from this address.</p>`,
+    }),
+  };
+}
+
+/** A plain message to a client, in the standard BSH shell. Line breaks in `message` are kept. */
+export function clientMessageEmail(input: { subject: string; message: string }): { subject: string; html: string } {
+  const bodyHtml = `<p style="margin:0;font-size:15px;line-height:1.7;color:${BRAND_DARK};white-space:pre-line;">${escapeHtml(input.message)}</p>`;
+  return {
+    subject: input.subject,
+    html: wrapEmailLayout({ preheader: input.message.slice(0, 90), bodyHtml }),
   };
 }

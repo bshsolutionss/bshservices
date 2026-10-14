@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   TASK_PRIORITIES,
   TASK_PRIORITY_LABELS,
+  type AssigneeOption,
   type Task,
   type TaskStatus,
   type TaskPriority,
@@ -16,14 +17,14 @@ import TaskStatusInlineControl from "@/components/admin/TaskStatusInlineControl"
 
 interface TaskRowProps {
   task: Task;
-  /** Active employee names, for the assignee field's autocomplete when editing. */
-  employeeNames?: string[];
+  /** Active team members, for the assignee picker when editing. */
+  assignees?: AssigneeOption[];
   /** Shown + linked when this row appears on the cross-project /admin/tasks list. */
   projectName?: string;
 }
 
 /** Shared task row — display + inline edit toggle + delete. Used on both /admin/tasks and a project's detail page. */
-export default function TaskRow({ task, employeeNames = [], projectName }: TaskRowProps) {
+export default function TaskRow({ task, assignees = [], projectName }: TaskRowProps) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -31,7 +32,8 @@ export default function TaskRow({ task, employeeNames = [], projectName }: TaskR
   const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState(task.title);
-  const [assignee, setAssignee] = useState(task.assignee_name ?? "");
+  const [assigneeId, setAssigneeId] = useState(task.assignee_id ?? "");
+  const [notice, setNotice] = useState<string | null>(null);
   const [priority, setPriority] = useState<TaskPriority>(task.priority);
   const [dueDate, setDueDate] = useState(task.due_date ?? "");
 
@@ -48,7 +50,8 @@ export default function TaskRow({ task, employeeNames = [], projectName }: TaskR
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title.trim(),
-          assignee_name: assignee.trim() || null,
+          // Only send it when it changed - re-saving must not re-email the same person.
+          ...(assigneeId !== (task.assignee_id ?? "") ? { assignee_id: assigneeId || null } : {}),
           priority,
           due_date: dueDate || null,
         }),
@@ -56,6 +59,8 @@ export default function TaskRow({ task, employeeNames = [], projectName }: TaskR
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || "Failed to save task.");
       setEditing(false);
+      if (body.notify === "queued") setNotice("Assignee is being emailed.");
+      else if (body.notify === "no_email") setNotice("Assigned - but they have no email on file.");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save task.");
@@ -84,20 +89,20 @@ export default function TaskRow({ task, employeeNames = [], projectName }: TaskR
       <li className="py-3 space-y-2 bg-[#F4F7FE] -mx-3 px-3 rounded-lg my-1">
         <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Task title" />
         <div className="flex flex-wrap gap-2">
-          <Input
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            placeholder="Assignee"
-            list={`task-row-assignee-${task.id}`}
-            className="w-36"
-          />
-          {employeeNames.length > 0 && (
-            <datalist id={`task-row-assignee-${task.id}`}>
-              {employeeNames.map((name) => (
-                <option key={name} value={name} />
-              ))}
-            </datalist>
-          )}
+          <select
+            value={assigneeId}
+            onChange={(e) => setAssigneeId(e.target.value)}
+            aria-label="Assignee"
+            className="text-sm rounded-lg border border-[#1A14A5]/20 px-2.5 py-2 bg-white w-44"
+          >
+            <option value="">Unassigned</option>
+            {assignees.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+                {a.email ? "" : " (no email)"}
+              </option>
+            ))}
+          </select>
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as TaskPriority)}
@@ -151,6 +156,7 @@ export default function TaskRow({ task, employeeNames = [], projectName }: TaskR
           {task.due_date ? ` · Due ${new Date(task.due_date).toLocaleDateString()}` : ""}
         </p>
         {error && <p className="text-xs text-red-600 mt-0.5">❌ {error}</p>}
+        {notice && <p className="text-xs text-emerald-700 mt-0.5">{notice}</p>}
       </div>
       <div className="flex items-center gap-3 shrink-0">
         <TaskStatusInlineControl taskId={task.id} initialStatus={task.status as TaskStatus} />

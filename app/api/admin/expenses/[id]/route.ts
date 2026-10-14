@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { EXPENSE_CATEGORIES, type ExpenseCategory } from "@/lib/expenses";
+import { EXPENSE_TYPES, type ExpenseCategory, type ExpenseType } from "@/lib/expenses";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface UpdatePayload {
@@ -11,6 +11,9 @@ interface UpdatePayload {
   expense_date?: string;
   vendor?: string | null;
   description?: string | null;
+  expense_type?: ExpenseType;
+  recurring_active?: boolean;
+  project_id?: string | null;
 }
 
 export async function PATCH(
@@ -32,10 +35,10 @@ export async function PATCH(
   const updates: Record<string, unknown> = {};
 
   if (payload.category !== undefined) {
-    if (!EXPENSE_CATEGORIES.includes(payload.category)) {
+    if (!payload.category?.trim() || payload.category.length > 80) {
       return NextResponse.json({ ok: false, error: "Invalid category." }, { status: 400 });
     }
-    updates.category = payload.category;
+    updates.category = payload.category.trim();
   }
   if (payload.amount !== undefined) {
     if (!Number.isFinite(Number(payload.amount)) || Number(payload.amount) <= 0) {
@@ -57,6 +60,15 @@ export async function PATCH(
   }
   if (payload.vendor !== undefined) updates.vendor = payload.vendor?.trim() || null;
   if (payload.description !== undefined) updates.description = payload.description?.trim() || null;
+
+  if (payload.expense_type !== undefined) {
+    if (!EXPENSE_TYPES.includes(payload.expense_type)) {
+      return NextResponse.json({ ok: false, error: "Invalid expense type." }, { status: 400 });
+    }
+    updates.expense_type = payload.expense_type;
+  }
+  if (payload.recurring_active !== undefined) updates.recurring_active = Boolean(payload.recurring_active);
+  if (payload.project_id !== undefined) updates.project_id = payload.project_id || null;
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ ok: false, error: "Nothing to update." }, { status: 400 });

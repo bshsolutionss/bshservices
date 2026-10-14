@@ -3,10 +3,11 @@ import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
 import {
+  PROJECT_BILLING_TYPES,
   PROJECT_STAGES,
   PROJECT_STAGE_LABELS,
-  PROJECT_SERVICE_CATEGORIES,
   type Project,
+  type ProjectBillingType,
   type ProjectStage,
   type ProjectServiceCategory,
 } from "@/lib/projects";
@@ -22,6 +23,11 @@ interface UpdatePayload {
   service_category?: ProjectServiceCategory | null;
   description?: string | null;
   archived?: boolean;
+  billing_type?: ProjectBillingType;
+  monthly_fee?: number | null;
+  billing_day?: number;
+  auto_invoice?: boolean;
+  recurring_active?: boolean;
 }
 
 export async function PATCH(
@@ -70,7 +76,7 @@ export async function PATCH(
   if (payload.start_date !== undefined) updates.start_date = payload.start_date || null;
   if (payload.due_date !== undefined) updates.due_date = payload.due_date || null;
   if (payload.service_category !== undefined) {
-    if (payload.service_category !== null && !PROJECT_SERVICE_CATEGORIES.includes(payload.service_category)) {
+    if (payload.service_category !== null && String(payload.service_category).length > 80) {
       return NextResponse.json({ ok: false, error: "Invalid service category." }, { status: 400 });
     }
     updates.service_category = payload.service_category;
@@ -80,6 +86,34 @@ export async function PATCH(
   }
   if (payload.archived !== undefined) {
     updates.archived = Boolean(payload.archived);
+  }
+  if (payload.billing_type !== undefined) {
+    if (!PROJECT_BILLING_TYPES.includes(payload.billing_type)) {
+      return NextResponse.json({ ok: false, error: "Invalid billing type." }, { status: 400 });
+    }
+    updates.billing_type = payload.billing_type;
+  }
+  if (payload.monthly_fee !== undefined) {
+    const fee = payload.monthly_fee === null ? null : Number(payload.monthly_fee);
+    if (fee !== null && (!Number.isFinite(fee) || fee < 0)) {
+      return NextResponse.json({ ok: false, error: "Monthly fee can't be negative." }, { status: 400 });
+    }
+    updates.monthly_fee = fee;
+  }
+  if (payload.billing_day !== undefined) {
+    const day = Number(payload.billing_day);
+    if (!Number.isInteger(day) || day < 1 || day > 28) {
+      return NextResponse.json({ ok: false, error: "Billing day must be between 1 and 28." }, { status: 400 });
+    }
+    updates.billing_day = day;
+  }
+  if (payload.auto_invoice !== undefined) updates.auto_invoice = Boolean(payload.auto_invoice);
+  if (payload.recurring_active !== undefined) updates.recurring_active = Boolean(payload.recurring_active);
+
+  const effectiveType = (updates.billing_type as ProjectBillingType | undefined) ?? existing.billing_type;
+  const effectiveFee = "monthly_fee" in updates ? (updates.monthly_fee as number | null) : existing.monthly_fee;
+  if (effectiveType === "monthly" && (!effectiveFee || effectiveFee <= 0)) {
+    return NextResponse.json({ ok: false, error: "A monthly project needs a monthly fee." }, { status: 400 });
   }
 
   if (Object.keys(updates).length === 0) {

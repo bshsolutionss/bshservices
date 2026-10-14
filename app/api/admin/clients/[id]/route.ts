@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { CLIENT_TYPES, type ClientType } from "@/lib/clients";
 
 interface UpdatePayload {
   company_name?: string;
@@ -10,6 +11,7 @@ interface UpdatePayload {
   industry?: string;
   account_manager?: string;
   notes?: string;
+  client_type?: ClientType;
 }
 
 export async function PATCH(
@@ -42,6 +44,13 @@ export async function PATCH(
     if (payload[field] !== undefined) {
       updates[field] = String(payload[field]).slice(0, 2000) || null;
     }
+  }
+
+  if (payload.client_type !== undefined) {
+    if (!CLIENT_TYPES.includes(payload.client_type)) {
+      return NextResponse.json({ ok: false, error: "Invalid client type." }, { status: 400 });
+    }
+    updates.client_type = payload.client_type;
   }
 
   if (Object.keys(updates).length === 0) {

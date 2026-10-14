@@ -6,6 +6,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Alert,
+  ChoiceField,
   Modal,
   Stepper,
   SelectField,
@@ -21,6 +22,7 @@ import {
   CURRENCIES,
   CURRENCY_LABELS,
   computeInvoiceTotals,
+  round2,
   formatMoney,
   type Currency,
 } from "@/lib/invoices";
@@ -113,6 +115,11 @@ export default function InvoiceCreateButton({
   const [lines, setLines] = useState<LineDraft[]>([newLine()]);
   const [taxRate, setTaxRate] = useState("0");
   const [discount, setDiscount] = useState("");
+  const [discountMode, setDiscountMode] = useState<"flat" | "percent">("flat");
+  const [poNumber, setPoNumber] = useState("");
+  const [terms, setTerms] = useState("");
+  const [defaultDueDays, setDefaultDueDays] = useState<number | null>(null);
+  const [defaultsLoaded, setDefaultsLoaded] = useState(false);
   const [issueDate, setIssueDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
@@ -150,7 +157,31 @@ export default function InvoiceCreateButton({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once for the handoff from project creation
   }, [autoOpen]);
 
-  const totals = computeInvoiceTotals(lines, taxRate, discount);
+  // A percentage discount is turned into a flat amount off the subtotal, so the preview, the API and the database all agree.
+  const rawSubtotal = computeInvoiceTotals(lines, 0, 0).subtotal;
+  const effectiveDiscount =
+    discountMode === "percent" ? round2((rawSubtotal * (Number(discount) || 0)) / 100) : discount;
+  const totals = computeInvoiceTotals(lines, taxRate, effectiveDiscount);
+
+  // Business defaults (tax rate, payment terms) come from Settings > Invoices. Fetched the first
+  // time the builder opens - lazily, so none of the pages that host this button pay for it.
+  useEffect(() => {
+    if (!open || defaultsLoaded) return;
+    setDefaultsLoaded(true);
+    fetch("/api/admin/settings/invoice")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => {
+        if (!body?.settings) return;
+        // A project link already chose the currency; otherwise start from the business default.
+        if (body.default_currency && !defaultProjectId) setCurrency((current) => (current === "PKR" ? body.default_currency : current));
+        const { default_tax_rate, default_due_days } = body.settings;
+        setTaxRate((current) => (current === "0" && default_tax_rate > 0 ? String(default_tax_rate) : current));
+        setDefaultDueDays(typeof default_due_days === "number" ? default_due_days : null);
+        setDueDate((current) => (current || typeof default_due_days !== "number" ? current : addDays(issueDate, default_due_days)));
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per mount, on first open
+  }, [open]);
 
   const reset = () => {
     setStep(0);
@@ -160,8 +191,11 @@ export default function InvoiceCreateButton({
     setLines([newLine()]);
     setTaxRate("0");
     setDiscount("");
+    setDiscountMode("flat");
+    setPoNumber("");
+    setTerms("");
     setIssueDate(new Date().toISOString().slice(0, 10));
-    setDueDate("");
+    setDueDate(defaultDueDays !== null ? addDays(new Date().toISOString().slice(0, 10), defaultDueDays) : "");
     setNotes("");
     setErrors({});
     setSubmitError(null);
@@ -189,7 +223,8 @@ export default function InvoiceCreateButton({
       else if (totals.subtotal <= 0) next.lines = "The subtotal must be greater than zero.";
       if (Number(taxRate) < 0 || Number(taxRate) > 100) next.taxRate = "Tax must be between 0 and 100%.";
       if (discount !== "" && Number(discount) < 0) next.discount = "Discount can't be negative.";
-      if (discount !== "" && Number(discount) > totals.subtotal + totals.tax) {
+      if (discountMode === "percent" && Number(discount) > 100) next.discount = "A percentage can't be above 100%.";
+      else if (discount !== "" && totals.discount > totals.subtotal + totals.tax) {
         next.discount = "Discount is larger than the invoice.";
       }
     }
@@ -217,7 +252,9 @@ export default function InvoiceCreateButton({
           project_id: projectId || undefined,
           currency,
           tax_rate: Number(taxRate) || 0,
-          discount: discount === "" ? 0 : Number(discount),
+          discount: totals.discount,
+          po_number: poNumber.trim() || undefined,
+          terms: terms.trim() || undefined,
           issue_date: issueDate,
           due_date: dueDate || undefined,
           notes: notes.trim() || undefined,
@@ -429,17 +466,30 @@ export default function InvoiceCreateButton({
                   error={errors.taxRate}
                   hint="Applied to the subtotal. Use 0 if this invoice isn't taxed."
                 />
+                <ChoiceField
+                  label="Discount type"
+                  value={discountMode}
+                  onChange={(v) => setDiscountMode(v as "flat" | "percent")}
+                  options={[
+                    { value: "flat", label: `Amount (${currency})` },
+                    { value: "percent", label: "Percent (%)" },
+                  ]}
+                />
                 <TextField
                   id="invoice-discount"
-                  label={`Discount (${currency})`}
+                  label={discountMode === "percent" ? "Discount (%)" : `Discount (${currency})`}
                   type="number"
                   min="0"
                   step="0.01"
                   value={discount}
                   onChange={setDiscount}
-                  placeholder="0.00"
+                  placeholder={discountMode === "percent" ? "e.g. 10" : "0.00"}
                   error={errors.discount}
-                  hint="A flat amount taken off the total."
+                  hint={
+                    discountMode === "percent"
+                      ? `Takes ${formatMoney(totals.discount, currency)} off the subtotal.`
+                      : "A flat amount taken off the total."
+                  }
                 />
               </div>
 
@@ -482,6 +532,21 @@ export default function InvoiceCreateButton({
                   ))}
                 </div>
               </div>
+              <TextField
+                id="invoice-po"
+                label="PO / reference number"
+                value={poNumber}
+                onChange={setPoNumber}
+                hint="Optional - the client's purchase order, printed on the PDF."
+              />
+              <TextareaField
+                id="invoice-terms"
+                label="Terms (this invoice only)"
+                value={terms}
+                onChange={setTerms}
+                rows={2}
+                placeholder="Leave empty to use your default terms from Settings."
+              />
               <TextareaField
                 id="invoice-notes"
                 label="Notes"

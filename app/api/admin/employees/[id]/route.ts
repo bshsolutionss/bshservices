@@ -1,7 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { EMPLOYEE_STATUSES, type EmployeeStatus } from "@/lib/employees";
+import {
+  EMPLOYEE_STATUSES,
+  EMPLOYMENT_TYPES,
+  PAY_BASES,
+  type EmployeeStatus,
+  type EmploymentType,
+  type PayBasis,
+} from "@/lib/employees";
+import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface UpdatePayload {
   name?: string;
@@ -12,6 +20,10 @@ interface UpdatePayload {
   status?: EmployeeStatus;
   hire_date?: string | null;
   notes?: string | null;
+  employment_type?: EmploymentType;
+  pay_basis?: PayBasis;
+  pay_amount?: number | null;
+  pay_currency?: Currency;
 }
 
 export async function PATCH(
@@ -34,7 +46,27 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
   }
 
+  if (payload.employment_type !== undefined && !EMPLOYMENT_TYPES.includes(payload.employment_type)) {
+    return NextResponse.json({ ok: false, error: "Invalid employment type." }, { status: 400 });
+  }
+  if (payload.pay_basis !== undefined && !PAY_BASES.includes(payload.pay_basis)) {
+    return NextResponse.json({ ok: false, error: "Invalid pay basis." }, { status: 400 });
+  }
+  if (payload.pay_currency !== undefined && !(CURRENCIES as string[]).includes(payload.pay_currency)) {
+    return NextResponse.json({ ok: false, error: "Invalid currency." }, { status: 400 });
+  }
+
   const updates: Record<string, unknown> = {};
+  if (payload.employment_type !== undefined) updates.employment_type = payload.employment_type;
+  if (payload.pay_basis !== undefined) updates.pay_basis = payload.pay_basis;
+  if (payload.pay_currency !== undefined) updates.pay_currency = payload.pay_currency;
+  if (payload.pay_amount !== undefined) {
+    const amount = payload.pay_amount === null || (payload.pay_amount as unknown) === "" ? null : Number(payload.pay_amount);
+    if (amount !== null && (!Number.isFinite(amount) || amount < 0)) {
+      return NextResponse.json({ ok: false, error: "Pay can't be negative." }, { status: 400 });
+    }
+    updates.pay_amount = amount;
+  }
   if (payload.name !== undefined) updates.name = String(payload.name).slice(0, 200);
   if (payload.email !== undefined) updates.email = payload.email || null;
   if (payload.phone !== undefined) updates.phone = payload.phone || null;
@@ -69,8 +101,8 @@ export async function DELETE(
   const { id } = await params;
   const service = createServiceRoleClient();
 
-  // Employees have no FK dependents (tasks.assignee_name is a free-text
-  // snapshot, not a reference) — safe to delete unconditionally.
+  // tasks.assignee_id is ON DELETE SET NULL, so existing tasks keep their
+  // assignee_name snapshot - safe to delete unconditionally.
   const { error } = await service.from("employees").delete().eq("id", id);
 
   if (error) {

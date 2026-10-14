@@ -16,6 +16,15 @@ import {
   Clock,
   Settings,
   Coins,
+  Mail,
+  FileText,
+  Target,
+  MessagesSquare,
+  Rocket,
+  PiggyBank,
+  ListChecks,
+  Building,
+  MessageSquareText,
   TrendingUp,
   ChevronDown,
   X,
@@ -45,9 +54,10 @@ interface NavGroup {
 // screenshot the user provided; colors/branding stayed BSH's own).
 const NAV_GROUPS: NavGroup[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+  { id: "goals", label: "Goals", icon: Target, href: "/admin/goals" },
   {
-    id: "pipeline",
-    label: "Pipeline",
+    id: "sales",
+    label: "Sales",
     icon: Users,
     items: [
       { href: "/admin/leads", label: "Leads", icon: Users },
@@ -55,13 +65,22 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    id: "work",
+    id: "clients",
     label: "Clients",
     icon: Building2,
     items: [
       { href: "/admin/clients", label: "Clients", icon: Building2 },
-      { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+      { href: "/admin/communication", label: "Communication", icon: MessagesSquare },
+    ],
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: FolderKanban,
+    items: [
+      { href: "/admin/projects", label: "Client projects", icon: FolderKanban },
       { href: "/admin/tasks", label: "Tasks", icon: CheckSquare },
+      { href: "/admin/personal-projects", label: "Personal projects", icon: Rocket },
     ],
   },
   {
@@ -69,17 +88,18 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Finance",
     icon: Wallet,
     items: [
-      { href: "/admin/finance", label: "Profit & Loss", icon: TrendingUp },
       { href: "/admin/invoices", label: "Invoices", icon: Receipt },
       { href: "/admin/expenses", label: "Expenses", icon: Wallet },
+      { href: "/admin/finance", label: "Profit & Loss", icon: TrendingUp },
     ],
   },
+  { id: "investments", label: "Investments", icon: PiggyBank, href: "/admin/investments" },
   {
     id: "team",
     label: "Team",
     icon: Contact,
     items: [
-      { href: "/admin/employees", label: "Employees", icon: Contact },
+      { href: "/admin/employees", label: "Team members", icon: Contact },
       { href: "/admin/availability", label: "Availability", icon: Clock },
     ],
   },
@@ -123,14 +143,24 @@ export default function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebar
 function SettingsPanelContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
-      <Link
-        href="/admin/settings/exchange-rates"
-        onClick={onNavigate}
-        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition"
-      >
-        <Coins className="w-[18px] h-[18px] shrink-0" />
-        Exchange Rates
-      </Link>
+      {[
+        { href: "/admin/settings/company", label: "Company", icon: Building },
+        { href: "/admin/settings/email", label: "Email", icon: Mail },
+        { href: "/admin/settings/invoices", label: "Invoice settings", icon: FileText },
+        { href: "/admin/settings/lists", label: "Lists", icon: ListChecks },
+        { href: "/admin/settings/templates", label: "Message templates", icon: MessageSquareText },
+        { href: "/admin/settings/exchange-rates", label: "Exchange Rates", icon: Coins },
+      ].map(({ href, label, icon: Icon }) => (
+        <Link
+          key={href}
+          href={href}
+          onClick={onNavigate}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition"
+        >
+          <Icon className="w-[18px] h-[18px] shrink-0" />
+          {label}
+        </Link>
+      ))}
       <PushNotificationToggle className="w-full" />
       <InstallAppButton variant="inline" className="w-full" />
     </>

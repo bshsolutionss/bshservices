@@ -3,7 +3,7 @@ import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
 import { recomputeInvoiceStatus } from "@/lib/admin/recompute-invoice-status";
-import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/invoices";
+import type { PaymentMethod } from "@/lib/invoices";
 
 interface CreatePayload {
   amount: number;
@@ -31,7 +31,7 @@ export async function POST(
   if (!payload.amount || payload.amount <= 0) {
     return NextResponse.json({ ok: false, error: "A positive amount is required." }, { status: 400 });
   }
-  if (payload.method && !PAYMENT_METHODS.includes(payload.method)) {
+  if (payload.method && payload.method.length > 80) {
     return NextResponse.json({ ok: false, error: "Invalid payment method." }, { status: 400 });
   }
 

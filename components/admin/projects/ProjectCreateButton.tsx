@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Alert,
+  ChoiceField,
   Modal,
   Stepper,
   SelectField,
@@ -18,13 +19,16 @@ import {
   type StepDefinition,
 } from "@/components/admin/ui";
 import {
-  PROJECT_SERVICE_CATEGORIES,
+  PROJECT_BILLING_LABELS,
+  PROJECT_BILLING_TYPES,
   PROJECT_STAGES,
   PROJECT_STAGE_LABELS,
+  type ProjectBillingType,
   type ProjectServiceCategory,
   type ProjectStage,
 } from "@/lib/projects";
 import { CURRENCIES, formatMoney, type Currency } from "@/lib/invoices";
+import { useOptions } from "@/lib/admin/use-options";
 
 const STEPS: StepDefinition[] = [
   { id: "details", label: "Project", hint: "Who it's for and what it is" },
@@ -58,6 +62,7 @@ export default function ProjectCreateButton({
   label = "New Project",
 }: ProjectCreateButtonProps) {
   const router = useRouter();
+  const services = useOptions("service_categories");
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -65,6 +70,10 @@ export default function ProjectCreateButton({
   const [name, setName] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
   const [description, setDescription] = useState("");
+  const [billingType, setBillingType] = useState<ProjectBillingType>("one_time");
+  const [monthlyFee, setMonthlyFee] = useState("");
+  const [billingDay, setBillingDay] = useState("1");
+  const [autoInvoice, setAutoInvoice] = useState(true);
   const [budget, setBudget] = useState("");
   const [currency, setCurrency] = useState<Currency>("PKR");
   const [stage, setStage] = useState<ProjectStage>("planning");
@@ -89,6 +98,10 @@ export default function ProjectCreateButton({
     setName("");
     setServiceCategory("");
     setDescription("");
+    setBillingType("one_time");
+    setMonthlyFee("");
+    setBillingDay("1");
+    setAutoInvoice(true);
     setBudget("");
     setCurrency("PKR");
     setStage("planning");
@@ -112,7 +125,11 @@ export default function ProjectCreateButton({
       if (!name.trim()) next.name = "Give the project a name.";
     }
     if (index === 1) {
-      if (budget !== "" && (!Number.isFinite(Number(budget)) || Number(budget) < 0)) {
+      if (billingType === "monthly") {
+        if (!Number.isFinite(Number(monthlyFee)) || Number(monthlyFee) <= 0) {
+          next.monthlyFee = "Enter the monthly fee.";
+        }
+      } else if (budget !== "" && (!Number.isFinite(Number(budget)) || Number(budget) < 0)) {
         next.budget = "Budget must be a positive number.";
       }
       if (startDate && dueDate && dueDate < startDate) {
@@ -141,7 +158,11 @@ export default function ProjectCreateButton({
         body: JSON.stringify({
           name: name.trim(),
           client_id: selectedClientId,
-          budget: budget === "" ? undefined : Number(budget),
+          billing_type: billingType,
+          monthly_fee: billingType === "monthly" ? Number(monthlyFee) : undefined,
+          billing_day: Number(billingDay) || 1,
+          auto_invoice: billingType === "monthly" ? autoInvoice : false,
+          budget: billingType === "monthly" || budget === "" ? undefined : Number(budget),
           currency,
           stage,
           service_category: (serviceCategory as ProjectServiceCategory) || undefined,
@@ -169,7 +190,10 @@ export default function ProjectCreateButton({
     { label: "Client", value: resolvedClientName },
     { label: "Project", value: name.trim() || "—" },
     { label: "Service", value: serviceCategory || "—" },
-    { label: "Budget", value: budget === "" ? "Not set" : formatMoney(Number(budget), currency) },
+    { label: "Billing", value: PROJECT_BILLING_LABELS[billingType] },
+    billingType === "monthly"
+      ? { label: "Monthly fee", value: `${formatMoney(Number(monthlyFee) || 0, currency)} on day ${billingDay}` }
+      : { label: "Budget", value: budget === "" ? "Not set" : formatMoney(Number(budget), currency) },
     { label: "Stage", value: PROJECT_STAGE_LABELS[stage] },
     { label: "Start", value: startDate || "—" },
     { label: "Due", value: dueDate || "—" },
@@ -255,7 +279,7 @@ export default function ProjectCreateButton({
               label="Service"
               value={serviceCategory}
               onChange={setServiceCategory}
-              options={PROJECT_SERVICE_CATEGORIES.map((c) => ({ value: c, label: c }))}
+              options={services.selectOptions}
               placeholder="Select a service…"
               hint="Used for reporting and filters."
             />
@@ -273,17 +297,70 @@ export default function ProjectCreateButton({
 
         {step === 1 && (
           <div className="grid gap-4 sm:grid-cols-2">
-            <MoneyField
-              id="project-budget"
-              label="Budget"
-              amount={budget}
-              onAmountChange={setBudget}
-              currency={currency}
-              onCurrencyChange={(v) => setCurrency(v as Currency)}
-              currencies={CURRENCIES}
-              error={errors.budget}
-              hint="Pre-fills the first invoice line. Leave empty if it isn't agreed yet."
-            />
+            <div className="sm:col-span-2">
+              <ChoiceField
+                label="Client pays"
+                value={billingType}
+                onChange={(v) => setBillingType(v as ProjectBillingType)}
+                options={PROJECT_BILLING_TYPES.map((t) => ({
+                  value: t,
+                  label: t === "monthly" ? "Monthly (retainer)" : "One time (fixed project)",
+                }))}
+                hint={
+                  billingType === "monthly"
+                    ? "A recurring fee billed every month until you pause it."
+                    : "A fixed budget for a defined piece of work."
+                }
+              />
+            </div>
+            {billingType === "monthly" ? (
+              <>
+                <MoneyField
+                  id="project-monthly-fee"
+                  label="Monthly fee"
+                  required
+                  amount={monthlyFee}
+                  onAmountChange={setMonthlyFee}
+                  currency={currency}
+                  onCurrencyChange={(v) => setCurrency(v as Currency)}
+                  currencies={CURRENCIES}
+                  error={errors.monthlyFee}
+                />
+                <SelectField
+                  id="project-billing-day"
+                  label="Invoice on day"
+                  value={billingDay}
+                  onChange={setBillingDay}
+                  options={Array.from({ length: 28 }, (_, i) => ({ value: String(i + 1), label: `Day ${i + 1} of the month` }))}
+                />
+                <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#1A14A5]/15 px-4 py-3 sm:col-span-2">
+                  <input
+                    type="checkbox"
+                    checked={autoInvoice}
+                    onChange={(e) => setAutoInvoice(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 accent-[#1A14A5]"
+                  />
+                  <span className="text-sm">
+                    <span className="font-semibold text-[#231F20]">Draft the invoice automatically each month</span>
+                    <span className="block text-xs text-[#231F20]/55">
+                      A draft is created on the billing day for you to review and send - nothing is sent to the client automatically.
+                    </span>
+                  </span>
+                </label>
+              </>
+            ) : (
+              <MoneyField
+                id="project-budget"
+                label="Budget"
+                amount={budget}
+                onAmountChange={setBudget}
+                currency={currency}
+                onCurrencyChange={(v) => setCurrency(v as Currency)}
+                currencies={CURRENCIES}
+                error={errors.budget}
+                hint="Pre-fills the first invoice line. Leave empty if it isn't agreed yet."
+              />
+            )}
             <SelectField
               id="project-stage"
               label="Starting stage"

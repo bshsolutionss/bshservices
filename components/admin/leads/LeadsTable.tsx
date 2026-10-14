@@ -48,11 +48,11 @@ const columns: DataTableColumn<LeadListItem>[] = [
   {
     key: "contact",
     label: "Contact",
-    value: (row) => row.email,
+    value: (row) => row.email ?? row.phone ?? "",
     render: (row) => (
       <>
-        <div>{row.email}</div>
-        {row.phone && <div className="text-xs text-[#231F20]/50">{row.phone}</div>}
+        <div>{row.email || row.phone || "—"}</div>
+        {row.email && row.phone && <div className="text-xs text-[#231F20]/50">{row.phone}</div>}
       </>
     ),
   },

@@ -8,6 +8,7 @@ import {
   Contact,
   FolderKanban,
   Receipt,
+  Repeat,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -24,6 +25,9 @@ import { formatMoney, type Currency } from "@/lib/invoices";
 import { sumToPKR } from "@/lib/currency";
 import { getExchangeRates } from "@/lib/admin/exchange-rates";
 import { todayInPkt } from "@/lib/availability";
+import { computeGoalProgress, listGoals } from "@/lib/admin/goals";
+import { periodLabel } from "@/lib/goals";
+import GoalCard from "@/components/admin/goals/GoalCard";
 import {
   buildProfitLoss,
   currentMonthKey,
@@ -72,6 +76,9 @@ async function getDashboardData() {
     { data: paymentsData },
     { data: outstandingInvoices },
     { data: expensesData },
+    { data: retainersData },
+    { data: monthlyExpenseData },
+    { data: clientTypeData },
     rates,
   ] = await Promise.all([
     // Consultation bookings have their own dashboard widget below — kept
@@ -119,8 +126,41 @@ async function getDashboardData() {
       .select("amount, expense_date, currency, category")
       .gte("expense_date", windowStart)
       .lt("expense_date", windowEnd),
+    // Recurring side of the business: active retainers, standing monthly costs, and the client mix.
+    supabase
+      .from("projects")
+      .select("monthly_fee, currency")
+      .eq("billing_type", "monthly")
+      .eq("recurring_active", true)
+      .eq("archived", false)
+      .neq("stage", "completed"),
+    supabase
+      .from("expenses")
+      .select("amount, currency")
+      .eq("expense_type", "monthly")
+      .eq("recurring_active", true)
+      .is("recurring_parent_id", null),
+    supabase.from("clients").select("client_type"),
     getExchangeRates(),
   ]);
+
+  const mrr = sumToPKR(
+    ((retainersData ?? []) as { monthly_fee: number | null; currency: Currency | null }[]).map((r) => ({
+      amount: Number(r.monthly_fee ?? 0),
+      currency: r.currency ?? "PKR",
+    })),
+    rates
+  );
+  const monthlyCosts = sumToPKR(
+    ((monthlyExpenseData ?? []) as { amount: number; currency: Currency | null }[]).map((e) => ({
+      amount: Number(e.amount),
+      currency: e.currency ?? "PKR",
+    })),
+    rates
+  );
+  const clientTypes = (clientTypeData ?? []) as { client_type: string | null }[];
+  const monthlyClients = clientTypes.filter((c) => c.client_type === "monthly").length;
+  const retainerCount = (retainersData ?? []).length;
 
   const leads = (allLeads ?? []) as Pick<
     Lead,
@@ -190,6 +230,11 @@ async function getDashboardData() {
     current,
     previous,
     totalOutstanding,
+    mrr,
+    monthlyCosts,
+    monthlyClients,
+    oneTimeClients: clientTypes.length - monthlyClients,
+    retainerCount,
     monthLabel: monthLabel(thisMonth, { withYear: true }),
     recent: leads.slice(0, 5),
   };
@@ -208,7 +253,12 @@ function monthDelta(current: number, previous: number, { invert = false } = {}) 
 }
 
 export default async function AdminDashboardPage() {
-  const data = await getDashboardData();
+  const monthKey = todayInPkt().slice(0, 7);
+  const [data, goals] = await Promise.all([
+    getDashboardData(),
+    // A failure here (e.g. goals table not created yet) must not take the whole dashboard down.
+    listGoals("monthly", monthKey).then(computeGoalProgress).catch(() => []),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -264,6 +314,66 @@ export default async function AdminDashboardPage() {
             iconBg="#f97316"
             description="Unpaid invoice balance"
             href="/admin/invoices"
+          />
+        </div>
+      </section>
+
+      {/* Goals for the current month */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-[#231F20]/60">
+            Goals · {periodLabel("monthly", monthKey)}
+          </h2>
+          <Link href="/admin/goals" className="text-sm font-medium text-[#1A14A5] hover:underline">
+            {goals.length > 0 ? "All goals →" : "Set a goal →"}
+          </Link>
+        </div>
+        {goals.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {goals.slice(0, 4).map((goal) => (
+              <GoalCard key={goal.id} goal={goal} compact />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Recurring — the predictable part of the business */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-[#231F20]/60">Recurring</h2>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard
+            label="Monthly retainers"
+            value={formatMoney(data.mrr, "PKR")}
+            icon={Repeat}
+            valueColor="#0F766E"
+            iconBg="#0D9488"
+            description={`${data.retainerCount} active retainer${data.retainerCount === 1 ? "" : "s"} · billed every month`}
+            href="/admin/projects?billing=monthly"
+          />
+          <StatCard
+            label="Monthly costs"
+            value={formatMoney(data.monthlyCosts, "PKR")}
+            icon={Receipt}
+            valueColor="#9F1239"
+            iconBg="#E11D48"
+            description="Standing monthly expenses"
+            href="/admin/expenses"
+          />
+          <StatCard
+            label="Recurring margin"
+            value={formatMoney(data.mrr - data.monthlyCosts, "PKR")}
+            icon={TrendingUp}
+            valueColor={data.mrr - data.monthlyCosts >= 0 ? "#0F766E" : "#B91C1C"}
+            iconBg={data.mrr - data.monthlyCosts >= 0 ? "#0D9488" : "#dc2626"}
+            description="Retainers minus monthly costs"
+          />
+          <StatCard
+            label="Client mix"
+            value={`${data.monthlyClients} / ${data.oneTimeClients}`}
+            icon={Users}
+            iconBg="#7c3aed"
+            description="Monthly / one-time clients"
+            href="/admin/clients"
           />
         </div>
       </section>

@@ -29,20 +29,23 @@ function getResendClient(): Resend {
  * saved by the time this runs; see app/api/leads/route.ts).
  */
 export async function sendLeadEmails(lead: Lead): Promise<void> {
+  // Manually-added leads may have no email; nothing to confirm to, and no one to reply to.
+  if (!lead.email) return;
+  const leadEmail = lead.email;
   const resend = getResendClient();
   const isBooking = lead.source === "consultation_booking";
 
   const [clientResult, adminResult] = await Promise.allSettled([
     resend.emails.send({
       from: FROM,
-      to: lead.email,
+      to: leadEmail,
       replyTo: ADMIN_EMAIL,
       ...(isBooking ? bookingClientConfirmationEmail(lead) : clientConfirmationEmail(lead)),
     }),
     resend.emails.send({
       from: FROM,
       to: ADMIN_EMAIL,
-      replyTo: lead.email,
+      replyTo: leadEmail,
       ...(isBooking ? bookingAdminNotificationEmail(lead) : adminNotificationEmail(lead)),
     }),
   ]);
@@ -74,6 +77,7 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
 
 /** Used only by the follow-up cron route. */
 export async function sendFollowUpEmail(lead: Lead, stage: 1 | 2 | 3): Promise<boolean> {
+  if (!lead.email) return false;
   try {
     const resend = getResendClient();
     await resend.emails.send({

@@ -5,6 +5,7 @@ import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads"
 import { PageHeader } from "@/components/admin/ui";
 import LeadsKanban, { type KanbanLead } from "@/components/admin/LeadsKanban";
 import LeadsTable, { type LeadListItem } from "@/components/admin/leads/LeadsTable";
+import LeadFormModal from "@/components/admin/leads/LeadFormModal";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +57,9 @@ export default async function AdminLeadsPage({
           </>
         }
         actions={
-          /* List / Board toggle */
+          <>
+          <LeadFormModal />
+          {/* List / Board toggle */}
           <div className="flex rounded-full border border-[#1A14A5]/10 bg-white p-1">
             {(["list", "board"] as const).map((option) => (
               <Link
@@ -73,6 +76,7 @@ export default async function AdminLeadsPage({
               </Link>
             ))}
           </div>
+          </>
         }
       >
         {/* Status filter pills */}

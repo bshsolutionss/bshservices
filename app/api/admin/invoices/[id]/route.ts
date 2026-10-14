@@ -19,6 +19,8 @@ interface UpdatePayload {
   due_date?: string | null;
   notes?: string | null;
   project_id?: string | null;
+  po_number?: string | null;
+  terms?: string | null;
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -87,6 +89,8 @@ export async function PATCH(
   if (payload.due_date !== undefined) updates.due_date = payload.due_date || null;
   if (payload.notes !== undefined) updates.notes = payload.notes ? String(payload.notes).slice(0, 5000) : null;
   if (payload.project_id !== undefined) updates.project_id = payload.project_id || null;
+  if (payload.po_number !== undefined) updates.po_number = payload.po_number ? String(payload.po_number).slice(0, 100) : null;
+  if (payload.terms !== undefined) updates.terms = payload.terms ? String(payload.terms).slice(0, 3000) : null;
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ ok: false, error: "Nothing to update." }, { status: 400 });

@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import type { User } from "@supabase/supabase-js";
 
 const SUPABASE_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
@@ -19,10 +18,9 @@ const SUPABASE_ANON_KEY =
  * returns the logged-in user (if any). Called from `proxy.ts` (this
  * project's Next.js 16 middleware entry point — renamed from middleware.ts).
  *
- * Uses `getUser()`, not `getSession()`: `getUser()` revalidates the JWT
- * against the Supabase auth server on every call, which is the
- * documented-safe check to run in middleware (a cookie-decoded session
- * alone can't be trusted without this).
+ * Uses `getClaims()`, not `getSession()`: it cryptographically verifies the
+ * JWT (a cookie-decoded session alone can't be trusted) without the network
+ * round trip `getUser()` costs. Only called for /admin routes — see proxy.ts.
  *
  * Takes `requestHeaders` (rather than building its own) so proxy.ts's
  * existing region-detection header forwarding survives — every
@@ -34,7 +32,7 @@ const SUPABASE_ANON_KEY =
 export async function updateSession(
   request: NextRequest,
   requestHeaders: Headers
-): Promise<{ response: NextResponse; user: User | null }> {
+): Promise<{ response: NextResponse; authenticated: boolean }> {
   let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -52,9 +50,9 @@ export async function updateSession(
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims() verifies the JWT locally (cached JWKS) and still refreshes an
+  // expired session through setAll above — no auth-server round trip per request.
+  const { data } = await supabase.auth.getClaims();
 
-  return { response, user };
+  return { response, authenticated: !!data?.claims?.sub };
 }

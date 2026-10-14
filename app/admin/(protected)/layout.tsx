@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin/session";
 import AdminShell from "@/components/admin/AdminShell";
 
 export const metadata = {
@@ -11,10 +11,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAdminSession();
 
   // Belt-and-suspenders: proxy.ts already redirects unauthenticated /admin/*
   // requests, this is a second check in case that ever drifts.
@@ -24,7 +21,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
-      <AdminShell userEmail={user.email ?? null}>{children}</AdminShell>
+      <AdminShell userEmail={user.email}>{children}</AdminShell>
     </div>
   );
 }

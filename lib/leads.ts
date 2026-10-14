@@ -22,7 +22,8 @@ export type LeadSource =
   | "service_form"
   | "consultation_booking"
   | "lead_magnet"
-  | "chatbot";
+  | "chatbot"
+  | "manual";
 export type LeadPriority = "low" | "medium" | "high" | "urgent";
 export type LeadLostReason = "budget" | "timing" | "competitor" | "no_response" | "other";
 export type BookingStatus = "confirmed" | "cancelled";
@@ -31,7 +32,8 @@ export interface Lead {
   id: string;
   created_at: string;
   name: string;
-  email: string;
+  /** Null for manually-added leads that only have a phone number. Always set for website leads. */
+  email: string | null;
   phone: string | null;
   business: string | null;
   best_time: string | null;
@@ -61,7 +63,24 @@ export interface Lead {
   booking_date: string | null;
   booking_time: string | null;
   booking_status: BookingStatus | null;
+  website: string | null;
+  /** For manual leads: where it came from, e.g. "Referral", "WhatsApp". */
+  lead_source_detail: string | null;
 }
+
+/** Ways a lead reaches you outside the website forms - offered when adding a lead by hand. */
+export const MANUAL_LEAD_SOURCES = [
+  "Phone call",
+  "WhatsApp",
+  "Referral",
+  "Facebook",
+  "Instagram",
+  "LinkedIn",
+  "Cold email",
+  "Fiverr / Upwork",
+  "Walk-in / event",
+  "Other",
+] as const;
 
 export const LEAD_STATUSES: LeadStatus[] = [
   "new",

@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Alert, ChoiceField, SectionCard, TextField, TextareaField, btnPrimary } from "@/components/admin/ui";
+import { CLIENT_TYPES, CLIENT_TYPE_LABELS, type ClientType } from "@/lib/clients";
 
 interface ClientEditControlProps {
   clientId: string;
@@ -16,6 +15,7 @@ interface ClientEditControlProps {
     industry: string | null;
     account_manager: string | null;
     notes: string | null;
+    client_type: ClientType;
   };
 }
 
@@ -29,15 +29,22 @@ export default function ClientEditControl({ clientId, initial }: ClientEditContr
     industry: initial.industry ?? "",
     account_manager: initial.account_manager ?? "",
     notes: initial.notes ?? "",
+    client_type: initial.client_type ?? "one_time",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const set = (key: keyof typeof fields) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setFields((prev) => ({ ...prev, [key]: e.target.value }));
+  const set = <K extends keyof typeof fields>(key: K) => (value: (typeof fields)[K]) => {
+    setSaved(false);
+    setFields((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSave = async () => {
+    if (!fields.company_name.trim() || !fields.contact_email.trim()) {
+      setError("Company name and contact email are required.");
+      return;
+    }
     setSaving(true);
     setSaved(false);
     setError(null);
@@ -61,23 +68,38 @@ export default function ClientEditControl({ clientId, initial }: ClientEditContr
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6 space-y-3">
-      <h2 className="font-bold text-[#231F20] mb-1">Client Profile</h2>
-      <Input placeholder="Company name" value={fields.company_name} onChange={set("company_name")} />
-      <Input placeholder="Contact name" value={fields.contact_name} onChange={set("contact_name")} />
-      <Input type="email" placeholder="Contact email" value={fields.contact_email} onChange={set("contact_email")} />
-      <Input placeholder="Contact phone" value={fields.contact_phone} onChange={set("contact_phone")} />
-      <Input placeholder="Industry" value={fields.industry} onChange={set("industry")} />
-      <Input placeholder="Account manager" value={fields.account_manager} onChange={set("account_manager")} />
-      <Textarea placeholder="Notes" rows={4} value={fields.notes} onChange={set("notes")} />
+    <SectionCard title="Client profile">
+      <div className="space-y-4">
+        <ChoiceField
+          label="Client type"
+          value={fields.client_type}
+          onChange={(v) => set("client_type")(v as ClientType)}
+          options={CLIENT_TYPES.map((t) => ({ value: t, label: CLIENT_TYPE_LABELS[t] }))}
+        />
+        <TextField id="cl-company" label="Company name" required value={fields.company_name} onChange={set("company_name")} />
+        <TextField id="cl-contact" label="Contact name" value={fields.contact_name} onChange={set("contact_name")} />
+        <TextField
+          id="cl-email"
+          label="Contact email"
+          type="email"
+          required
+          value={fields.contact_email}
+          onChange={set("contact_email")}
+          hint="Invoices are emailed here."
+        />
+        <TextField id="cl-phone" label="Phone" type="tel" value={fields.contact_phone} onChange={set("contact_phone")} />
+        <TextField id="cl-industry" label="Industry" value={fields.industry} onChange={set("industry")} />
+        <TextField id="cl-manager" label="Account manager" value={fields.account_manager} onChange={set("account_manager")} />
+        <TextareaField id="cl-notes" label="Notes" rows={4} value={fields.notes} onChange={set("notes")} />
 
-      <div className="flex items-center gap-3 pt-1">
-        <Button onClick={handleSave} disabled={saving} className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-xl">
-          {saving ? "Saving..." : "Save"}
-        </Button>
-        {saved && <span className="text-sm text-green-600">✅ Saved</span>}
-        {error && <span className="text-sm text-red-600">❌ {error}</span>}
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={handleSave} disabled={saving} className={btnPrimary}>
+            {saving ? "Saving…" : "Save changes"}
+          </button>
+          {saved && <span className="text-sm font-medium text-emerald-600">Saved</span>}
+        </div>
+        {error && <Alert tone="error">{error}</Alert>}
       </div>
-    </div>
+    </SectionCard>
   );
 }

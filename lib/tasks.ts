@@ -10,6 +10,9 @@ export interface Task {
   title: string;
   description: string | null;
   assignee_name: string | null;
+  /** The employee the task is assigned to — set whenever the assignee is picked from the team list. */
+  assignee_id: string | null;
+  assigned_notified_at: string | null;
   priority: TaskPriority;
   due_date: string | null;
   status: TaskStatus;
@@ -40,3 +43,10 @@ export const TASK_PRIORITY_LABELS: Record<TaskPriority, string> = {
   high: "High",
   urgent: "Urgent",
 };
+
+/** A team member offered in assignee pickers. `email` decides whether an assignment email can be sent. */
+export interface AssigneeOption {
+  id: string;
+  name: string;
+  email: string | null;
+}

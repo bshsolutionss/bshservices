@@ -1,7 +1,8 @@
 /** Shared types/constants for invoices/payments — mirrors lib/leads.ts's shape. */
 
 export type InvoiceStatus = "draft" | "sent" | "paid" | "partially_paid";
-export type PaymentMethod = "cash" | "bank_transfer" | "card" | "cheque" | "other";
+/** Editable in Settings > Lists (keys like bank_transfer for the built-ins). */
+export type PaymentMethod = string;
 export type Currency = "USD" | "PKR" | "CAD" | "AUD";
 
 export interface Invoice {
@@ -25,6 +26,13 @@ export interface Invoice {
   due_date: string | null;
   status: InvoiceStatus;
   notes: string | null;
+  /** "YYYY-MM" for a monthly retainer invoice; null for ordinary invoices. */
+  billing_period: string | null;
+  po_number: string | null;
+  /** Per-invoice terms; falls back to the default terms in Settings. */
+  terms: string | null;
+  sent_at: string | null;
+  last_emailed_at: string | null;
 }
 
 /** A billable line on an invoice. `line_total` is DB-generated (quantity x unit_price). */
@@ -102,7 +110,7 @@ export const INVOICE_STATUS_COLORS: Record<InvoiceStatus, { bg: string; text: st
 
 export const PAYMENT_METHODS: PaymentMethod[] = ["cash", "bank_transfer", "card", "cheque", "other"];
 
-export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+export const PAYMENT_METHOD_LABELS: Record<string, string> = {
   cash: "Cash",
   bank_transfer: "Bank Transfer",
   card: "Card",

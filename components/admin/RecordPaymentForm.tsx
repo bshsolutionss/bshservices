@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, SelectField, TextField, btnPrimary } from "@/components/admin/ui";
 import {
-  PAYMENT_METHODS,
-  PAYMENT_METHOD_LABELS,
   formatMoney,
   type Currency,
   type PaymentMethod,
 } from "@/lib/invoices";
+import { useOptions } from "@/lib/admin/use-options";
 
 interface RecordPaymentFormProps {
   invoiceId: string;
@@ -19,6 +18,7 @@ interface RecordPaymentFormProps {
 
 export default function RecordPaymentForm({ invoiceId, remainingBalance, currency }: RecordPaymentFormProps) {
   const router = useRouter();
+  const methods = useOptions("payment_methods");
   const [amount, setAmount] = useState(remainingBalance > 0 ? String(remainingBalance) : "");
   const [paidOn, setPaidOn] = useState(new Date().toISOString().slice(0, 10));
   const [method, setMethod] = useState<PaymentMethod>("bank_transfer");
@@ -84,7 +84,7 @@ export default function RecordPaymentForm({ invoiceId, remainingBalance, currenc
           label="Method"
           value={method}
           onChange={(v) => setMethod(v as PaymentMethod)}
-          options={PAYMENT_METHODS.map((m) => ({ value: m, label: PAYMENT_METHOD_LABELS[m] }))}
+          options={methods.selectOptions}
         />
         <TextField
           id="payment-reference"

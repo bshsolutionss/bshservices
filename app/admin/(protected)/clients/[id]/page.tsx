@@ -18,6 +18,10 @@ import DeleteClientButton from "@/components/admin/DeleteClientButton";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 import ProjectCreateButton from "@/components/admin/projects/ProjectCreateButton";
 import InvoiceCreateButton from "@/components/admin/invoices/InvoiceCreateButton";
+import { ComposeEmailModal, LogCommunicationModal } from "@/components/admin/communication/CommunicationModals";
+import CommunicationTable from "@/components/admin/communication/CommunicationTable";
+import { loadCommunicationData } from "@/lib/admin/communication-data";
+import { CLIENT_TYPE_COLORS, CLIENT_TYPE_LABELS } from "@/lib/clients";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +29,11 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
   const { id } = await params;
   const supabase = createServiceRoleClient();
 
-  const [{ data: client }, { data: projectsData }, { data: invoicesData }] = await Promise.all([
+  const [{ data: client }, { data: projectsData }, { data: invoicesData }, comms] = await Promise.all([
     supabase.from("clients").select("*").eq("id", id).single<Client>(),
     supabase.from("projects").select("*").eq("client_id", id).order("created_at", { ascending: false }),
     supabase.from("invoices").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+    loadCommunicationData({ clientId: id, limit: 100 }),
   ]);
 
   if (!client) {
@@ -43,7 +48,15 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
       <PageHeader
         backHref="/admin/clients"
         backLabel="Clients"
-        title={client.company_name}
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            {client.company_name}
+            <Badge
+              label={CLIENT_TYPE_LABELS[client.client_type] ?? CLIENT_TYPE_LABELS.one_time}
+              colors={CLIENT_TYPE_COLORS[client.client_type] ?? CLIENT_TYPE_COLORS.one_time}
+            />
+          </span>
+        }
         subtitle={
           <>
             {client.contact_email}
@@ -143,6 +156,22 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
             )}
           </SectionCard>
 
+          <SectionCard
+            title="Communication"
+            subtitle={`${comms.rows.length} logged`}
+            action={
+              <div className="flex flex-wrap gap-2">
+                <ComposeEmailModal clients={comms.clients} projects={comms.projects} templates={comms.templates} fixedClientId={client.id} variant="outline" />
+                <LogCommunicationModal clients={comms.clients} projects={comms.projects} fixedClientId={client.id} />
+              </div>
+            }
+            padded={false}
+          >
+            <div className="p-4">
+              <CommunicationTable rows={comms.rows} hideClient />
+            </div>
+          </SectionCard>
+
           <ActivityTimeline entityType="client" entityId={client.id} />
         </div>
 
@@ -157,6 +186,7 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
               industry: client.industry,
               account_manager: client.account_manager,
               notes: client.notes,
+              client_type: client.client_type,
             }}
           />
           <DeleteClientButton clientId={client.id} />

@@ -4,6 +4,8 @@ import { CheckSquare, Receipt } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Client } from "@/lib/clients";
 import {
+  PROJECT_BILLING_COLORS,
+  PROJECT_BILLING_LABELS,
   PROJECT_STAGES,
   PROJECT_STAGE_COLORS,
   PROJECT_STAGE_LABELS,
@@ -11,7 +13,7 @@ import {
   type ProjectServiceCategory,
   type ProjectStage,
 } from "@/lib/projects";
-import type { Task } from "@/lib/tasks";
+import type { AssigneeOption, Task } from "@/lib/tasks";
 import {
   INVOICE_STATUS_COLORS,
   INVOICE_STATUS_LABELS,
@@ -28,6 +30,9 @@ import TaskRow from "@/components/admin/TaskRow";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
 import InvoiceCreateButton from "@/components/admin/invoices/InvoiceCreateButton";
 import ProjectStageFlow from "@/components/admin/projects/ProjectStageFlow";
+import RetainerInvoiceButton from "@/components/admin/projects/RetainerInvoiceButton";
+import { periodLabel } from "@/lib/admin/recurring";
+import { todayInPkt } from "@/lib/availability";
 
 export const dynamic = "force-dynamic";
 
@@ -43,33 +48,31 @@ export default async function AdminProjectDetailPage({
   const { invoice: invoiceParam } = await searchParams;
   const supabase = createServiceRoleClient();
 
-  const { data: project } = await supabase.from("projects").select("*").eq("id", id).single<Project>();
-  if (!project) {
+  // One round trip: the project (with its client embedded) and everything keyed on its id,
+  // instead of project -> client/tasks/invoices -> balances in sequence.
+  const [{ data: projectRow }, { data: tasksData }, { data: invoicesData }, { data: employeesData }, { data: balanceRows }] =
+    await Promise.all([
+      supabase.from("projects").select("*, clients(*)").eq("id", id).single(),
+      supabase.from("tasks").select("*").eq("project_id", id).order("created_at", { ascending: false }),
+      supabase.from("invoices").select("*").eq("project_id", id).order("created_at", { ascending: false }),
+      supabase.from("employees").select("id, name, email").eq("status", "active").order("name"),
+      supabase.from("invoice_balances").select("*").eq("project_id", id),
+    ]);
+
+  if (!projectRow) {
     notFound();
   }
-
-  const [{ data: client }, { data: tasksData }, { data: invoicesData }, { data: employeesData }] = await Promise.all([
-    supabase.from("clients").select("*").eq("id", project.client_id).single<Client>(),
-    supabase.from("tasks").select("*").eq("project_id", id).order("created_at", { ascending: false }),
-    supabase.from("invoices").select("*").eq("project_id", id).order("created_at", { ascending: false }),
-    supabase.from("employees").select("name").eq("status", "active").order("name"),
-  ]);
+  const { clients: clientJoin, ...projectFields } = projectRow as Project & { clients: Client | Client[] | null };
+  const project = projectFields as Project;
+  const client = (Array.isArray(clientJoin) ? clientJoin[0] : clientJoin) ?? null;
 
   const tasks = (tasksData ?? []) as Task[];
   const completedCount = tasks.filter((t) => t.status === "completed").length;
   const invoiceRows = (invoicesData ?? []) as Invoice[];
-  const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
+  const assignees = (employeesData ?? []) as AssigneeOption[];
 
-  // paid/balance/overdue come from the invoice_balances view — the single
-  // source of truth for that math — joined back onto the invoices above.
-  const { data: balanceRows } =
-    invoiceRows.length > 0
-      ? await supabase
-          .from("invoice_balances")
-          .select("*")
-          .in("invoice_id", invoiceRows.map((i) => i.id))
-      : { data: [] };
-
+  // paid/balance/overdue come from the invoice_balances view - the single
+  // source of truth for that math - joined back onto the invoices above.
   const balanceById = new Map(
     ((balanceRows ?? []) as InvoiceBalance[]).map((b) => [b.invoice_id, b])
   );
@@ -97,8 +100,12 @@ export default async function AdminProjectDetailPage({
   const outstanding = invoices
     .filter((i) => i.status === "sent" || i.status === "partially_paid")
     .reduce((sum, i) => sum + Number(i.balance), 0);
+  const isMonthly = project.billing_type === "monthly";
+  const monthlyFee = project.monthly_fee != null ? Number(project.monthly_fee) : null;
+  const currentPeriod = todayInPkt().slice(0, 7);
+  const billedThisMonth = invoiceRows.some((i) => i.billing_period === currentPeriod);
   const budget = project.budget != null ? Number(project.budget) : null;
-  const unbilled = budget !== null ? Math.max(budget - invoiced, 0) : null;
+  const unbilled = !isMonthly && budget !== null ? Math.max(budget - invoiced, 0) : null;
 
   const invoiceButton = client ? (
     <InvoiceCreateButton
@@ -108,7 +115,7 @@ export default async function AdminProjectDetailPage({
           id: project.id,
           name: project.name,
           client_id: project.client_id,
-          budget: unbilled && unbilled > 0 ? unbilled : project.budget,
+          budget: isMonthly ? monthlyFee : unbilled && unbilled > 0 ? unbilled : project.budget,
           currency: project.currency,
         },
       ]}
@@ -119,6 +126,11 @@ export default async function AdminProjectDetailPage({
       autoOpen={invoiceParam === "new"}
     />
   ) : null;
+
+  const retainerButton =
+    isMonthly && project.recurring_active && !billedThisMonth ? (
+      <RetainerInvoiceButton projectId={project.id} periodLabel={periodLabel(currentPeriod)} />
+    ) : null;
 
   return (
     <div className="space-y-6">
@@ -132,6 +144,11 @@ export default async function AdminProjectDetailPage({
               label={PROJECT_STAGE_LABELS[project.stage as ProjectStage]}
               colors={PROJECT_STAGE_COLORS[project.stage as ProjectStage]}
             />
+            <Badge
+              label={PROJECT_BILLING_LABELS[project.billing_type] ?? "One-time"}
+              colors={PROJECT_BILLING_COLORS[project.billing_type] ?? PROJECT_BILLING_COLORS.one_time}
+            />
+            {isMonthly && !project.recurring_active && <Badge label="Billing paused" colors={{ bg: "#FEF3C7", text: "#92400E" }} />}
             {project.archived && <Badge label="Archived" colors={{ bg: "#F1F1F1", text: "#6B7280" }} />}
           </span>
         }
@@ -143,11 +160,17 @@ export default async function AdminProjectDetailPage({
               </Link>
             )}
             {project.service_category && <> · {project.service_category}</>}
-            {budget !== null && <> · Budget {formatMoney(budget, project.currency)}</>}
+            {isMonthly && monthlyFee !== null && <> · {formatMoney(monthlyFee, project.currency)} / month</>}
+            {!isMonthly && budget !== null && <> · Budget {formatMoney(budget, project.currency)}</>}
             {project.due_date && <> · Due {formatDate(project.due_date)}</>}
           </>
         }
-        actions={invoiceButton}
+        actions={
+          <>
+            {retainerButton}
+            {invoiceButton}
+          </>
+        }
       />
 
       <ProjectStageFlow
@@ -172,7 +195,7 @@ export default async function AdminProjectDetailPage({
             subtitle={`${completedCount} of ${tasks.length} completed`}
             bodyClassName="px-5 pb-5 pt-4 sm:px-6"
           >
-            <NewTaskInlineForm projectId={project.id} employeeNames={employeeNames} />
+            <NewTaskInlineForm projectId={project.id} assignees={assignees} />
             {tasks.length === 0 ? (
               <EmptyState
                 icon={CheckSquare}
@@ -182,7 +205,7 @@ export default async function AdminProjectDetailPage({
             ) : (
               <ul className="divide-y divide-[#1A14A5]/5">
                 {tasks.map((task) => (
-                  <TaskRow key={task.id} task={task} employeeNames={employeeNames} />
+                  <TaskRow key={task.id} task={task} assignees={assignees} />
                 ))}
               </ul>
             )}
@@ -240,7 +263,18 @@ export default async function AdminProjectDetailPage({
         <div className="space-y-6">
           <SectionCard title="Billing" subtitle={`In ${project.currency}`}>
             <dl className="space-y-2.5 text-sm">
-              <Row label="Budget" value={budget !== null ? formatMoney(budget, project.currency) : "Not set"} />
+              {isMonthly ? (
+                <>
+                  <Row label="Monthly fee" value={monthlyFee !== null ? formatMoney(monthlyFee, project.currency) : "Not set"} />
+                  <Row
+                    label="Billing day"
+                    value={`Day ${project.billing_day}`}
+                    hint={project.auto_invoice ? "Draft created automatically" : "Created manually"}
+                  />
+                </>
+              ) : (
+                <Row label="Budget" value={budget !== null ? formatMoney(budget, project.currency) : "Not set"} />
+              )}
               <Row label="Invoiced" value={formatMoney(invoiced, project.currency)} />
               <Row label="Paid" value={formatMoney(paid, project.currency)} tone="positive" />
               <Row label="Outstanding" value={formatMoney(outstanding, project.currency)} tone="warning" />
@@ -264,6 +298,11 @@ export default async function AdminProjectDetailPage({
             initialServiceCategory={project.service_category as ProjectServiceCategory | null}
             initialDescription={project.description}
             initialArchived={project.archived}
+            initialBillingType={project.billing_type ?? "one_time"}
+            initialMonthlyFee={project.monthly_fee}
+            initialBillingDay={project.billing_day ?? 1}
+            initialAutoInvoice={!!project.auto_invoice}
+            initialRecurringActive={project.recurring_active ?? true}
             taskCount={tasks.length}
           />
         </div>

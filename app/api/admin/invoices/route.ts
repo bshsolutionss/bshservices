@@ -24,6 +24,8 @@ interface CreatePayload {
   issue_date?: string;
   due_date?: string;
   notes?: string;
+  po_number?: string;
+  terms?: string;
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -127,6 +129,8 @@ export async function POST(request: NextRequest) {
       issue_date: issueDate,
       due_date: payload.due_date || null,
       notes: payload.notes?.trim().slice(0, 5000) || null,
+      po_number: payload.po_number?.trim().slice(0, 100) || null,
+      terms: payload.terms?.trim().slice(0, 3000) || null,
       status: "draft",
     })
     .select("id, invoice_number")

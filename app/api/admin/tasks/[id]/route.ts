@@ -1,4 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
+import { notifyTaskAssigned } from "@/lib/admin/task-notify";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { TASK_STATUSES, TASK_PRIORITIES, type TaskStatus, type TaskPriority } from "@/lib/tasks";
@@ -7,6 +8,8 @@ interface UpdatePayload {
   title?: string;
   description?: string;
   assignee_name?: string;
+  /** Employee id, or null to unassign. Changing it emails the new assignee. */
+  assignee_id?: string | null;
   priority?: TaskPriority;
   due_date?: string | null;
   status?: TaskStatus;
@@ -51,11 +54,44 @@ export async function PATCH(
     updates.estimated_hours = payload.estimated_hours === null ? null : Number(payload.estimated_hours);
   }
 
+  const service = createServiceRoleClient();
+
+  let notify: "none" | "queued" | "no_email" = "none";
+
+  if (payload.assignee_id !== undefined) {
+    const { data: current } = await service
+      .from("tasks")
+      .select("assignee_id")
+      .eq("id", id)
+      .single<{ assignee_id: string | null }>();
+    if (!current) return NextResponse.json({ ok: false, error: "Task not found." }, { status: 404 });
+
+    if (!payload.assignee_id) {
+      updates.assignee_id = null;
+      updates.assignee_name = null;
+      updates.assigned_notified_at = null;
+    } else {
+      const { data: employee } = await service
+        .from("employees")
+        .select("name, email")
+        .eq("id", payload.assignee_id)
+        .single<{ name: string; email: string | null }>();
+      if (!employee) {
+        return NextResponse.json({ ok: false, error: "That team member no longer exists." }, { status: 400 });
+      }
+      updates.assignee_id = payload.assignee_id;
+      updates.assignee_name = employee.name;
+      if (payload.assignee_id !== current.assignee_id) {
+        updates.assigned_notified_at = null;
+        notify = employee.email ? "queued" : "no_email";
+      }
+    }
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ ok: false, error: "Nothing to update." }, { status: 400 });
   }
 
-  const service = createServiceRoleClient();
   const { error } = await service.from("tasks").update(updates).eq("id", id);
 
   if (error) {
@@ -63,7 +99,9 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "Update failed." }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  if (notify === "queued") after(() => notifyTaskAssigned(id, { reassigned: true }));
+
+  return NextResponse.json({ ok: true, notify });
 }
 
 export async function DELETE(

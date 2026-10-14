@@ -2,10 +2,11 @@ import Link from "next/link";
 import { CheckSquare } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { cn } from "@/lib/utils";
-import { TASK_STATUSES, TASK_STATUS_LABELS, type Task, type TaskStatus } from "@/lib/tasks";
+import { TASK_STATUSES, TASK_STATUS_LABELS, type AssigneeOption, type Task, type TaskStatus } from "@/lib/tasks";
 import type { Project } from "@/lib/projects";
 import { EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import TaskRow from "@/components/admin/TaskRow";
+import NewTaskInlineForm from "@/components/admin/NewTaskInlineForm";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,7 @@ export default async function AdminTasksPage({
     await Promise.all([
       query,
       supabase.from("projects").select("id, name"),
-      supabase.from("employees").select("name").eq("status", "active").order("name"),
+      supabase.from("employees").select("id, name, email").eq("status", "active").order("name"),
       // Unfiltered, so each chip can carry its own count.
       projectParam
         ? supabase.from("tasks").select("status").eq("project_id", projectParam)
@@ -40,7 +41,7 @@ export default async function AdminTasksPage({
   const tasks = (tasksData ?? []) as Task[];
   const projects = (projectsData ?? []) as Pick<Project, "id" | "name">[];
   const projectNames = new Map(projects.map((p) => [p.id, p.name]));
-  const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
+  const assignees = (employeesData ?? []) as AssigneeOption[];
 
   const statusCounts = new Map<string, number>();
   for (const row of (statusCountsData ?? []) as { status: string }[]) {
@@ -105,12 +106,16 @@ export default async function AdminTasksPage({
         </div>
       </PageHeader>
 
+      <SectionCard title="New task" subtitle="Assign it to a team member and they are emailed straight away">
+        <NewTaskInlineForm projectId={projectParam} projects={projects} assignees={assignees} />
+      </SectionCard>
+
       <SectionCard padded={false} bodyClassName="px-5 sm:px-6">
         {tasks.length === 0 ? (
           <EmptyState
             icon={CheckSquare}
             title="No tasks here"
-            description="Tasks are created on a project's own page, where they stay tied to the work they belong to."
+            description="Add one above - pick a project, assign a team member, and they get an email."
           />
         ) : (
           <ul className="divide-y divide-[#1A14A5]/5">
@@ -118,7 +123,7 @@ export default async function AdminTasksPage({
               <TaskRow
                 key={task.id}
                 task={task}
-                employeeNames={employeeNames}
+                assignees={assignees}
                 projectName={projectNames.get(task.project_id) || "—"}
               />
             ))}

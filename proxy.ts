@@ -41,7 +41,16 @@ export async function proxy(request: NextRequest) {
   // Supabase session refresh — builds on `requestHeaders` so the region
   // header forwarding survives even when Supabase needs to rebuild the
   // response to attach refreshed auth cookies.
-  const { response, user } = await updateSession(request, requestHeaders);
+  // Only /admin needs it: public pages never read the session, and the
+  // check used to add an auth round trip to every marketing-site request.
+  const isAdminRoute = pathname.startsWith('/admin');
+  let response: NextResponse;
+  let authenticated = false;
+  if (isAdminRoute) {
+    ({ response, authenticated } = await updateSession(request, requestHeaders));
+  } else {
+    response = NextResponse.next({ request: { headers: requestHeaders } });
+  }
 
   // Set cookie for persistence
   response.cookies.set('user-region', detectedRegion, {
@@ -53,7 +62,7 @@ export async function proxy(request: NextRequest) {
   // Admin route guard — redirect unauthenticated requests to the login page.
   // (Admin mutation API routes independently re-check auth themselves too;
   // this is the fast, page-level guard.)
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !user) {
+  if (isAdminRoute && pathname !== '/admin/login' && !authenticated) {
     const loginUrl = new URL('/admin/login', request.url);
     return NextResponse.redirect(loginUrl);
   }

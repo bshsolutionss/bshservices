@@ -25,6 +25,9 @@ import DeletePaymentButton from "@/components/admin/DeletePaymentButton";
 import InvoiceFlow from "@/components/admin/invoices/InvoiceFlow";
 import InvoiceItemsEditor from "@/components/admin/invoices/InvoiceItemsEditor";
 import InvoiceDetailsEditor from "@/components/admin/invoices/InvoiceDetailsEditor";
+import InvoiceEmailButton from "@/components/admin/invoices/InvoiceEmailButton";
+import DuplicateInvoiceButton from "@/components/admin/invoices/DuplicateInvoiceButton";
+import { getInvoiceSettings } from "@/lib/admin/invoice-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +40,14 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
     notFound();
   }
 
-  const [{ data: client }, { data: balance }, { data: paymentsData }, { data: itemsData }, { data: projectsData }] =
-    await Promise.all([
+  const [
+    { data: client },
+    { data: balance },
+    { data: paymentsData },
+    { data: itemsData },
+    { data: projectsData },
+    invoiceSettings,
+  ] = await Promise.all([
       supabase.from("clients").select("*").eq("id", invoice.client_id).single<Client>(),
       supabase.from("invoice_balances").select("*").eq("invoice_id", id).single<InvoiceBalance>(),
       supabase.from("payments").select("*").eq("invoice_id", id).order("paid_on", { ascending: false }),
@@ -46,6 +55,7 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
       // been applied yet, so the page still renders in that window.
       supabase.from("invoice_items").select("*").eq("invoice_id", id).order("position"),
       supabase.from("projects").select("id, name").eq("client_id", invoice.client_id).order("name"),
+      getInvoiceSettings(),
     ]);
 
   const payments = (paymentsData ?? []) as Payment[];
@@ -101,6 +111,17 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
             >
               <Download className="h-4 w-4" /> PDF
             </a>
+            <DuplicateInvoiceButton invoiceId={invoice.id} />
+            {client && (
+              <InvoiceEmailButton
+                invoiceId={invoice.id}
+                invoiceNumber={invoice.invoice_number}
+                clientEmail={client.contact_email}
+                defaultMessage={invoiceSettings.email_message}
+                alreadyEmailed={!!invoice.last_emailed_at}
+                isDraft={invoice.status === "draft"}
+              />
+            )}
             {invoice.status === "draft" && <MarkSentButton invoiceId={invoice.id} />}
           </>
         }
@@ -163,7 +184,7 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
                           </span>
                           <span className="text-[#231F20]/50">
                             {" · "}
-                            {payment.method ? PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] : "Method not set"}
+                            {payment.method ? (PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] ?? payment.method) : "Method not set"}
                             {payment.reference ? ` (${payment.reference})` : ""}
                           </span>
                         </div>
@@ -197,6 +218,8 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
               issueDate={invoice.issue_date ?? invoice.created_at.slice(0, 10)}
               dueDate={invoice.due_date}
               notes={invoice.notes}
+              poNumber={invoice.po_number}
+              terms={invoice.terms}
               projectId={invoice.project_id}
               projects={projects}
               itemised={items.length > 0}

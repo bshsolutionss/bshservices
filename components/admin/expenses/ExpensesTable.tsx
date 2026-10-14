@@ -4,13 +4,19 @@ import { useRouter } from "next/navigation";
 import { Badge, ConfirmButton } from "@/components/admin/ui";
 import AdminDataTable from "@/components/admin/DataTable/AdminDataTable";
 import type { DataTableColumn } from "@/components/admin/DataTable/types";
-import { EXPENSE_CATEGORY_COLORS, type Expense, type ExpenseCategory } from "@/lib/expenses";
+import {
+  EXPENSE_TYPE_COLORS,
+  EXPENSE_TYPE_LABELS,
+  type Expense,
+} from "@/lib/expenses";
 import { formatDate, formatMoney } from "@/lib/invoices";
+import { useOptions } from "@/lib/admin/use-options";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
 
 interface ExpensesTableProps {
   expenses: Expense[];
   employees: { id: string; name: string }[];
+  projects?: { id: string; name: string }[];
   toolbarExtra?: React.ReactNode;
 }
 
@@ -19,8 +25,9 @@ interface ExpensesTableProps {
  * customisation and CSV export work exactly as they do on Leads, Projects and
  * Invoices, instead of this page having its own hand-rolled <table>.
  */
-export default function ExpensesTable({ expenses, employees, toolbarExtra }: ExpensesTableProps) {
+export default function ExpensesTable({ expenses, employees, projects = [], toolbarExtra }: ExpensesTableProps) {
   const router = useRouter();
+  const categories = useOptions("expense_categories");
 
   // Defined here rather than at module scope because the row actions need the
   // employee list and the router for refresh after a delete.
@@ -37,7 +44,24 @@ export default function ExpensesTable({ expenses, employees, toolbarExtra }: Exp
       label: "Category",
       value: (row) => row.category,
       render: (row) => (
-        <Badge label={row.category} colors={EXPENSE_CATEGORY_COLORS[row.category as ExpenseCategory]} />
+        <Badge label={categories.labelFor(row.category)} colors={categories.colorsFor(row.category)} />
+      ),
+    },
+    {
+      key: "type",
+      label: "Type",
+      value: (row) => EXPENSE_TYPE_LABELS[row.expense_type] ?? EXPENSE_TYPE_LABELS.one_time,
+      render: (row) => (
+        <span className="inline-flex items-center gap-1.5">
+          <Badge
+            label={EXPENSE_TYPE_LABELS[row.expense_type] ?? EXPENSE_TYPE_LABELS.one_time}
+            colors={EXPENSE_TYPE_COLORS[row.expense_type] ?? EXPENSE_TYPE_COLORS.one_time}
+          />
+          {row.expense_type === "monthly" && !row.recurring_parent_id && !row.recurring_active && (
+            <span className="text-xs text-[#231F20]/45">stopped</span>
+          )}
+          {row.recurring_parent_id && <span className="text-xs text-[#231F20]/45">auto</span>}
+        </span>
       ),
     },
     { key: "vendor", label: "Vendor / Employee", value: (row) => row.vendor ?? "" },
@@ -60,7 +84,7 @@ export default function ExpensesTable({ expenses, employees, toolbarExtra }: Exp
       filterable: false,
       render: (row) => (
         <div className="flex items-center gap-3">
-          <ExpenseFormModal expense={row} employees={employees} trigger="link" />
+          <ExpenseFormModal expense={row} employees={employees} projects={projects} trigger="link" />
           <ConfirmButton
             label="Remove"
             display="inline"

@@ -54,6 +54,7 @@ const SOURCE_POINTS: Record<LeadSource, number> = {
   service_form: 25, // came from a specific service page, already knows what they want
   contact_form: 15, // general inquiry, less qualified yet
   chatbot: 12, // volunteered details mid-chat — warm, but lighter than a filled-out form
+  manual: 20, // an admin chose to log it - a real conversation already happened
   lead_magnet: 5, // downloaded something free — early-funnel, not yet a real inquiry
 };
 

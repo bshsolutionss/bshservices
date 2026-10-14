@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
-import { Alert, Modal, TextField, btnGhost, btnPrimary } from "@/components/admin/ui";
+import { Alert, ChoiceField, Modal, TextField, btnGhost, btnPrimary } from "@/components/admin/ui";
+import { CLIENT_TYPES, CLIENT_TYPE_LABELS, type ClientType } from "@/lib/clients";
 
 /** Add a client by hand. (The usual path is automatic: marking a lead Won creates the client.) */
 export default function ClientFormModal() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [clientType, setClientType] = useState<ClientType>("one_time");
   const [companyName, setCompanyName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactName, setContactName] = useState("");
@@ -21,6 +23,7 @@ export default function ClientFormModal() {
 
   const close = () => {
     setOpen(false);
+    setClientType("one_time");
     setCompanyName("");
     setContactEmail("");
     setContactName("");
@@ -46,6 +49,7 @@ export default function ClientFormModal() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          client_type: clientType,
           company_name: companyName.trim(),
           contact_email: contactEmail.trim(),
           contact_name: contactName.trim() || undefined,
@@ -92,6 +96,19 @@ export default function ClientFormModal() {
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <ChoiceField
+              label="Client type"
+              value={clientType}
+              onChange={(v) => setClientType(v as ClientType)}
+              options={CLIENT_TYPES.map((t) => ({ value: t, label: CLIENT_TYPE_LABELS[t] }))}
+              hint={
+                clientType === "monthly"
+                  ? "Pays a recurring monthly fee (retainer). Add the monthly project to start billing."
+                  : "Pays per project. Invoice them as work is delivered."
+              }
+            />
+          </div>
           <TextField
             id="client-company"
             label="Company name"

@@ -2,7 +2,7 @@ import { Banknote, Percent, Receipt, TrendingUp } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { getExchangeRates } from "@/lib/admin/exchange-rates";
 import { formatMoney, type Currency } from "@/lib/invoices";
-import { EXPENSE_CATEGORIES } from "@/lib/expenses";
+import { getOptions } from "@/lib/admin/options";
 import type { Client } from "@/lib/clients";
 import type { Project } from "@/lib/projects";
 import {
@@ -47,7 +47,7 @@ export default async function AdminFinancePage({
   const query = await searchParams;
   const { from, to, preset } = resolveRange(query);
   const basis: RevenueBasis = query.basis === "accrual" ? "accrual" : "cash";
-  const category = query.category && EXPENSE_CATEGORIES.includes(query.category as never) ? query.category : "";
+  const category = query.category?.trim().slice(0, 80) ?? "";
   const clientFilter = query.client ?? "";
 
   const comparison = previousRange(from, to);
@@ -169,7 +169,7 @@ export default async function AdminFinancePage({
         basis={basis}
         category={category}
         clientId={clientFilter}
-        categories={[...EXPENSE_CATEGORIES]}
+        categories={(await getOptions("expense_categories")).map((o) => o.value)}
         clients={clients.map((c) => ({ id: c.id, name: c.company_name }))}
       />
 

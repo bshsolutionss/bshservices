@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, PieChart, Receipt, Wallet } from "lucide-react";
+import { Repeat, PieChart, Receipt, Wallet } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Expense } from "@/lib/expenses";
 import { formatMoney } from "@/lib/invoices";
@@ -9,12 +9,13 @@ import { currentMonthKey, monthKeyOf, monthLabel, percentChange, shiftMonth } fr
 import { PageHeader, StatCard } from "@/components/admin/ui";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
 import ExpensesTable from "@/components/admin/expenses/ExpensesTable";
+import RecurringSyncButton from "@/components/admin/RecurringSyncButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminExpensesPage() {
   const supabase = createServiceRoleClient();
-  const [{ data }, rates, { data: employeesData }] = await Promise.all([
+  const [{ data }, rates, { data: employeesData }, { data: projectsData }] = await Promise.all([
     supabase.from("expenses").select("*").order("expense_date", { ascending: false }).limit(500),
     getExchangeRates(),
     // Active employees only — someone no longer with the company shouldn't
@@ -22,7 +23,9 @@ export default async function AdminExpensesPage() {
     // existing expense already tagged with their name still shows fine,
     // see VendorOrEmployeeField's fallback-option handling).
     supabase.from("employees").select("id, name").eq("status", "active").order("name"),
+    supabase.from("projects").select("id, name").eq("archived", false).order("name"),
   ]);
+  const projects = (projectsData ?? []) as { id: string; name: string }[];
 
   const expenses = (data ?? []) as Expense[];
   const employees = (employeesData ?? []) as { id: string; name: string }[];
@@ -47,6 +50,12 @@ export default async function AdminExpensesPage() {
   }
   const topCategory = [...byCategory.entries()].sort((a, b) => b[1] - a[1])[0];
 
+  // Fixed monthly cost = the active monthly templates (one row each, however many months were generated).
+  const monthlyTemplates = expenses.filter(
+    (e) => e.expense_type === "monthly" && !e.recurring_parent_id && e.recurring_active
+  );
+  const monthlyCommitment = monthlyTemplates.reduce((total, e) => total + inPKR(e), 0);
+
   const change = percentChange(thisMonthTotal, lastMonthTotal);
 
   return (
@@ -61,7 +70,12 @@ export default async function AdminExpensesPage() {
             </Link>
           </>
         }
-        actions={<ExpenseFormModal employees={employees} />}
+        actions={
+          <>
+            <RecurringSyncButton />
+            <ExpenseFormModal employees={employees} projects={projects} />
+          </>
+        }
       />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -84,11 +98,11 @@ export default async function AdminExpensesPage() {
           description="Spent this month"
         />
         <StatCard
-          label={monthLabel(lastMonth, { withYear: true })}
-          value={formatMoney(lastMonthTotal, "PKR")}
-          icon={CalendarDays}
+          label="Monthly commitments"
+          value={formatMoney(monthlyCommitment, "PKR")}
+          icon={Repeat}
           iconBg="#7c3aed"
-          description="Previous month"
+          description={`${monthlyTemplates.length} recurring cost${monthlyTemplates.length === 1 ? "" : "s"} · last month ${formatMoney(lastMonthTotal, "PKR")}`}
         />
         <StatCard
           label={`${thisYear} total`}
@@ -106,7 +120,7 @@ export default async function AdminExpensesPage() {
         />
       </div>
 
-      <ExpensesTable expenses={expenses} employees={employees} />
+      <ExpensesTable expenses={expenses} employees={employees} projects={projects} />
     </div>
   );
 }

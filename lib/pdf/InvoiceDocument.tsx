@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/render
 import type { Invoice, InvoiceItem, Payment, PaymentMethod } from "@/lib/invoices";
 import { INVOICE_STATUS_LABELS, PAYMENT_METHOD_LABELS, formatMoney } from "@/lib/invoices";
 import type { Client } from "@/lib/clients";
+import type { CompanySettings } from "@/lib/admin/company-settings";
 
 const BRAND_BLUE = "#1A14A5";
 const BRAND_DARK = "#231F20";
@@ -127,6 +128,11 @@ interface InvoiceDocumentProps {
   balance: number;
   /** Buffer of the BSH logo PNG, read from public/ at request time — see the PDF route. */
   logoBuffer: Buffer;
+  /** Bank / wallet details from Settings > Invoices, so the client knows where to pay. */
+  paymentDetails?: string;
+  /** Per-invoice terms, or the default terms from settings. */
+  terms?: string;
+  company?: CompanySettings;
 }
 
 export function InvoiceDocument({
@@ -137,6 +143,9 @@ export function InvoiceDocument({
   paid,
   balance,
   logoBuffer,
+  paymentDetails,
+  terms,
+  company,
 }: InvoiceDocumentProps) {
   const statusColors = STATUS_COLORS[invoice.status] ?? STATUS_COLORS.draft;
   const taxLabel = Number(invoice.tax_rate) > 0 ? `Tax (${Number(invoice.tax_rate)}%)` : "Tax";
@@ -149,14 +158,17 @@ export function InvoiceDocument({
             {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image is a PDF
                 drawing primitive, not an HTML <img>; it has no alt prop in its API. */}
             <Image src={{ data: logoBuffer, format: "png" }} style={styles.logo} />
-            <Text style={styles.brandName}>BSH Solutions</Text>
-            <Text style={styles.brandTagline}>Business Smart Hub · bshsolutions.net</Text>
+            <Text style={styles.brandName}>{company?.name ?? "BSH Solutions"}</Text>
+            <Text style={styles.brandTagline}>
+              {[company?.tagline ?? "Business Smart Hub", company?.website ?? "bshsolutions.net"].filter(Boolean).join(" · ")}
+            </Text>
           </View>
           <View>
             <Text style={styles.invoiceTitle}>INVOICE</Text>
             <Text style={styles.invoiceMeta}>{invoice.invoice_number}</Text>
             <Text style={styles.invoiceMeta}>Issued {formatDate(invoice.issue_date ?? invoice.created_at)}</Text>
             <Text style={styles.invoiceMeta}>Due {formatDate(invoice.due_date)}</Text>
+            {invoice.po_number ? <Text style={styles.invoiceMeta}>PO {invoice.po_number}</Text> : null}
             <Text style={[styles.statusBadge, { backgroundColor: statusColors.bg, color: statusColors.text }]}>
               {INVOICE_STATUS_LABELS[invoice.status]}
             </Text>
@@ -166,10 +178,16 @@ export function InvoiceDocument({
         <View style={styles.partiesRow}>
           <View style={styles.partyBlock}>
             <Text style={styles.partyLabel}>From</Text>
-            <Text style={styles.partyName}>BSH Solutions</Text>
-            <Text style={styles.partyLine}>Karachi, Pakistan</Text>
-            <Text style={styles.partyLine}>info@bshsolutions.net</Text>
-            <Text style={styles.partyLine}>+92 312 8994968</Text>
+            <Text style={styles.partyName}>{company?.name ?? "BSH Solutions"}</Text>
+            {(company ? company.address : "Karachi, Pakistan") ? (
+              <Text style={styles.partyLine}>{company ? company.address : "Karachi, Pakistan"}</Text>
+            ) : null}
+            {(company ? company.email : "info@bshsolutions.net") ? (
+              <Text style={styles.partyLine}>{company ? company.email : "info@bshsolutions.net"}</Text>
+            ) : null}
+            {(company ? company.phone : "+92 312 8994968") ? (
+              <Text style={styles.partyLine}>{company ? company.phone : "+92 312 8994968"}</Text>
+            ) : null}
           </View>
           <View style={styles.partyBlock}>
             <Text style={styles.partyLabel}>Bill To</Text>
@@ -239,7 +257,7 @@ export function InvoiceDocument({
               <View key={payment.id} style={styles.tableRow}>
                 <Text style={styles.colDate}>{formatDate(payment.paid_on)}</Text>
                 <Text style={styles.colMethod}>
-                  {payment.method ? PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] : "—"}
+                  {payment.method ? (PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] ?? payment.method) : "—"}
                 </Text>
                 <Text style={styles.colRef}>{payment.reference || "—"}</Text>
                 <Text style={styles.colAmount}>{formatMoney(payment.amount, invoice.currency)}</Text>
@@ -255,10 +273,26 @@ export function InvoiceDocument({
           </View>
         )}
 
+        {paymentDetails ? (
+          <View wrap={false}>
+            <Text style={styles.sectionTitle}>How to pay</Text>
+            <Text style={styles.notes}>{paymentDetails}</Text>
+          </View>
+        ) : null}
+
+        {terms ? (
+          <View wrap={false}>
+            <Text style={styles.sectionTitle}>Terms</Text>
+            <Text style={styles.notes}>{terms}</Text>
+          </View>
+        ) : null}
+
         <View style={styles.footer} fixed>
-          <Text style={styles.footerBrand}>BSH Solutions</Text>
+          <Text style={styles.footerBrand}>{company?.name ?? "BSH Solutions"}</Text>
           <Text style={styles.footerText}>Thank you for your business.</Text>
-          <Text style={styles.footerText}>bshsolutions.net · info@bshsolutions.net</Text>
+          <Text style={styles.footerText}>
+            {[company?.website ?? "bshsolutions.net", company?.email ?? "info@bshsolutions.net"].filter(Boolean).join(" · ")}
+          </Text>
         </View>
       </Page>
     </Document>

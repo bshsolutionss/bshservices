@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
     .select("*")
     .eq("follow_up_completed", false)
     .in("status", ["new", "contacted"])
+    .not("email", "is", null)
     .lte("next_follow_up_at", new Date().toISOString())
     .limit(100);
 

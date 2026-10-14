@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { Client } from "@/lib/clients";
+import { Badge } from "@/components/admin/ui";
+import { CLIENT_TYPE_COLORS, CLIENT_TYPE_LABELS, type Client } from "@/lib/clients";
 import AdminDataTable from "@/components/admin/DataTable/AdminDataTable";
 import type { DataTableColumn } from "@/components/admin/DataTable/types";
 
@@ -18,6 +19,17 @@ const columns: DataTableColumn<Client>[] = [
       <Link href={`/admin/clients/${row.id}`} className="font-medium text-[#1A14A5] hover:underline">
         {row.company_name}
       </Link>
+    ),
+  },
+  {
+    key: "type",
+    label: "Type",
+    value: (row) => CLIENT_TYPE_LABELS[row.client_type] ?? CLIENT_TYPE_LABELS.one_time,
+    render: (row) => (
+      <Badge
+        label={CLIENT_TYPE_LABELS[row.client_type] ?? CLIENT_TYPE_LABELS.one_time}
+        colors={CLIENT_TYPE_COLORS[row.client_type] ?? CLIENT_TYPE_COLORS.one_time}
+      />
     ),
   },
   {

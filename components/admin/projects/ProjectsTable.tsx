@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { PROJECT_STAGE_LABELS, PROJECT_STAGE_COLORS, type Project, type ProjectStage } from "@/lib/projects";
+import {
+  PROJECT_BILLING_COLORS,
+  PROJECT_BILLING_LABELS,
+  PROJECT_STAGE_LABELS,
+  PROJECT_STAGE_COLORS,
+  type Project,
+  type ProjectStage,
+} from "@/lib/projects";
+import { Badge } from "@/components/admin/ui";
 import { formatMoney } from "@/lib/invoices";
 import AdminDataTable from "@/components/admin/DataTable/AdminDataTable";
 import type { DataTableColumn } from "@/components/admin/DataTable/types";
@@ -25,6 +33,22 @@ const columns: DataTableColumn<ProjectListItem>[] = [
     value: (row) => row.clientName,
   },
   {
+    key: "billing",
+    label: "Billing",
+    value: (row) => PROJECT_BILLING_LABELS[row.billing_type] ?? PROJECT_BILLING_LABELS.one_time,
+    render: (row) => (
+      <span className="inline-flex items-center gap-1.5">
+        <Badge
+          label={PROJECT_BILLING_LABELS[row.billing_type] ?? PROJECT_BILLING_LABELS.one_time}
+          colors={PROJECT_BILLING_COLORS[row.billing_type] ?? PROJECT_BILLING_COLORS.one_time}
+        />
+        {row.billing_type === "monthly" && !row.recurring_active && (
+          <span className="text-xs text-[#231F20]/45">paused</span>
+        )}
+      </span>
+    ),
+  },
+  {
     key: "service",
     label: "Service",
     value: (row) => row.service_category || "",
@@ -33,8 +57,15 @@ const columns: DataTableColumn<ProjectListItem>[] = [
   {
     key: "amount",
     label: "Amount",
-    value: (row) => row.budget ?? 0,
-    render: (row) => (row.budget !== null ? formatMoney(Number(row.budget), row.currency) : "—"),
+    value: (row) => (row.billing_type === "monthly" ? row.monthly_fee : row.budget) ?? 0,
+    render: (row) =>
+      row.billing_type === "monthly"
+        ? row.monthly_fee !== null
+          ? `${formatMoney(Number(row.monthly_fee), row.currency)} / mo`
+          : "—"
+        : row.budget !== null
+          ? formatMoney(Number(row.budget), row.currency)
+          : "—",
     className: "whitespace-nowrap",
   },
   {

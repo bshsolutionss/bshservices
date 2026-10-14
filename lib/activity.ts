@@ -18,7 +18,10 @@ export type ActivityType =
   | "payment_deleted"
   | "invoice_sent"
   | "invoice_items_updated"
-  | "project_updated";
+  | "project_updated"
+  | "lead_created"
+  | "invoice_emailed"
+  | "recurring_invoice";
 
 export interface Activity {
   id: string;

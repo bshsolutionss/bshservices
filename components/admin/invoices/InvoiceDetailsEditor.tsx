@@ -20,6 +20,8 @@ interface InvoiceDetailsEditorProps {
   issueDate: string;
   dueDate: string | null;
   notes: string | null;
+  poNumber: string | null;
+  terms: string | null;
   projectId: string | null;
   /** The client's projects, so an invoice can be (re)linked to one. */
   projects: { id: string; name: string }[];
@@ -42,6 +44,8 @@ export default function InvoiceDetailsEditor({
   issueDate,
   dueDate,
   notes,
+  poNumber,
+  terms,
   projectId,
   projects,
   itemised,
@@ -57,6 +61,8 @@ export default function InvoiceDetailsEditor({
   const [due, setDue] = useState(dueDate ?? "");
   const [project, setProject] = useState(projectId ?? "");
   const [notesValue, setNotesValue] = useState(notes ?? "");
+  const [poValue, setPoValue] = useState(poNumber ?? "");
+  const [termsValue, setTermsValue] = useState(terms ?? "");
   const [amountValue, setAmountValue] = useState(String(amount));
   const [taxValue, setTaxValue] = useState(String(tax));
 
@@ -69,6 +75,8 @@ export default function InvoiceDetailsEditor({
     setDue(dueDate ?? "");
     setProject(projectId ?? "");
     setNotesValue(notes ?? "");
+    setPoValue(poNumber ?? "");
+    setTermsValue(terms ?? "");
     setAmountValue(String(amount));
     setTaxValue(String(tax));
     setError(null);
@@ -97,6 +105,8 @@ export default function InvoiceDetailsEditor({
           due_date: due || null,
           project_id: project || null,
           notes: notesValue.trim() || null,
+          po_number: poValue.trim() || null,
+          terms: termsValue.trim() || null,
           // Only sent for a non-itemised invoice; otherwise the DB derives
           // the subtotal from the line items and this would fight it.
           ...(itemised ? {} : { amount: Number(amountValue), tax: Number(taxValue) || 0 }),
@@ -123,12 +133,19 @@ export default function InvoiceDetailsEditor({
           <Row label="Due date" value={formatDate(dueDate)} />
           <Row label="Currency" value={currency} />
           <Row label="Project" value={linkedProject?.name ?? "Not linked"} />
+          {poNumber && <Row label="PO number" value={poNumber} />}
           {!itemised && <Row label="Amount" value={formatMoney(amount, currency)} />}
         </dl>
         {notes && (
           <div className="rounded-xl bg-[#F4F7FE] px-3.5 py-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-[#231F20]/50">Notes</p>
             <p className="mt-1 whitespace-pre-wrap text-sm text-[#231F20]/75">{notes}</p>
+          </div>
+        )}
+        {terms && (
+          <div className="rounded-xl bg-[#F4F7FE] px-3.5 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#231F20]/50">Terms</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-[#231F20]/75">{terms}</p>
           </div>
         )}
         <button type="button" onClick={() => setEditing(true)} className={btnSecondary}>
@@ -184,6 +201,13 @@ export default function InvoiceDetailsEditor({
         </>
       )}
 
+      <TextField
+        id="invoice-detail-po"
+        label="PO / reference number"
+        value={poValue}
+        onChange={setPoValue}
+        hint="The client's purchase order or reference, printed on the PDF."
+      />
       <TextareaField
         id="invoice-detail-notes"
         label="Notes"
@@ -191,6 +215,14 @@ export default function InvoiceDetailsEditor({
         onChange={setNotesValue}
         rows={3}
         placeholder="Appears on the PDF."
+      />
+      <TextareaField
+        id="invoice-detail-terms"
+        label="Terms (this invoice only)"
+        value={termsValue}
+        onChange={setTermsValue}
+        rows={3}
+        placeholder="Leave empty to use the default terms from Settings."
       />
 
       {error && <Alert tone="error">{error}</Alert>}

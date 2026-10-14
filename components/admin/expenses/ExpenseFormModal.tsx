@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Alert,
+  ChoiceField,
   Modal,
   MoneyField,
   SelectField,
@@ -15,11 +16,20 @@ import {
   btnPrimary,
 } from "@/components/admin/ui";
 import VendorOrEmployeeField from "@/components/admin/VendorOrEmployeeField";
-import { EXPENSE_CATEGORIES, type Expense, type ExpenseCategory } from "@/lib/expenses";
+import {
+  EXPENSE_TYPES,
+  EXPENSE_TYPE_LABELS,
+  type Expense,
+  type ExpenseCategory,
+  type ExpenseType,
+} from "@/lib/expenses";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
+import { useOptions } from "@/lib/admin/use-options";
 
 interface ExpenseFormModalProps {
   employees: { id: string; name: string }[];
+  /** Projects a cost can be attributed to (optional on every expense). */
+  projects?: { id: string; name: string }[];
   /** Omit to create; pass an expense to edit it. */
   expense?: Expense;
   /** Trigger appearance — the list toolbar wants a solid button, a row wants a text link. */
@@ -36,6 +46,7 @@ interface ExpenseFormModalProps {
  */
 export default function ExpenseFormModal({
   employees,
+  projects = [],
   expense,
   trigger = "solid",
   label,
@@ -44,6 +55,10 @@ export default function ExpenseFormModal({
   const editing = !!expense;
 
   const [open, setOpen] = useState(false);
+  const categoryList = useOptions("expense_categories");
+  const [expenseType, setExpenseType] = useState<ExpenseType>(expense?.expense_type ?? "one_time");
+  const [projectId, setProjectId] = useState(expense?.project_id ?? "");
+  const [keepRepeating, setKeepRepeating] = useState(expense?.recurring_active ?? true);
   const [category, setCategory] = useState<ExpenseCategory>(expense?.category ?? "Office");
   const [amount, setAmount] = useState(expense ? String(expense.amount) : "");
   // PKR is the business's standard currency — still freely changeable per expense.
@@ -54,10 +69,17 @@ export default function ExpenseFormModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isGenerated = !!expense?.recurring_parent_id;
+  /** The original monthly row - the one future months are generated from. */
+  const isTemplate = editing && expense!.expense_type === "monthly" && !isGenerated;
+
   const close = () => {
     setOpen(false);
     setError(null);
     if (!editing) {
+      setExpenseType("one_time");
+      setProjectId("");
+      setKeepRepeating(true);
       setCategory("Office");
       setAmount("");
       setCurrency("PKR");
@@ -90,6 +112,9 @@ export default function ExpenseFormModal({
           expense_date: expenseDate,
           vendor: vendor.trim() || null,
           description: description.trim() || null,
+          expense_type: expenseType,
+          project_id: projectId || null,
+          ...(editing && isTemplate ? { recurring_active: keepRepeating } : {}),
         }),
       });
       const body = await res.json().catch(() => ({}));
@@ -141,9 +166,24 @@ export default function ExpenseFormModal({
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          {!isGenerated && (
+            <div className="sm:col-span-2">
+              <ChoiceField
+                label="Type"
+                value={expenseType}
+                onChange={(v) => setExpenseType(v as ExpenseType)}
+                options={EXPENSE_TYPES.map((t) => ({ value: t, label: EXPENSE_TYPE_LABELS[t] }))}
+                hint={
+                  expenseType === "monthly"
+                    ? "Repeats every month on the same day - the following months are booked automatically."
+                    : "A single payment."
+                }
+              />
+            </div>
+          )}
           <TextField
             id="expense-date"
-            label="Date spent"
+            label={expenseType === "monthly" ? "First payment date" : "Date spent"}
             type="date"
             required
             value={expenseDate}
@@ -155,7 +195,11 @@ export default function ExpenseFormModal({
             required
             value={category}
             onChange={(v) => setCategory(v as ExpenseCategory)}
-            options={EXPENSE_CATEGORIES.map((c) => ({ value: c, label: c }))}
+            options={
+              categoryList.options.some((o) => o.value === category)
+                ? categoryList.selectOptions
+                : [{ value: category, label: category }, ...categoryList.selectOptions]
+            }
           />
           <MoneyField
             id="expense-amount"
@@ -168,6 +212,28 @@ export default function ExpenseFormModal({
             currencies={CURRENCIES}
           />
           <VendorOrEmployeeField category={category} value={vendor} onChange={setVendor} employees={employees} />
+          {projects.length > 0 && (
+            <SelectField
+              id="expense-project"
+              label="Project"
+              value={projectId}
+              onChange={setProjectId}
+              options={projects.map((p) => ({ value: p.id, label: p.name }))}
+              placeholder="Not tied to a project"
+              hint="Optional - for project profitability."
+            />
+          )}
+          {isTemplate && (
+            <label className="flex items-center gap-2 self-end pb-2 text-sm text-[#231F20]/70">
+              <input
+                type="checkbox"
+                checked={keepRepeating}
+                onChange={(e) => setKeepRepeating(e.target.checked)}
+                className="h-4 w-4 accent-[#1A14A5]"
+              />
+              Keep repeating every month
+            </label>
+          )}
           <TextareaField
             id="expense-description"
             label="Description"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Send } from "lucide-react";
-import { btnPrimary } from "@/components/admin/ui";
+import { btnSecondary } from "@/components/admin/ui";
 
 /** Moves a draft invoice to "sent" — the point from which payments can be recorded against it. */
 export default function MarkSentButton({ invoiceId }: { invoiceId: string }) {
@@ -32,7 +32,7 @@ export default function MarkSentButton({ invoiceId }: { invoiceId: string }) {
 
   return (
     <span className="inline-flex flex-col items-start gap-1">
-      <button type="button" onClick={handleClick} disabled={saving} className={btnPrimary}>
+      <button type="button" onClick={handleClick} disabled={saving} className={btnSecondary}>
         <Send className="h-4 w-4" />
         {saving ? "Marking…" : "Mark as sent"}
       </button>

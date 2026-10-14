@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { CLIENT_TYPES, type ClientType } from "@/lib/clients";
 
 interface CreatePayload {
   company_name: string;
@@ -9,6 +10,7 @@ interface CreatePayload {
   contact_phone?: string;
   industry?: string;
   account_manager?: string;
+  client_type?: ClientType;
 }
 
 export async function POST(request: NextRequest) {
@@ -29,10 +31,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (payload.client_type && !CLIENT_TYPES.includes(payload.client_type)) {
+    return NextResponse.json({ ok: false, error: "Invalid client type." }, { status: 400 });
+  }
+
   const service = createServiceRoleClient();
   const { data, error } = await service
     .from("clients")
     .insert({
+      client_type: payload.client_type || "one_time",
       company_name: payload.company_name.trim(),
       contact_email: payload.contact_email.trim(),
       contact_name: payload.contact_name?.trim() || null,
