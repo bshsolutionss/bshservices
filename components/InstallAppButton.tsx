@@ -87,7 +87,7 @@ export default function InstallAppButton({ variant = "floating", className }: In
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-white rounded-2xl shadow-lg border border-[#1A14A5]/10 pl-4 pr-2 py-2.5 max-w-[calc(100vw-2rem)]">
+    <div className="fixed bottom-20 right-4 z-50 flex items-center gap-2 bg-white rounded-2xl shadow-lg border border-[#1A14A5]/10 pl-4 pr-2 py-2.5 max-w-[calc(100vw-2rem)]">
       <span className="text-sm font-medium text-[#231F20] whitespace-nowrap">Install BSH Solutions app</span>
       <button
         type="button"

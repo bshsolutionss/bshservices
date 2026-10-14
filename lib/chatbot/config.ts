@@ -30,6 +30,29 @@ export const CHATBOT_THINKING_LEVEL = process.env.CHATBOT_THINKING_LEVEL || "min
 export const MAX_HISTORY_TURNS = 12;
 export const MAX_MESSAGE_CHARS = 1000;
 
+/**
+ * Rate limiting, in three layers, because they defend different things:
+ *
+ *   BURST / SUSTAINED — per IP, in-memory (lib/rate-limit.ts). Stops one
+ *     visitor or script monopolising the bot. Per warm instance only.
+ *   DAILY_MODEL_CALL_BUDGET — per day, in Postgres (lib/chatbot/budget.ts).
+ *     The one that actually protects the free-tier daily quota, because it is
+ *     shared across every serverless instance.
+ *   LEADS — per IP per hour, so a conversation can't be used to spam the
+ *     leads table (and the team's inbox).
+ *
+ * The daily default leaves headroom under the free tier's requests-per-day
+ * allowance; check your real number at
+ * https://aistudio.google.com/rate-limit and set CHATBOT_DAILY_MODEL_CALLS.
+ */
+export const CHAT_BURST_LIMIT = 6;
+export const CHAT_BURST_WINDOW_MS = 60 * 1000;
+export const CHAT_SUSTAINED_LIMIT = 40;
+export const CHAT_SUSTAINED_WINDOW_MS = 60 * 60 * 1000;
+export const CHAT_LEAD_LIMIT = 3;
+export const CHAT_LEAD_WINDOW_MS = 60 * 60 * 1000;
+export const DAILY_MODEL_CALL_BUDGET = Number(process.env.CHATBOT_DAILY_MODEL_CALLS) || 800;
+
 export const BUSINESS_FACTS = {
   name: "BSH Solutions",
   longName: "Business Smart Hub (BSH Solutions)",
@@ -63,4 +86,4 @@ export const STARTER_PROMPTS = [
 ] as const;
 
 export const GREETING =
-  "Hi! I'm BSH Solutions' assistant. Ask me about our services, pricing, or how we work — and I can set up a free consultation for you.";
+  "Hi there! Ask me anything about our services, pricing or packages — or I can set up a free consultation with the team.";

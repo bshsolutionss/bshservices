@@ -1,22 +1,23 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { GREETING, STARTER_PROMPTS } from "@/lib/chatbot/config";
 
 /**
- * Floating AI assistant, mounted site-wide by components/SiteChrome.tsx.
+ * Floating chat widget, mounted site-wide by components/SiteChrome.tsx.
  *
  * Answers come from /api/chat, which grounds the model on the site's own
  * services, pricing and FAQ content — so this widget holds no copy of that
  * information and never needs updating when a price changes.
  *
- * Placed bottom-right but raised a row so it clears InstallAppButton's
- * floating pill (bottom-right) and WhatsAppButton (bottom-left).
+ * Placed bottom-right at bottom-4 to mirror WhatsAppButton (bottom-left)
+ * on the exact same horizontal line.
  */
 
 /** Mirrors lib/chatbot/knowledge.ts's Region — declared locally so this
@@ -26,6 +27,40 @@ type Region = "GLOBAL" | "PK";
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+}
+
+/**
+ * The company mark, used everywhere the widget needs a face: the launcher,
+ * the header, and beside each assistant reply. Deliberately the real logo
+ * rather than a generic robot/sparkle glyph — a visitor should feel they are
+ * talking to this company, not to "an AI". The PNG has a transparent
+ * background, so it sits on the white disc without a plate behind it.
+ */
+function BshMark({ size = 28, className = "" }: { size?: number; className?: string }) {
+  return (
+    <Image
+      src="/images/noghlogo.png"
+      alt=""
+      aria-hidden="true"
+      width={size}
+      height={size}
+      className={`object-contain ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
+/** White disc + mark. The logo's own colours are navy and blue, so it needs a
+ *  light surface to stay legible on the brand-blue header. */
+function BshAvatar({ size = 36, markSize = 22 }: { size?: number; markSize?: number }) {
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-[#1A14A5]/10"
+      style={{ width: size, height: size }}
+    >
+      <BshMark size={markSize} />
+    </span>
+  );
 }
 
 interface ChatApiResponse {
@@ -225,7 +260,9 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ====== Launcher ====== */}
+      {/* ====== Launcher ======
+          Floating button at bottom-4 right-4, mirroring WhatsAppButton (bottom-4 left-4)
+          on the exact same horizontal line. */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
@@ -237,13 +274,10 @@ export default function ChatWidget() {
               setIsOpen(true);
               trackEvent("chatbot_open", { page: pathname || "/" });
             }}
-            aria-label="Open the BSH Solutions assistant"
-            className="fixed bottom-[5.5rem] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#1A14A5] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+            aria-label="Chat with BSH Solutions"
+            className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#1A14A5] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
             <MessageCircle className="h-7 w-7" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#F4F7FE] text-[#1A14A5] ring-2 ring-[#1A14A5]">
-              <Sparkles className="h-3 w-3" />
-            </span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -264,12 +298,13 @@ export default function ChatWidget() {
             {/* Header */}
             <div className="flex items-center justify-between gap-3 bg-[#1A14A5] px-5 py-4 text-white">
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
-                  <Sparkles className="h-5 w-5" />
-                </span>
+                <BshAvatar size={38} markSize={23} />
                 <div>
-                  <p className="text-sm font-bold leading-tight">BSH Assistant</p>
-                  <p className="text-xs text-white/70">Services, pricing & bookings</p>
+                  <p className="text-sm font-bold leading-tight">BSH Solutions</p>
+                  <p className="flex items-center gap-1.5 text-xs text-white/75">
+                    <span className="h-2 w-2 rounded-full bg-[#25D366]" />
+                    Online — usually replies instantly
+                  </p>
                 </div>
               </div>
               <button
@@ -289,37 +324,54 @@ export default function ChatWidget() {
               aria-label="Conversation"
               className="flex-1 space-y-3 overflow-y-auto bg-[#F4F7FE] px-4 py-4"
             >
-              <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-[#231F20] shadow-sm">
-                {GREETING}
+              {/* Opening message. Shown with the mark like any other reply, so
+                  the conversation reads as coming from the company. */}
+              <div className="flex items-end gap-2">
+                <BshAvatar size={28} markSize={17} />
+                <div className="max-w-[80%] rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-[#231F20] shadow-sm">
+                  {GREETING}
+                </div>
               </div>
 
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={
-                    message.role === "user"
-                      ? "ml-auto max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-[#1A14A5] px-4 py-3 text-sm leading-relaxed text-white shadow-sm"
-                      : "max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-[#231F20] shadow-sm"
-                  }
-                >
-                  {message.role === "assistant" ? (
-                    <MessageText text={message.content} />
-                  ) : (
-                    message.content
-                  )}
-                </div>
-              ))}
+              {messages.map((message, index) => {
+                if (message.role === "user") {
+                  return (
+                    <div
+                      key={index}
+                      className="ml-auto max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-[#1A14A5] px-4 py-3 text-sm leading-relaxed text-white shadow-sm"
+                    >
+                      {message.content}
+                    </div>
+                  );
+                }
+
+                // The mark only appears on the first reply of a run, the way a
+                // real chat thread groups consecutive messages from one person.
+                const startsRun = messages[index - 1]?.role !== "assistant";
+
+                return (
+                  <div key={index} className="flex items-end gap-2">
+                    {startsRun ? <BshAvatar size={28} markSize={17} /> : <span className="w-7 shrink-0" />}
+                    <div className="max-w-[80%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-[#231F20] shadow-sm">
+                      <MessageText text={message.content} />
+                    </div>
+                  </div>
+                );
+              })}
 
               {isSending && (
-                <div className="flex max-w-[85%] items-center gap-1.5 rounded-2xl rounded-bl-md bg-white px-4 py-4 shadow-sm">
-                  {[0, 150, 300].map((delay) => (
-                    <span
-                      key={delay}
-                      className="h-2 w-2 animate-bounce rounded-full bg-[#1A14A5]/40"
-                      style={{ animationDelay: `${delay}ms` }}
-                    />
-                  ))}
-                  <span className="sr-only">The assistant is typing…</span>
+                <div className="flex items-end gap-2">
+                  <BshAvatar size={28} markSize={17} />
+                  <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md bg-white px-4 py-4 shadow-sm">
+                    {[0, 150, 300].map((delay) => (
+                      <span
+                        key={delay}
+                        className="h-2 w-2 animate-bounce rounded-full bg-[#1A14A5]/40"
+                        style={{ animationDelay: `${delay}ms` }}
+                      />
+                    ))}
+                    <span className="sr-only">Typing…</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -352,7 +404,7 @@ export default function ChatWidget() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1000}
-                placeholder="Ask about services or pricing…"
+                placeholder="Type your message…"
                 aria-label="Your message"
                 className="min-w-0 flex-1 rounded-2xl border border-[#1A14A5]/15 bg-[#F4F7FE] px-4 py-2.5 text-sm text-[#231F20] outline-none transition-colors placeholder:text-[#231F20]/40 focus:border-[#1A14A5]"
               />
@@ -367,7 +419,7 @@ export default function ChatWidget() {
             </form>
 
             <p className="bg-white px-4 pb-3 text-center text-[11px] leading-snug text-[#231F20]/45">
-              AI assistant — details are confirmed by our team.
+              Automated assistant — our team confirms every detail.
             </p>
           </motion.div>
         )}
