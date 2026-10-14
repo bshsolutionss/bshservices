@@ -1,27 +1,5 @@
 import { safeJsonLd } from "@/lib/json-ld";
-
-const faqs = [
-  {
-    question: "What is Business Smart Hub (BSH)?",
-    answer:
-      "BSH is your one-stop technology partner providing design, marketing, software, AI, and hardware solutions to help businesses grow and thrive in the digital era.",
-  },
-  {
-    question: "Who can benefit from BSH services?",
-    answer:
-      "Our services are tailored for startups, small businesses, and enterprises who want to scale, innovate, and succeed with smart, future-ready solutions.",
-  },
-  {
-    question: "Do you provide customized solutions?",
-    answer:
-      "Yes! Every business has unique needs. We create tailored strategies, from branding and web design to AI-driven automation and hardware integration.",
-  },
-  {
-    question: "How can I get started?",
-    answer:
-      "Simply contact us through our form or email us at info@bshsolutions.net (or sales@bshsolutions.net for project proposals). Our team will schedule a free consultation to understand your needs and recommend the best solutions.",
-  },
-];
+import { SITE_FAQS } from "@/lib/faq-data";
 
 export default function Faq() {
   return (
@@ -32,7 +10,7 @@ export default function Faq() {
           __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
+            mainEntity: SITE_FAQS.map((faq) => ({
               "@type": "Question",
               name: faq.question,
               acceptedAnswer: { "@type": "Answer", text: faq.answer },
@@ -49,7 +27,7 @@ export default function Faq() {
       </div>
 
       <div className="mx-auto mt-12 max-w-3xl space-y-4">
-        {faqs.map((faq) => (
+        {SITE_FAQS.map((faq) => (
           <details key={faq.question} className="group rounded-lg border border-gray-200 bg-white shadow-sm">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-left font-medium text-gray-900">
               {faq.question}

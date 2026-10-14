@@ -14,7 +14,15 @@ export type LeadStatus =
 // No DB migration needed — `leads.source` is a plain `text` column with no
 // CHECK constraint (see supabase/migrations/0001_leads.sql), so a new
 // app-level value here is the only change required.
-export type LeadSource = "contact_form" | "service_form" | "consultation_booking" | "lead_magnet";
+// "chatbot" added for the site AI assistant (components/chatbot/ChatWidget.tsx
+// -> app/api/chat), which captures a lead mid-conversation once the visitor
+// hands over their name and email.
+export type LeadSource =
+  | "contact_form"
+  | "service_form"
+  | "consultation_booking"
+  | "lead_magnet"
+  | "chatbot";
 export type LeadPriority = "low" | "medium" | "high" | "urgent";
 export type LeadLostReason = "budget" | "timing" | "competitor" | "no_response" | "other";
 export type BookingStatus = "confirmed" | "cancelled";

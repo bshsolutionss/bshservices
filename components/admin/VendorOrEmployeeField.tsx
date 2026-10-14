@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { SelectField, TextField } from "@/components/admin/ui";
 import type { ExpenseCategory } from "@/lib/expenses";
 
 interface VendorOrEmployeeFieldProps {
@@ -16,8 +16,7 @@ interface VendorOrEmployeeFieldProps {
  * The "Vendor" field on an expense — except when the category is
  * "Salaries", where a vendor doesn't make sense and this becomes an
  * Employee dropdown instead (sourced from real employee records, not a
- * hardcoded list). Shared between NewExpenseInlineForm and ExpenseRow's
- * inline edit so both stay in sync.
+ * hardcoded list). Shared by the create and edit forms so both stay in sync.
  */
 export default function VendorOrEmployeeField({
   category,
@@ -28,10 +27,12 @@ export default function VendorOrEmployeeField({
 }: VendorOrEmployeeFieldProps) {
   if (category !== "Salaries") {
     return (
-      <Input
-        placeholder="Vendor (optional)"
+      <TextField
+        id="expense-vendor"
+        label="Vendor"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
+        placeholder="Who was paid?"
         className={className}
       />
     );
@@ -44,17 +45,15 @@ export default function VendorOrEmployeeField({
   const options = value && !names.includes(value) ? [value, ...names] : names;
 
   return (
-    <select
+    <SelectField
+      id="expense-employee"
+      label="Employee"
       value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={className ?? "rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white"}
-    >
-      <option value="">Select employee…</option>
-      {options.map((name) => (
-        <option key={name} value={name}>
-          {name}
-        </option>
-      ))}
-    </select>
+      onChange={onChange}
+      options={options.map((name) => ({ value: name, label: name }))}
+      placeholder="Select employee…"
+      className={className}
+      hint="Active employees. A past employee already on an expense stays selectable."
+    />
   );
 }

@@ -10,7 +10,8 @@ const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
 type NetworkInfo = { saveData?: boolean; effectiveType?: string };
 
 function canAfford3D(): boolean {
-  if (window.innerWidth < 768) return false;
+  // Mobile included: the hero keeps a `[data-hero-stage]` slot at every width
+  // (see heros.tsx), and HeroScene3D caps its pixel ratio on small screens.
   // Reduced motion still gets the scene: HeroScene3D draws it as a still frame
   // (no animation), so the hero is never empty. Only weak networks skip it.
   const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection;

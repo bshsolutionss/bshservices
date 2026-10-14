@@ -1,24 +1,46 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CheckSquare, Receipt } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Client } from "@/lib/clients";
-import type { Project, ProjectStage, ProjectServiceCategory } from "@/lib/projects";
+import {
+  PROJECT_STAGES,
+  PROJECT_STAGE_COLORS,
+  PROJECT_STAGE_LABELS,
+  type Project,
+  type ProjectServiceCategory,
+  type ProjectStage,
+} from "@/lib/projects";
 import type { Task } from "@/lib/tasks";
-import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS, formatMoney, type Invoice, type InvoiceStatus } from "@/lib/invoices";
+import {
+  INVOICE_STATUS_COLORS,
+  INVOICE_STATUS_LABELS,
+  formatDate,
+  formatMoney,
+  type Invoice,
+  type InvoiceBalance,
+  type InvoiceStatus,
+} from "@/lib/invoices";
+import { Badge, EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import ProjectEditControl from "@/components/admin/ProjectEditControl";
 import NewTaskInlineForm from "@/components/admin/NewTaskInlineForm";
 import TaskRow from "@/components/admin/TaskRow";
-import NewInvoiceInlineForm from "@/components/admin/NewInvoiceInlineForm";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
+import InvoiceCreateButton from "@/components/admin/invoices/InvoiceCreateButton";
+import ProjectStageFlow from "@/components/admin/projects/ProjectStageFlow";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  /** `?invoice=new` is the handoff from the create-project flow — it opens the invoice builder on arrival. */
+  searchParams: Promise<{ invoice?: string }>;
 }) {
   const { id } = await params;
+  const { invoice: invoiceParam } = await searchParams;
   const supabase = createServiceRoleClient();
 
   const { data: project } = await supabase.from("projects").select("*").eq("id", id).single<Project>();
@@ -35,50 +57,128 @@ export default async function AdminProjectDetailPage({
 
   const tasks = (tasksData ?? []) as Task[];
   const completedCount = tasks.filter((t) => t.status === "completed").length;
-  const invoices = (invoicesData ?? []) as Invoice[];
+  const invoiceRows = (invoicesData ?? []) as Invoice[];
   const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
+
+  // paid/balance/overdue come from the invoice_balances view — the single
+  // source of truth for that math — joined back onto the invoices above.
+  const { data: balanceRows } =
+    invoiceRows.length > 0
+      ? await supabase
+          .from("invoice_balances")
+          .select("*")
+          .in("invoice_id", invoiceRows.map((i) => i.id))
+      : { data: [] };
+
+  const balanceById = new Map(
+    ((balanceRows ?? []) as InvoiceBalance[]).map((b) => [b.invoice_id, b])
+  );
+  const invoices = invoiceRows.map((inv) => {
+    const balance = balanceById.get(inv.id);
+    return {
+      invoice_id: inv.id,
+      invoice_number: inv.invoice_number,
+      status: inv.status,
+      currency: inv.currency,
+      due_date: inv.due_date,
+      total: Number(inv.total),
+      paid: Number(balance?.paid ?? 0),
+      balance: Number(balance?.balance ?? inv.total),
+      is_overdue: balance?.is_overdue ?? false,
+    };
+  });
+
+  // Everything on this page is in the project's own currency — a project and
+  // its invoices are billed in one currency, so no conversion is needed.
+  const invoiced = invoices
+    .filter((i) => i.status !== "draft")
+    .reduce((sum, i) => sum + Number(i.total), 0);
+  const paid = invoices.reduce((sum, i) => sum + Number(i.paid), 0);
+  const outstanding = invoices
+    .filter((i) => i.status === "sent" || i.status === "partially_paid")
+    .reduce((sum, i) => sum + Number(i.balance), 0);
+  const budget = project.budget != null ? Number(project.budget) : null;
+  const unbilled = budget !== null ? Math.max(budget - invoiced, 0) : null;
+
+  const invoiceButton = client ? (
+    <InvoiceCreateButton
+      clients={[{ id: client.id, company_name: client.company_name }]}
+      projects={[
+        {
+          id: project.id,
+          name: project.name,
+          client_id: project.client_id,
+          budget: unbilled && unbilled > 0 ? unbilled : project.budget,
+          currency: project.currency,
+        },
+      ]}
+      defaultClientId={client.id}
+      defaultProjectId={project.id}
+      lockSelection
+      label="Create invoice"
+      autoOpen={invoiceParam === "new"}
+    />
+  ) : null;
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/admin/projects" className="text-sm text-[#1A14A5] hover:underline">
-          ← Back to Projects
-        </Link>
-        <div className="flex items-center gap-3 mt-2">
-          <h1 className="text-2xl font-extrabold text-[#231F20]">{project.name}</h1>
-          {project.archived && (
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-500">Archived</span>
-          )}
-        </div>
-        {client && (
-          <Link href={`/admin/clients/${client.id}`} className="text-sm text-[#1A14A5] hover:underline">
-            {client.company_name}
-          </Link>
-        )}
-        {project.service_category && (
-          <span className="ml-2 text-xs font-bold px-2.5 py-1 rounded-full bg-[#1A14A5]/10 text-[#1A14A5]">
-            {project.service_category}
+      <PageHeader
+        backHref="/admin/projects"
+        backLabel="Projects"
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            {project.name}
+            <Badge
+              label={PROJECT_STAGE_LABELS[project.stage as ProjectStage]}
+              colors={PROJECT_STAGE_COLORS[project.stage as ProjectStage]}
+            />
+            {project.archived && <Badge label="Archived" colors={{ bg: "#F1F1F1", text: "#6B7280" }} />}
           </span>
-        )}
-        {project.description && (
-          <p className="text-sm text-[#231F20]/70 mt-3 max-w-2xl whitespace-pre-wrap">{project.description}</p>
-        )}
-      </div>
+        }
+        subtitle={
+          <>
+            {client && (
+              <Link href={`/admin/clients/${client.id}`} className="font-medium text-[#1A14A5] hover:underline">
+                {client.company_name}
+              </Link>
+            )}
+            {project.service_category && <> · {project.service_category}</>}
+            {budget !== null && <> · Budget {formatMoney(budget, project.currency)}</>}
+            {project.due_date && <> · Due {formatDate(project.due_date)}</>}
+          </>
+        }
+        actions={invoiceButton}
+      />
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-[#231F20]">Tasks</h2>
-              <span className="text-xs text-[#231F20]/50">
-                {completedCount}/{tasks.length} completed
-              </span>
-            </div>
+      <ProjectStageFlow
+        stage={project.stage as ProjectStage}
+        stages={PROJECT_STAGES}
+        startDate={project.start_date}
+        dueDate={project.due_date}
+        taskCount={tasks.length}
+        completedTasks={completedCount}
+      />
 
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          {project.description && (
+            <SectionCard title="Scope">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#231F20]/75">{project.description}</p>
+            </SectionCard>
+          )}
+
+          <SectionCard
+            title="Tasks"
+            subtitle={`${completedCount} of ${tasks.length} completed`}
+            bodyClassName="px-5 pb-5 pt-4 sm:px-6"
+          >
             <NewTaskInlineForm projectId={project.id} employeeNames={employeeNames} />
-
             {tasks.length === 0 ? (
-              <p className="text-sm text-[#231F20]/50">No tasks yet.</p>
+              <EmptyState
+                icon={CheckSquare}
+                title="No tasks yet"
+                description="Break the work down so progress is visible to everyone."
+              />
             ) : (
               <ul className="divide-y divide-[#1A14A5]/5">
                 {tasks.map((task) => (
@@ -86,67 +186,120 @@ export default async function AdminProjectDetailPage({
                 ))}
               </ul>
             )}
-          </div>
+          </SectionCard>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-[#231F20]">Invoices</h2>
-              {client && (
-                <NewInvoiceInlineForm
-                  clients={[{ id: client.id, company_name: client.company_name }]}
-                  projects={[{ id: project.id, name: project.name, client_id: project.client_id }]}
-                  defaultClientId={client.id}
-                  defaultProjectId={project.id}
-                  defaultAmount={project.budget ?? undefined}
-                  defaultCurrency={project.currency}
-                  lockSelection
-                  triggerLabel="+ Create Invoice"
-                />
-              )}
-            </div>
+          <SectionCard
+            title="Invoices"
+            subtitle={
+              invoices.length > 0
+                ? `${formatMoney(invoiced, project.currency)} invoiced · ${formatMoney(paid, project.currency)} paid`
+                : "Nothing billed yet"
+            }
+            action={invoiceButton}
+          >
             {invoices.length === 0 ? (
-              <p className="text-sm text-[#231F20]/50">No invoices yet.</p>
+              <EmptyState
+                icon={Receipt}
+                title="No invoices for this project"
+                description="Create one from the budget — it starts as a draft you can review before sending."
+              />
             ) : (
               <ul className="divide-y divide-[#1A14A5]/5">
-                {invoices.map((invoice) => (
-                  <li key={invoice.id} className="py-3 flex items-center justify-between">
-                    <Link href={`/admin/invoices/${invoice.id}`} className="font-medium text-[#1A14A5] hover:underline">
-                      {invoice.invoice_number}
-                    </Link>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-[#231F20]/70">{formatMoney(invoice.total, invoice.currency)}</span>
-                      <span
-                        className="text-xs font-bold px-3 py-1 rounded-full"
-                        style={{
-                          background: INVOICE_STATUS_COLORS[invoice.status as InvoiceStatus].bg,
-                          color: INVOICE_STATUS_COLORS[invoice.status as InvoiceStatus].text,
-                        }}
+                {invoices.map((inv) => (
+                  <li key={inv.invoice_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <Link
+                        href={`/admin/invoices/${inv.invoice_id}`}
+                        className="font-medium text-[#1A14A5] hover:underline"
                       >
-                        {INVOICE_STATUS_LABELS[invoice.status as InvoiceStatus]}
+                        {inv.invoice_number}
+                      </Link>
+                      <p className="text-xs text-[#231F20]/50">
+                        {inv.due_date ? `Due ${formatDate(inv.due_date)}` : "No due date"}
+                        {inv.is_overdue && <span className="font-semibold text-red-600"> · overdue</span>}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-semibold text-[#231F20]">
+                        {formatMoney(inv.total, inv.currency)}
                       </span>
+                      <Badge
+                        label={INVOICE_STATUS_LABELS[inv.status as InvoiceStatus]}
+                        colors={INVOICE_STATUS_COLORS[inv.status as InvoiceStatus]}
+                      />
                     </div>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
+          </SectionCard>
 
           <ActivityTimeline entityType="project" entityId={project.id} />
         </div>
 
-        <ProjectEditControl
-          projectId={project.id}
-          initialStage={project.stage as ProjectStage}
-          initialBudget={project.budget}
-          initialCurrency={project.currency}
-          initialStartDate={project.start_date}
-          initialDueDate={project.due_date}
-          initialServiceCategory={project.service_category as ProjectServiceCategory | null}
-          initialDescription={project.description}
-          initialArchived={project.archived}
-          taskCount={tasks.length}
-        />
+        <div className="space-y-6">
+          <SectionCard title="Billing" subtitle={`In ${project.currency}`}>
+            <dl className="space-y-2.5 text-sm">
+              <Row label="Budget" value={budget !== null ? formatMoney(budget, project.currency) : "Not set"} />
+              <Row label="Invoiced" value={formatMoney(invoiced, project.currency)} />
+              <Row label="Paid" value={formatMoney(paid, project.currency)} tone="positive" />
+              <Row label="Outstanding" value={formatMoney(outstanding, project.currency)} tone="warning" />
+              {unbilled !== null && (
+                <Row
+                  label="Left to bill"
+                  value={formatMoney(unbilled, project.currency)}
+                  hint={unbilled === 0 ? "Budget fully invoiced" : undefined}
+                />
+              )}
+            </dl>
+          </SectionCard>
+
+          <ProjectEditControl
+            projectId={project.id}
+            initialStage={project.stage as ProjectStage}
+            initialBudget={project.budget}
+            initialCurrency={project.currency}
+            initialStartDate={project.start_date}
+            initialDueDate={project.due_date}
+            initialServiceCategory={project.service_category as ProjectServiceCategory | null}
+            initialDescription={project.description}
+            initialArchived={project.archived}
+            taskCount={tasks.length}
+          />
+        </div>
       </div>
+    </div>
+  );
+}
+
+function Row({
+  label,
+  value,
+  tone,
+  hint,
+}: {
+  label: string;
+  value: string;
+  tone?: "positive" | "warning";
+  hint?: string;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <dt className="text-[#231F20]/55">{label}</dt>
+      <dd className="text-right">
+        <span
+          className={
+            tone === "positive"
+              ? "font-semibold text-emerald-700"
+              : tone === "warning"
+                ? "font-semibold text-amber-700"
+                : "font-semibold text-[#231F20]"
+          }
+        >
+          {value}
+        </span>
+        {hint && <span className="block text-xs text-[#231F20]/40">{hint}</span>}
+      </dd>
     </div>
   );
 }

@@ -15,7 +15,10 @@ export type ActivityType =
   | "lost"
   | "booking_cancelled"
   | "invoice_updated"
-  | "payment_deleted";
+  | "payment_deleted"
+  | "invoice_sent"
+  | "invoice_items_updated"
+  | "project_updated";
 
 export interface Activity {
   id: string;

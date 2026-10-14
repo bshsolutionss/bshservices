@@ -5,7 +5,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { InvoiceDocument } from "@/lib/pdf/InvoiceDocument";
-import type { Invoice, Payment, InvoiceBalance } from "@/lib/invoices";
+import type { Invoice, InvoiceBalance, InvoiceItem, Payment } from "@/lib/invoices";
 import type { Client } from "@/lib/clients";
 
 // react-pdf needs Node APIs (fs, Buffer) — not compatible with the edge runtime.
@@ -26,10 +26,13 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "Invoice not found." }, { status: 404 });
   }
 
-  const [{ data: client }, { data: paymentsData }, { data: balance }] = await Promise.all([
+  const [{ data: client }, { data: paymentsData }, { data: balance }, { data: itemsData }] = await Promise.all([
     service.from("clients").select("*").eq("id", invoice.client_id).single<Client>(),
     service.from("payments").select("*").eq("invoice_id", id).order("paid_on", { ascending: false }),
     service.from("invoice_balances").select("*").eq("invoice_id", id).single<InvoiceBalance>(),
+    // Absent (→ []) on a non-itemised invoice, and before migration 0010 —
+    // the document falls back to the single-amount layout in both cases.
+    service.from("invoice_items").select("*").eq("invoice_id", id).order("position"),
   ]);
 
   if (!client) {
@@ -37,13 +40,14 @@ export async function GET(
   }
 
   const payments = (paymentsData ?? []) as Payment[];
+  const items = (itemsData ?? []) as InvoiceItem[];
   const paid = balance ? Number(balance.paid) : 0;
   const remaining = balance ? Number(balance.balance) : Number(invoice.total);
 
   const logoBuffer = await readFile(path.join(process.cwd(), "public", "android-chrome-192x192.png"));
 
   const pdfBuffer = await renderToBuffer(
-    InvoiceDocument({ invoice, client, payments, paid, balance: remaining, logoBuffer })
+    InvoiceDocument({ invoice, client, payments, items, paid, balance: remaining, logoBuffer })
   );
 
   return new NextResponse(new Uint8Array(pdfBuffer), {

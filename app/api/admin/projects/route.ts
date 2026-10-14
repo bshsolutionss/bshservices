@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
-import { PROJECT_SERVICE_CATEGORIES, type ProjectServiceCategory } from "@/lib/projects";
+import { PROJECT_SERVICE_CATEGORIES, PROJECT_STAGES, type ProjectServiceCategory, type ProjectStage } from "@/lib/projects";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface CreatePayload {
@@ -10,6 +10,7 @@ interface CreatePayload {
   client_id: string;
   budget?: number;
   currency?: Currency;
+  stage?: ProjectStage;
   start_date?: string;
   due_date?: string;
   service_category?: ProjectServiceCategory;
@@ -39,6 +40,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid currency." }, { status: 400 });
   }
 
+  if (payload.stage && !(PROJECT_STAGES as string[]).includes(payload.stage)) {
+    return NextResponse.json({ ok: false, error: "Invalid stage." }, { status: 400 });
+  }
+
+  if (payload.start_date && payload.due_date && payload.due_date < payload.start_date) {
+    return NextResponse.json({ ok: false, error: "Due date cannot be before the start date." }, { status: 400 });
+  }
+
   const service = createServiceRoleClient();
   const { data, error } = await service
     .from("projects")
@@ -48,6 +57,7 @@ export async function POST(request: NextRequest) {
       budget: payload.budget ?? null,
       // PKR is the business's standard currency — see supabase/migrations/0009_currency.sql.
       currency: payload.currency || "PKR",
+      stage: payload.stage || "planning",
       start_date: payload.start_date || null,
       due_date: payload.due_date || null,
       service_category: payload.service_category || null,

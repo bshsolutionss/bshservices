@@ -68,13 +68,36 @@ const REQUEST_HEADERS = {
   Accept: "application/json",
 };
 
+// WordPress sits on shared hosting that slows from ~1.4s to ~6s under a burst
+// of parallel requests (e.g. right after a deploy, when the data cache is
+// empty). Bound each attempt, retry once on a transient failure, and log the
+// real cause — otherwise a hiccup surfaces as a bare "Something went wrong"
+// with nothing in the runtime logs to explain it.
+async function wpFetch(url: string, label: string): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch(url, {
+        headers: REQUEST_HEADERS,
+        next: { revalidate: 300 },
+        signal: AbortSignal.timeout(9000),
+      });
+      if (res.ok || (res.status < 500 && res.status !== 429)) return res;
+      lastError = new Error(`${res.status} ${res.statusText}`);
+    } catch (error) {
+      lastError = error;
+      // A timeout already burned the budget — retrying would only hang longer.
+      if (error instanceof DOMException && error.name === "TimeoutError") break;
+    }
+  }
+  console.error(`[wp] ${label} failed:`, lastError);
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
+
 export async function getPostsPage(page = 1, perPage = 9): Promise<WPPostsPage> {
-  const res = await fetch(
+  const res = await wpFetch(
     `${API_URL}/posts?_embed&page=${page}&per_page=${perPage}`,
-    {
-      headers: REQUEST_HEADERS,
-      next: { revalidate: 300 },
-    },
+    `posts page ${page}`,
   );
   if (!res.ok) {
     throw new Error(`Failed to fetch posts: ${res.status} ${res.statusText}`);
@@ -107,10 +130,7 @@ export async function getAllPosts(): Promise<WPPost[]> {
 export const getPostBySlug = cache(async (slug: string): Promise<WPPost | null> => {
   if (!slug) return null;
   const cleanSlug = encodeURIComponent(slug.trim());
-  const res = await fetch(`${API_URL}/posts?_embed&slug=${cleanSlug}`, {
-    headers: REQUEST_HEADERS,
-    next: { revalidate: 300 },
-  });
+  const res = await wpFetch(`${API_URL}/posts?_embed&slug=${cleanSlug}`, `post "${slug}"`);
   if (!res.ok) {
     throw new Error(`Failed to fetch post by slug (${slug}): ${res.status} ${res.statusText}`);
   }

@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     .insert({
       category: payload.category,
       amount: payload.amount,
-      currency: payload.currency || "USD",
+      // PKR is the business's standard currency — same default as projects and invoices.
+      currency: payload.currency || "PKR",
       expense_date: payload.expense_date || new Date().toISOString().slice(0, 10),
       vendor: payload.vendor?.trim().slice(0, 200) || null,
       description: payload.description?.trim().slice(0, 1000) || null,

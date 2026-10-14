@@ -14,6 +14,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   service_form: "Service Form",
   consultation_booking: "Consultation Booking",
   lead_magnet: "Lead Magnet Download",
+  chatbot: "Website Chatbot",
 };
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {

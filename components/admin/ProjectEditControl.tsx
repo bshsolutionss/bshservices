@@ -2,15 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Archive, ArchiveRestore, Trash2 } from "lucide-react";
 import {
+  Alert,
+  ConfirmButton,
+  MoneyField,
+  SectionCard,
+  SelectField,
+  TextField,
+  TextareaField,
+  btnPrimary,
+  btnSecondary,
+} from "@/components/admin/ui";
+import {
+  PROJECT_SERVICE_CATEGORIES,
   PROJECT_STAGES,
   PROJECT_STAGE_LABELS,
-  PROJECT_SERVICE_CATEGORIES,
-  type ProjectStage,
   type ProjectServiceCategory,
+  type ProjectStage,
 } from "@/lib/projects";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
@@ -27,6 +36,7 @@ interface ProjectEditControlProps {
   taskCount?: number;
 }
 
+/** Everything editable about a project, plus archive/delete, in the sidebar of its detail page. */
 export default function ProjectEditControl({
   projectId,
   initialStage,
@@ -50,31 +60,37 @@ export default function ProjectEditControl({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [archiving, setArchiving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const patch = async (body: Record<string, unknown>) => {
+    const res = await fetch(`/api/admin/projects/${projectId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const parsed = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(parsed.error || "Save failed.");
+  };
+
   const handleSave = async () => {
+    if (startDate && dueDate && dueDate < startDate) {
+      setError("Due date can't be before the start date.");
+      return;
+    }
+
     setSaving(true);
     setSaved(false);
     setError(null);
-
     try {
-      const res = await fetch(`/api/admin/projects/${projectId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          stage,
-          budget: budget === "" ? null : Number(budget),
-          currency,
-          start_date: startDate || null,
-          due_date: dueDate || null,
-          service_category: serviceCategory || null,
-          description: description || null,
-        }),
+      await patch({
+        stage,
+        budget: budget === "" ? null : Number(budget),
+        currency,
+        start_date: startDate || null,
+        due_date: dueDate || null,
+        service_category: serviceCategory || null,
+        description: description || null,
       });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body.error || "Save failed");
-
       setSaved(true);
       router.refresh();
     } catch (err) {
@@ -87,14 +103,8 @@ export default function ProjectEditControl({
   const handleArchiveToggle = async () => {
     setArchiving(true);
     setError(null);
-
     try {
-      const res = await fetch(`/api/admin/projects/${projectId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ archived: !initialArchived }),
-      });
-      if (!res.ok) throw new Error("Failed");
+      await patch({ archived: !initialArchived });
       router.refresh();
     } catch {
       setError("Failed to update archive status.");
@@ -103,135 +113,90 @@ export default function ProjectEditControl({
     }
   };
 
-  const handleDelete = async () => {
-    const taskWarning = taskCount > 0 ? ` This will also delete its ${taskCount} task${taskCount === 1 ? "" : "s"}.` : "";
-    if (!confirm(`Delete this project permanently?${taskWarning} This cannot be undone.`)) return;
-
-    setDeleting(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/projects/${projectId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete.");
-      router.push("/admin/projects");
-      router.refresh();
-    } catch {
-      setError("Failed to delete project.");
-      setDeleting(false);
-    }
-  };
-
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-bold text-[#231F20]">Project Status</h2>
-        {initialArchived && (
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-500">Archived</span>
-        )}
-      </div>
-
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Service</label>
-        <select
-          value={serviceCategory}
-          onChange={(e) => setServiceCategory(e.target.value as ProjectServiceCategory)}
-          className="w-full rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white"
-        >
-          <option value="">Not set</option>
-          {PROJECT_SERVICE_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Stage</label>
-        <select
+    <SectionCard title="Project settings" subtitle={initialArchived ? "This project is archived" : undefined}>
+      <div className="space-y-4">
+        <SelectField
+          id="project-edit-stage"
+          label="Stage"
           value={stage}
-          onChange={(e) => setStage(e.target.value as ProjectStage)}
-          className="w-full rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white"
-        >
-          {PROJECT_STAGES.map((s) => (
-            <option key={s} value={s}>
-              {PROJECT_STAGE_LABELS[s]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Amount</label>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            min="0"
-            step="0.01"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            className="flex-1"
-          />
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value as Currency)}
-            className="rounded-lg border border-[#1A14A5]/20 px-2.5 text-sm bg-white"
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Start Date</label>
-          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Due Date</label>
-          <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-        </div>
-      </div>
-
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Description</label>
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={4}
-          placeholder="Project scope, notes..."
+          onChange={(v) => setStage(v as ProjectStage)}
+          options={PROJECT_STAGES.map((s) => ({ value: s, label: PROJECT_STAGE_LABELS[s] }))}
         />
-      </div>
+        <SelectField
+          id="project-edit-service"
+          label="Service"
+          value={serviceCategory}
+          onChange={(v) => setServiceCategory(v as ProjectServiceCategory)}
+          options={PROJECT_SERVICE_CATEGORIES.map((c) => ({ value: c, label: c }))}
+          placeholder="Not set"
+        />
+        <MoneyField
+          id="project-edit-budget"
+          label="Budget"
+          amount={budget}
+          onAmountChange={setBudget}
+          currency={currency}
+          onCurrencyChange={(v) => setCurrency(v as Currency)}
+          currencies={CURRENCIES}
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <TextField id="project-edit-start" label="Start" type="date" value={startDate} onChange={setStartDate} />
+          <TextField id="project-edit-due" label="Due" type="date" value={dueDate} onChange={setDueDate} />
+        </div>
+        <TextareaField
+          id="project-edit-description"
+          label="Scope / description"
+          value={description}
+          onChange={setDescription}
+          rows={4}
+          placeholder="Project scope, notes…"
+        />
 
-      <div className="flex items-center gap-3">
-        <Button onClick={handleSave} disabled={saving} className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-xl">
-          {saving ? "Saving..." : "Save"}
-        </Button>
-        {saved && <span className="text-sm text-green-600">✅ Saved</span>}
-      </div>
-      {error && <p className="text-sm text-red-600">❌ {error}</p>}
+        {error && <Alert tone="error">{error}</Alert>}
+        {saved && !error && <Alert tone="success">Saved.</Alert>}
 
-      <div className="pt-3 border-t border-[#1A14A5]/10 space-y-2">
-        <Button
-          onClick={handleArchiveToggle}
-          disabled={archiving}
-          variant="outline"
-          className="w-full rounded-xl border-[#1A14A5]/20 text-[#1A14A5]"
-        >
-          {archiving ? "Updating..." : initialArchived ? "Unarchive Project" : "Archive Project"}
-        </Button>
-        <Button
-          onClick={handleDelete}
-          disabled={deleting}
-          variant="outline"
-          className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50"
-        >
-          {deleting ? "Deleting..." : "Delete Project"}
-        </Button>
+        <button type="button" onClick={handleSave} disabled={saving} className={btnPrimary}>
+          {saving ? "Saving…" : "Save changes"}
+        </button>
+
+        <div className="space-y-2 border-t border-[#1A14A5]/10 pt-4">
+          <button
+            type="button"
+            onClick={handleArchiveToggle}
+            disabled={archiving}
+            className={`${btnSecondary} w-full`}
+          >
+            {initialArchived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+            {archiving ? "Updating…" : initialArchived ? "Unarchive project" : "Archive project"}
+          </button>
+          <ConfirmButton
+            label="Delete project"
+            display="block"
+            icon={<Trash2 className="h-4 w-4" />}
+            title="Delete this project?"
+            confirmLabel="Delete permanently"
+            message={
+              <>
+                <p>The project and everything attached to it will be removed. This cannot be undone.</p>
+                {taskCount > 0 && (
+                  <p className="mt-2 font-semibold text-red-600">
+                    Its {taskCount} task{taskCount === 1 ? "" : "s"} will be deleted too.
+                  </p>
+                )}
+                <p className="mt-2">If you only want it out of the way, archive it instead.</p>
+              </>
+            }
+            onConfirm={async () => {
+              const res = await fetch(`/api/admin/projects/${projectId}`, { method: "DELETE" });
+              const body = await res.json().catch(() => ({}));
+              if (!res.ok) throw new Error(body.error || "Could not delete the project.");
+              router.push("/admin/projects");
+              router.refresh();
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </SectionCard>
   );
 }

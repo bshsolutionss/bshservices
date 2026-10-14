@@ -53,6 +53,7 @@ const SOURCE_POINTS: Record<LeadSource, number> = {
   consultation_booking: 40, // picked an actual time slot — highest intent
   service_form: 25, // came from a specific service page, already knows what they want
   contact_form: 15, // general inquiry, less qualified yet
+  chatbot: 12, // volunteered details mid-chat — warm, but lighter than a filled-out form
   lead_magnet: 5, // downloaded something free — early-funnel, not yet a real inquiry
 };
 

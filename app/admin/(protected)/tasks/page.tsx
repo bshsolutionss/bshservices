@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { CheckSquare } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { cn } from "@/lib/utils";
 import { TASK_STATUSES, TASK_STATUS_LABELS, type Task, type TaskStatus } from "@/lib/tasks";
 import type { Project } from "@/lib/projects";
+import { EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import TaskRow from "@/components/admin/TaskRow";
 
 export const dynamic = "force-dynamic";
@@ -24,54 +26,92 @@ export default async function AdminTasksPage({
   if (activeStatus) query = query.eq("status", activeStatus);
   if (projectParam) query = query.eq("project_id", projectParam);
 
-  const [{ data: tasksData }, { data: projectsData }, { data: employeesData }] = await Promise.all([
-    query,
-    supabase.from("projects").select("id, name"),
-    supabase.from("employees").select("name").eq("status", "active").order("name"),
-  ]);
+  const [{ data: tasksData }, { data: projectsData }, { data: employeesData }, { data: statusCountsData }] =
+    await Promise.all([
+      query,
+      supabase.from("projects").select("id, name"),
+      supabase.from("employees").select("name").eq("status", "active").order("name"),
+      // Unfiltered, so each chip can carry its own count.
+      projectParam
+        ? supabase.from("tasks").select("status").eq("project_id", projectParam)
+        : supabase.from("tasks").select("status"),
+    ]);
 
   const tasks = (tasksData ?? []) as Task[];
-  const projectNames = new Map((projectsData ?? []).map((p: Pick<Project, "id" | "name">) => [p.id, p.name]));
+  const projects = (projectsData ?? []) as Pick<Project, "id" | "name">[];
+  const projectNames = new Map(projects.map((p) => [p.id, p.name]));
   const employeeNames = ((employeesData ?? []) as { name: string }[]).map((e) => e.name);
+
+  const statusCounts = new Map<string, number>();
+  for (const row of (statusCountsData ?? []) as { status: string }[]) {
+    statusCounts.set(row.status, (statusCounts.get(row.status) ?? 0) + 1);
+  }
+  const totalCount = ((statusCountsData ?? []) as unknown[]).length;
+
+  const filteredProjectName = projectParam ? projectNames.get(projectParam) : undefined;
+  const hrefFor = (status?: TaskStatus) => {
+    const params = new URLSearchParams();
+    if (status) params.set("status", status);
+    if (projectParam) params.set("project", projectParam);
+    const qs = params.toString();
+    return qs ? `/admin/tasks?${qs}` : "/admin/tasks";
+  };
+
+  const chipClass = (active: boolean) =>
+    cn(
+      "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition",
+      active
+        ? "bg-[#1A14A5] text-white shadow-sm"
+        : "border border-[#1A14A5]/10 bg-white text-[#231F20]/70 hover:border-[#1A14A5]/30"
+    );
+  const countClass = (active: boolean) =>
+    cn("rounded-full px-1.5 text-xs font-bold", active ? "bg-white/20" : "bg-[#F4F7FE] text-[#231F20]/50");
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-[#231F20]">Tasks</h1>
-        <p className="text-[#231F20]/60 text-sm mt-1">
-          {tasks.length} task{tasks.length === 1 ? "" : "s"}
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <Link
-          href="/admin/tasks"
-          className={cn(
-            "px-4 py-2 rounded-full text-sm font-semibold transition",
-            !activeStatus ? "bg-[#1A14A5] text-white" : "bg-white text-[#231F20]/70 border border-[#1A14A5]/10"
-          )}
-        >
-          All
-        </Link>
-        {TASK_STATUSES.map((status) => (
-          <Link
-            key={status}
-            href={`/admin/tasks?status=${status}`}
-            className={cn(
-              "px-4 py-2 rounded-full text-sm font-semibold transition",
-              activeStatus === status ? "bg-[#1A14A5] text-white" : "bg-white text-[#231F20]/70 border border-[#1A14A5]/10"
+      <PageHeader
+        title="Tasks"
+        subtitle={
+          <>
+            {tasks.length} task{tasks.length === 1 ? "" : "s"}
+            {filteredProjectName && (
+              <>
+                {" in "}
+                <Link href={`/admin/projects/${projectParam}`} className="font-medium text-[#1A14A5] hover:underline">
+                  {filteredProjectName}
+                </Link>
+                {" · "}
+                <Link href="/admin/tasks" className="font-medium text-[#1A14A5] hover:underline">
+                  clear
+                </Link>
+              </>
             )}
-          >
-            {TASK_STATUS_LABELS[status]}
+          </>
+        }
+      >
+        <div className="flex flex-wrap gap-2">
+          <Link href={hrefFor()} className={chipClass(!activeStatus)}>
+            All <span className={countClass(!activeStatus)}>{totalCount}</span>
           </Link>
-        ))}
-      </div>
+          {TASK_STATUSES.map((status) => {
+            const active = activeStatus === status;
+            return (
+              <Link key={status} href={hrefFor(status)} className={chipClass(active)}>
+                {TASK_STATUS_LABELS[status]}
+                <span className={countClass(active)}>{statusCounts.get(status) ?? 0}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </PageHeader>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#1A14A5]/10 p-6">
+      <SectionCard padded={false} bodyClassName="px-5 sm:px-6">
         {tasks.length === 0 ? (
-          <p className="text-sm text-[#231F20]/50 py-4 text-center">
-            No tasks found. Add tasks from a project&apos;s detail page.
-          </p>
+          <EmptyState
+            icon={CheckSquare}
+            title="No tasks here"
+            description="Tasks are created on a project's own page, where they stay tied to the work they belong to."
+          />
         ) : (
           <ul className="divide-y divide-[#1A14A5]/5">
             {tasks.map((task) => (
@@ -84,7 +124,7 @@ export default async function AdminTasksPage({
             ))}
           </ul>
         )}
-      </div>
+      </SectionCard>
     </div>
   );
 }

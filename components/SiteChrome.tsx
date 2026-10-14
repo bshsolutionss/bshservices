@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import InstallAppButton from "@/components/InstallAppButton";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ExitIntentOffer from "@/components/ExitIntentOffer";
+import ChatWidget from "@/components/chatbot/ChatWidget";
 
 /**
  * Wraps the public marketing Header/Footer around page content, except on
@@ -27,6 +28,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <Footer />
       <InstallAppButton variant="floating" />
       <WhatsAppButton variant="floating" source="floating_button" />
+      <ChatWidget />
       <ExitIntentOffer />
     </>
   );

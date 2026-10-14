@@ -1,5 +1,5 @@
 import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
-import type { Invoice, Payment, PaymentMethod } from "@/lib/invoices";
+import type { Invoice, InvoiceItem, Payment, PaymentMethod } from "@/lib/invoices";
 import { INVOICE_STATUS_LABELS, PAYMENT_METHOD_LABELS, formatMoney } from "@/lib/invoices";
 import type { Client } from "@/lib/clients";
 
@@ -57,6 +57,26 @@ const styles = StyleSheet.create({
   balanceValue: { fontSize: 10, fontWeight: 700, color: "#991B1B" },
   sectionTitle: { fontSize: 10, fontWeight: 700, color: BRAND_DARK, marginBottom: 8 },
   paymentsTable: { marginBottom: 24 },
+  itemsTable: { marginBottom: 20 },
+  itemsHeaderRow: {
+    flexDirection: "row",
+    backgroundColor: BRAND_BG,
+    borderRadius: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginBottom: 2,
+  },
+  itemRow: {
+    flexDirection: "row",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EDEFF9",
+  },
+  colDescription: { width: "52%", fontSize: 9, color: BRAND_DARK },
+  colQty: { width: "12%", fontSize: 9, color: MUTED, textAlign: "right" },
+  colUnit: { width: "18%", fontSize: 9, color: MUTED, textAlign: "right" },
+  colLineTotal: { width: "18%", fontSize: 9, color: BRAND_DARK, textAlign: "right" },
   tableHeaderRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -101,14 +121,25 @@ interface InvoiceDocumentProps {
   invoice: Invoice;
   client: Client;
   payments: Payment[];
+  /** Billed lines. Empty for an invoice billed as one flat amount. */
+  items?: InvoiceItem[];
   paid: number;
   balance: number;
   /** Buffer of the BSH logo PNG, read from public/ at request time — see the PDF route. */
   logoBuffer: Buffer;
 }
 
-export function InvoiceDocument({ invoice, client, payments, paid, balance, logoBuffer }: InvoiceDocumentProps) {
+export function InvoiceDocument({
+  invoice,
+  client,
+  payments,
+  items = [],
+  paid,
+  balance,
+  logoBuffer,
+}: InvoiceDocumentProps) {
   const statusColors = STATUS_COLORS[invoice.status] ?? STATUS_COLORS.draft;
+  const taxLabel = Number(invoice.tax_rate) > 0 ? `Tax (${Number(invoice.tax_rate)}%)` : "Tax";
 
   return (
     <Document title={`Invoice ${invoice.invoice_number}`} author="BSH Solutions">
@@ -124,7 +155,7 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
           <View>
             <Text style={styles.invoiceTitle}>INVOICE</Text>
             <Text style={styles.invoiceMeta}>{invoice.invoice_number}</Text>
-            <Text style={styles.invoiceMeta}>Issued {formatDate(invoice.created_at)}</Text>
+            <Text style={styles.invoiceMeta}>Issued {formatDate(invoice.issue_date ?? invoice.created_at)}</Text>
             <Text style={styles.invoiceMeta}>Due {formatDate(invoice.due_date)}</Text>
             <Text style={[styles.statusBadge, { backgroundColor: statusColors.bg, color: statusColors.text }]}>
               {INVOICE_STATUS_LABELS[invoice.status]}
@@ -149,13 +180,32 @@ export function InvoiceDocument({ invoice, client, payments, paid, balance, logo
           </View>
         </View>
 
+        {items.length > 0 && (
+          <View style={styles.itemsTable}>
+            <View style={styles.itemsHeaderRow}>
+              <Text style={[styles.colDescription, styles.tableHeaderText]}>Description</Text>
+              <Text style={[styles.colQty, styles.tableHeaderText]}>Qty</Text>
+              <Text style={[styles.colUnit, styles.tableHeaderText]}>Unit price</Text>
+              <Text style={[styles.colLineTotal, styles.tableHeaderText]}>Amount</Text>
+            </View>
+            {items.map((item) => (
+              <View key={item.id} style={styles.itemRow} wrap={false}>
+                <Text style={styles.colDescription}>{item.description}</Text>
+                <Text style={styles.colQty}>{Number(item.quantity)}</Text>
+                <Text style={styles.colUnit}>{formatMoney(item.unit_price, invoice.currency)}</Text>
+                <Text style={styles.colLineTotal}>{formatMoney(item.line_total, invoice.currency)}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
         <View style={styles.summaryTable}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Amount</Text>
+            <Text style={styles.summaryLabel}>{items.length > 0 ? "Subtotal" : "Amount"}</Text>
             <Text style={styles.summaryValue}>{formatMoney(invoice.amount, invoice.currency)}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Tax</Text>
+            <Text style={styles.summaryLabel}>{taxLabel}</Text>
             <Text style={styles.summaryValue}>{formatMoney(invoice.tax, invoice.currency)}</Text>
           </View>
           <View style={styles.summaryRow}>

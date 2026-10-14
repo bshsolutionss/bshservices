@@ -11,19 +11,25 @@ interface UpdatePayload {
   status?: (typeof STATUS_ONLY_VALUES)[number];
   amount?: number;
   tax?: number;
+  /** Percentage. When set above 0 the DB derives the absolute `tax` from it. */
+  tax_rate?: number;
   discount?: number;
   currency?: Currency;
+  issue_date?: string;
   due_date?: string | null;
   notes?: string | null;
   project_id?: string | null;
 }
 
-/** Handles both the quick "mark as sent" action and full field edits from
- * InvoiceEditControl. `total` is a DB-generated column (amount + tax -
- * discount) — never set directly — so any amount/tax/discount edit triggers
- * a status recompute afterward in case it moves the invoice across the
- * paid/partially_paid boundary. Payment recording (which also touches
- * status) still goes through the payments route. */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Handles the quick "mark as sent" action and the header edits from
+ * InvoiceDetailsEditor / InvoiceItemsEditor. `total` is a DB-generated
+ * column (amount + tax - discount) and `tax` is derived from `tax_rate` —
+ * neither is ever set directly here — so any money edit triggers a status
+ * recompute afterward in case it moves the invoice across the
+ * paid/partially_paid boundary. Line items go through …/items, and payment
+ * recording (which also touches status) through …/payments. */
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -55,12 +61,28 @@ export async function PATCH(
     updates.amount = Number(payload.amount);
   }
   if (payload.tax !== undefined) updates.tax = Number(payload.tax) || 0;
+  if (payload.tax_rate !== undefined) {
+    const rate = Number(payload.tax_rate);
+    if (!Number.isFinite(rate) || rate < 0 || rate > 100) {
+      return NextResponse.json({ ok: false, error: "Tax rate must be between 0 and 100." }, { status: 400 });
+    }
+    // Setting a rate above 0 hands tax over to the DB trigger; setting it
+    // to 0 means "tax is a flat amount", and the trigger then leaves the
+    // `tax` column exactly as given.
+    updates.tax_rate = rate;
+  }
   if (payload.discount !== undefined) updates.discount = Number(payload.discount) || 0;
   if (payload.currency !== undefined) {
     if (!CURRENCIES.includes(payload.currency)) {
       return NextResponse.json({ ok: false, error: "Invalid currency." }, { status: 400 });
     }
     updates.currency = payload.currency;
+  }
+  if (payload.issue_date !== undefined) {
+    if (!ISO_DATE.test(payload.issue_date)) {
+      return NextResponse.json({ ok: false, error: "Invalid issue date." }, { status: 400 });
+    }
+    updates.issue_date = payload.issue_date;
   }
   if (payload.due_date !== undefined) updates.due_date = payload.due_date || null;
   if (payload.notes !== undefined) updates.notes = payload.notes ? String(payload.notes).slice(0, 5000) : null;
@@ -78,7 +100,20 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "Update failed." }, { status: 500 });
   }
 
-  const changedMoney = payload.amount !== undefined || payload.tax !== undefined || payload.discount !== undefined;
+  if (payload.status === "sent") {
+    await logActivity({
+      entityType: "invoice",
+      entityId: id,
+      type: "invoice_sent",
+      description: "Invoice marked as sent",
+    });
+  }
+
+  const changedMoney =
+    payload.amount !== undefined ||
+    payload.tax !== undefined ||
+    payload.tax_rate !== undefined ||
+    payload.discount !== undefined;
   if (changedMoney) {
     await recomputeInvoiceStatus(service, id);
     await logActivity({ entityType: "invoice", entityId: id, type: "invoice_updated", description: "Invoice amount updated" });

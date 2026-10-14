@@ -106,6 +106,7 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   // doesn't call sendLeadEmails — see its comment on why) — present only so
   // this Record stays exhaustive over LeadSource.
   lead_magnet: "Lead Magnet Download",
+  chatbot: "Website Chatbot",
 };
 
 export function clientConfirmationEmail(lead: Lead): { subject: string; html: string } {

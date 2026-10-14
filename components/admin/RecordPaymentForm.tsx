@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, formatMoney, type Currency, type PaymentMethod } from "@/lib/invoices";
+import { Alert, SelectField, TextField, btnPrimary } from "@/components/admin/ui";
+import {
+  PAYMENT_METHODS,
+  PAYMENT_METHOD_LABELS,
+  formatMoney,
+  type Currency,
+  type PaymentMethod,
+} from "@/lib/invoices";
 
 interface RecordPaymentFormProps {
   invoiceId: string;
@@ -23,9 +28,18 @@ export default function RecordPaymentForm({ invoiceId, remainingBalance, currenc
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) {
+      setError("Enter a positive amount.");
+      return;
+    }
+    if (Number(amount) > remainingBalance) {
+      setError(`That is more than the ${formatMoney(remainingBalance, currency)} still outstanding.`);
+      return;
+    }
+
     setSaving(true);
     setError(null);
-
     try {
       const res = await fetch(`/api/admin/invoices/${invoiceId}/payments`, {
         method: "POST",
@@ -34,7 +48,7 @@ export default function RecordPaymentForm({ invoiceId, remainingBalance, currenc
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || "Failed to record payment.");
-
+      setReference("");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to record payment.");
@@ -44,47 +58,48 @@ export default function RecordPaymentForm({ invoiceId, remainingBalance, currenc
   };
 
   if (remainingBalance <= 0) {
-    return <p className="text-sm text-green-600">✅ This invoice is fully paid.</p>;
+    return <Alert tone="success">This invoice is fully paid.</Alert>;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-xs text-[#231F20]/50">
-        Remaining balance: <span className="font-semibold text-[#231F20]">{formatMoney(remainingBalance, currency)}</span>
+        Outstanding:{" "}
+        <span className="font-semibold text-[#231F20]">{formatMoney(remainingBalance, currency)}</span>
       </p>
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Amount ({currency})</label>
-        <Input type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} required />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Date</label>
-        <Input type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} required />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Method</label>
-        <select
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField
+          id="payment-amount"
+          label={`Amount (${currency})`}
+          type="number"
+          min="0"
+          step="0.01"
+          value={amount}
+          onChange={setAmount}
+          required
+        />
+        <TextField id="payment-date" label="Received on" type="date" value={paidOn} onChange={setPaidOn} required />
+        <SelectField
+          id="payment-method"
+          label="Method"
           value={method}
-          onChange={(e) => setMethod(e.target.value as PaymentMethod)}
-          className="w-full rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white"
-        >
-          {PAYMENT_METHODS.map((m) => (
-            <option key={m} value={m}>
-              {PAYMENT_METHOD_LABELS[m]}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Reference (optional)</label>
-        <Input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Transaction ID, cheque #..." />
+          onChange={(v) => setMethod(v as PaymentMethod)}
+          options={PAYMENT_METHODS.map((m) => ({ value: m, label: PAYMENT_METHOD_LABELS[m] }))}
+        />
+        <TextField
+          id="payment-reference"
+          label="Reference"
+          value={reference}
+          onChange={setReference}
+          placeholder="Transaction ID, cheque no…"
+        />
       </div>
 
-      <div className="flex items-center gap-3 pt-1">
-        <Button type="submit" disabled={saving} className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-xl">
-          {saving ? "Recording..." : "Record Payment"}
-        </Button>
-        {error && <span className="text-sm text-red-600">❌ {error}</span>}
-      </div>
+      {error && <Alert tone="error">{error}</Alert>}
+
+      <button type="submit" disabled={saving} className={btnPrimary}>
+        {saving ? "Recording…" : "Record payment"}
+      </button>
     </form>
   );
 }

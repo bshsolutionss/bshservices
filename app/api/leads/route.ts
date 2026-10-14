@@ -1,13 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServiceRoleClient } from "@/lib/supabase/service";
-import { sendLeadEmails } from "@/lib/email/resend";
-import { sendAdminPush } from "@/lib/push";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
-import { scoreLead } from "@/lib/lead-scoring";
-import type { Lead, LeadSource } from "@/lib/leads";
+import { saveLead } from "@/lib/leads-server";
+import type { LeadSource } from "@/lib/leads";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const FOLLOW_UP_DELAY_MS = 24 * 60 * 60 * 1000; // Day 1
 
 interface LeadPayload {
   source: LeadSource;
@@ -69,73 +65,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid source." }, { status: 400 });
   }
 
-  const now = new Date();
-
-  const service_category = payload.service_category?.trim().slice(0, 100) || null;
-  const selected_service = payload.selected_service?.trim().slice(0, 150) || null;
-  const business_type = payload.business_type?.trim().slice(0, 100) || null;
-  const phone = payload.phone?.trim().slice(0, 60) || null;
-  const message = payload.message?.trim().slice(0, 5000) || null;
-
-  const { priority, expectedValue, expectedValueCurrency } = scoreLead({
+  const result = await saveLead({
     source: payload.source,
-    service_category,
-    selected_service,
-    business_type,
-    message,
-    phone,
+    name: payload.name,
+    email: payload.email,
+    phone: payload.phone,
+    business: payload.business,
+    best_time: payload.best_time,
+    message: payload.message,
+    service_category: payload.service_category,
+    selected_service: payload.selected_service,
+    business_type: payload.business_type,
+    page_path: payload.page_path,
   });
 
-  const insertRow = {
-    name: payload.name.trim().slice(0, 200),
-    email: payload.email.trim().slice(0, 320),
-    phone,
-    business: payload.business?.trim().slice(0, 200) || null,
-    best_time: payload.best_time?.trim().slice(0, 200) || null,
-    message,
-    service_category,
-    selected_service,
-    business_type,
-    source: payload.source,
-    page_path: payload.page_path?.trim().slice(0, 300) || null,
-    status: "new" as const,
-    priority,
-    expected_value: expectedValue,
-    expected_value_currency: expectedValueCurrency,
-    next_follow_up_at: new Date(now.getTime() + FOLLOW_UP_DELAY_MS).toISOString(),
-    follow_up_stage: 0,
-    follow_up_completed: false,
-  };
-
-  const supabase = createServiceRoleClient();
-
-  const { data: lead, error } = await supabase
-    .from("leads")
-    .insert(insertRow)
-    .select()
-    .single<Lead>();
-
-  if (error || !lead) {
-    console.error("[api/leads] insert failed:", error);
-    return NextResponse.json(
-      { ok: false, error: "Could not save your submission. Please try again." },
-      { status: 500 }
-    );
+  if (!result.ok) {
+    return NextResponse.json({ ok: false, error: result.error }, { status: 500 });
   }
 
-  // Never let an email-sending failure change the response — the lead is
-  // already saved, which is what matters to the user.
-  try {
-    await sendLeadEmails(lead);
-  } catch (err) {
-    console.error("[api/leads] sendLeadEmails failed:", err);
-  }
-
-  await sendAdminPush({
-    title: "New lead",
-    body: `${lead.name}${lead.business ? ` (${lead.business})` : ""} — ${lead.selected_service || lead.service_category || "general inquiry"}`,
-    url: `/admin/leads/${lead.id}`,
-  });
-
-  return NextResponse.json({ ok: true, id: lead.id });
+  return NextResponse.json({ ok: true, id: result.lead.id });
 }

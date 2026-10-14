@@ -9,6 +9,7 @@ import { sanitizeWpHtml } from "@/lib/sanitize-html";
 import { SITE_URL } from "@/lib/site";
 import {
   DEFAULT_AUTHOR_NAME,
+  getAllPosts,
   getFeaturedImage,
   getFeaturedImageAlt,
   getPostAuthorName,
@@ -22,6 +23,19 @@ import {
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+// Statically generated and refreshed in the background every 5 minutes, so a
+// slow or briefly unreachable WordPress serves the last good page instead of
+// an error. Posts published later render on first request (dynamicParams).
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  try {
+    return (await getAllPosts()).map((post) => ({ slug: post.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

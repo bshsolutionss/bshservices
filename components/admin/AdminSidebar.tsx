@@ -16,6 +16,7 @@ import {
   Clock,
   Settings,
   Coins,
+  TrendingUp,
   ChevronDown,
   X,
   type LucideIcon,
@@ -68,6 +69,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Finance",
     icon: Wallet,
     items: [
+      { href: "/admin/finance", label: "Profit & Loss", icon: TrendingUp },
       { href: "/admin/invoices", label: "Invoices", icon: Receipt },
       { href: "/admin/expenses", label: "Expenses", icon: Wallet },
     ],

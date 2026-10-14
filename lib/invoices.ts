@@ -10,17 +10,47 @@ export interface Invoice {
   invoice_number: string;
   client_id: string;
   project_id: string | null;
+  /** Subtotal. Derived from the line items by DB trigger when the invoice has any — see supabase/migrations/0010_invoice_items.sql. */
   amount: number;
+  /** Absolute tax amount. Derived from `tax_rate` by DB trigger whenever a rate is set. */
   tax: number;
+  /** Tax percentage (0 = tax entered as a flat amount instead). */
+  tax_rate: number;
   discount: number;
+  /** DB-generated: amount + tax - discount. Never written directly. */
   total: number;
   currency: Currency;
+  /** The date the invoice is dated for — what finance reports bucket accrual revenue by. */
+  issue_date: string;
   due_date: string | null;
   status: InvoiceStatus;
   notes: string | null;
 }
 
-/** Row from the `invoice_balances` view — single source of truth for paid/balance/overdue. */
+/** A billable line on an invoice. `line_total` is DB-generated (quantity x unit_price). */
+export interface InvoiceItem {
+  id: string;
+  created_at: string;
+  invoice_id: string;
+  position: number;
+  description: string;
+  quantity: number;
+  unit_price: number;
+  line_total: number;
+}
+
+/** The shape the UI edits and the API accepts — no ids, since lines are saved as a whole list. */
+export interface InvoiceItemInput {
+  description: string;
+  quantity: number;
+  unit_price: number;
+}
+
+/**
+ * Row from the `invoice_balances` view — single source of truth for
+ * paid/balance/overdue, and (since 0010) rich enough to render the whole
+ * invoices list without a second query against `invoices`.
+ */
 export interface InvoiceBalance {
   invoice_id: string;
   client_id: string;
@@ -31,6 +61,17 @@ export interface InvoiceBalance {
   paid: number;
   balance: number;
   is_overdue: boolean;
+  invoice_number: string;
+  project_id: string | null;
+  issue_date: string;
+  amount: number;
+  tax: number;
+  tax_rate: number;
+  discount: number;
+  notes: string | null;
+  created_at: string;
+  item_count: number;
+  last_payment_on: string | null;
 }
 
 export interface Payment {
@@ -117,4 +158,43 @@ export function formatByCurrency(amounts: { amount: number; currency: Currency |
   return Array.from(byCurrency.entries())
     .map(([currency, total]) => formatMoney(total, currency))
     .join(" + ");
+}
+
+/**
+ * The one place invoice arithmetic lives on the TypeScript side — used by
+ * the create/edit forms to preview totals before saving. It mirrors exactly
+ * what the database computes on write (see 0010_invoice_items.sql), so the
+ * preview can never disagree with the saved invoice.
+ */
+export interface InvoiceTotals {
+  subtotal: number;
+  tax: number;
+  discount: number;
+  total: number;
+}
+
+export function round2(value: number): number {
+  return Math.round((Number(value) || 0) * 100) / 100;
+}
+
+export function computeInvoiceTotals(
+  items: { quantity: number | string; unit_price: number | string }[],
+  taxRate: number | string,
+  discount: number | string
+): InvoiceTotals {
+  const subtotal = round2(
+    items.reduce((sum, item) => sum + round2((Number(item.quantity) || 0) * (Number(item.unit_price) || 0)), 0)
+  );
+  const tax = round2((subtotal * (Number(taxRate) || 0)) / 100);
+  const safeDiscount = round2(Number(discount) || 0);
+  return { subtotal, tax, discount: safeDiscount, total: round2(subtotal + tax - safeDiscount) };
+}
+
+/** Short, locale-aware date for list/detail screens. Keeps "—" for empty dates consistent panel-wide. */
+export function formatDate(value: string | null | undefined): string {
+  if (!value) return "—";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? "—"
+    : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
