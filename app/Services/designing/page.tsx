@@ -101,7 +101,7 @@ export default function DesigningPage() {
         id="ui-ux"
         learnMoreHref="/Services/designing/ui-ux-design"
         title="UI / UX Design"
-        description="We design user interfaces that are intuitive, accessible, and delightful — enhancing usability and conversion rates."
+        description="We design user interfaces that are intuitive, accessible, and delightful, enhancing usability and conversion rates."
         features={[
           "User research and wireframing",
           "High-fidelity prototyping",
@@ -172,7 +172,7 @@ export default function DesigningPage() {
         id="motion-graphics"
         learnMoreHref="/Services/designing/motion-graphics-design"
         title="Motion Graphics"
-        description="We bring your ideas to life with smooth, engaging motion visuals — perfect for ads, explainers, and branding videos."
+        description="We bring your ideas to life with smooth, engaging motion visuals, perfect for ads, explainers, and branding videos."
         features={[
           "Animated logos and intros",
           "Explainer videos",

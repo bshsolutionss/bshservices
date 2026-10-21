@@ -126,10 +126,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // Font variables live on <html> (not <body>) because Tailwind's base
+    // layer sets font-family on html — the variable must be defined there.
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-white text-[#231F20]`}
+        className={`font-sans antialiased overflow-x-hidden bg-white text-[#231F20]`}
       >
         {/* Google Tag Manager — script loads early, noscript fallback sits right after <body> */}
         <GoogleTagManager />

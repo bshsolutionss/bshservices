@@ -33,7 +33,7 @@ export async function loadCommunicationData(options: { clientId?: string; limit?
     const client = one(clients);
     return {
       ...(rest as Communication),
-      clientName: client?.company_name ?? "—",
+      clientName: client?.company_name ?? "-",
       clientPhone: client?.contact_phone ?? null,
       projectName: one(projects)?.name ?? null,
     };

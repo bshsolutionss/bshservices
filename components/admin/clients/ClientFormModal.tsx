@@ -84,7 +84,7 @@ export default function ClientFormModal() {
         open={open}
         onClose={close}
         title="New client"
-        description="Only the company and an email are required — the rest can be filled in later."
+        description="Only the company and an email are required, the rest can be filled in later."
         size="md"
         footer={
           <>

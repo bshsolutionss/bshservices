@@ -44,7 +44,7 @@ export default async function AdminAvailabilityPage() {
 
       {unavailable ? (
         <div className="bg-white rounded-2xl shadow-sm border border-amber-200 p-6 text-amber-700 text-sm">
-          Availability management is temporarily unavailable — the database migration for this feature may not
+          Availability management is temporarily unavailable, the database migration for this feature may not
           have been run yet.
         </div>
       ) : (

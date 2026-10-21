@@ -50,7 +50,7 @@ const columns: DataTableColumn<Employee>[] = [
           <span className="text-xs text-[#231F20]/45">{PAY_BASIS_SUFFIX[row.pay_basis] ?? ""}</span>
         </span>
       ) : (
-        "—"
+        "-"
       ),
   },
   {

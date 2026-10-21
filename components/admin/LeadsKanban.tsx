@@ -47,7 +47,7 @@ function KanbanCard({ lead }: { lead: KanbanLead }) {
         {lead.name}
       </Link>
       <p className="text-xs text-[#231F20]/50 mt-0.5 truncate">
-        {lead.selected_service || lead.service_category || lead.business || "—"}
+        {lead.selected_service || lead.service_category || lead.business || "-"}
       </p>
       {lead.expected_value !== null && (
         <p className="text-xs font-semibold text-[#1A14A5] mt-1.5">

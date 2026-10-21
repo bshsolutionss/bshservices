@@ -87,7 +87,7 @@ export default function LeadMagnetGate({ slug }: LeadMagnetGateProps) {
           <div className="mt-6 flex items-center gap-3 rounded-2xl bg-green-50 border border-green-200 p-4">
             <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
             <p className="text-sm text-green-800">
-              Downloaded! Check your downloads folder — the PDF opened as{" "}
+              Downloaded! Check your downloads folder, the PDF opened as{" "}
               <strong>{slug}.pdf</strong>.
             </p>
           </div>

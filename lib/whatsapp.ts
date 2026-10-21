@@ -19,5 +19,5 @@ export const DEFAULT_WHATSAPP_MESSAGE =
 
 /** Service-page CTAs pass the service name through so the chat opens with real context. */
 export function whatsAppMessageForService(serviceName: string): string {
-  return `Hi BSH Solutions! I'm interested in your ${serviceName} service — could we talk?`;
+  return `Hi BSH Solutions! I'm interested in your ${serviceName} service, could we talk?`;
 }

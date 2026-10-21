@@ -182,7 +182,7 @@ export default function MarketingPage() {
         <ServiceSection
           title="Content Marketing"
           learnMoreHref="/Services/marketing/content-marketing"
-          description="We create impactful content strategies that educate, inspire, and convert — from blog posts to videos and social media campaigns."
+          description="We create impactful content strategies that educate, inspire, and convert, from blog posts to videos and social media campaigns."
           features={[
             "Blog writing and SEO content",
             "Video and visual content production",

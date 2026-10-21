@@ -24,7 +24,7 @@ const GoogleMap = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-3 text-gray-600 text-center"
         >
-          Visit BSH Solutions — Your trusted partner in digital innovation.
+          Visit BSH Solutions, Your trusted partner in digital innovation.
         </motion.p>
 
         {/* Map Card */}

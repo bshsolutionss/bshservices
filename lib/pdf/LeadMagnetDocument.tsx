@@ -84,7 +84,7 @@ export function LeadMagnetDocument({ magnet, logoBuffer, siteHost }: LeadMagnetD
         ))}
 
         <View style={styles.footer} fixed>
-          <Text style={styles.footerBrand}>BSH Solutions — Business Smart Hub</Text>
+          <Text style={styles.footerBrand}>BSH Solutions, Business Smart Hub</Text>
           <Text style={styles.footerText}>{siteHost} · Want a hand working through this list? Book a free consultation.</Text>
         </View>
       </Page>

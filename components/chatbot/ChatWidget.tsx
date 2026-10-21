@@ -234,7 +234,7 @@ export default function ChatWidget() {
             {
               role: "assistant",
               content:
-                "Sorry — something went wrong on my side. You can reach the team directly at info@bshsolutions.net or book a free call at /book-consultation.",
+                "Sorry, something went wrong on my side. You can reach the team directly at info@bshsolutions.net or book a free call at /book-consultation.",
             },
           ]);
         }
@@ -303,7 +303,7 @@ export default function ChatWidget() {
                   <p className="text-sm font-bold leading-tight">BSH Solutions</p>
                   <p className="flex items-center gap-1.5 text-xs text-white/75">
                     <span className="h-2 w-2 rounded-full bg-[#25D366]" />
-                    Online — usually replies instantly
+                    Online, usually replies instantly
                   </p>
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function ChatWidget() {
             </form>
 
             <p className="bg-white px-4 pb-3 text-center text-[11px] leading-snug text-[#231F20]/45">
-              Automated assistant — our team confirms every detail.
+              Automated assistant, our team confirms every detail.
             </p>
           </motion.div>
         )}

@@ -161,7 +161,7 @@ export async function PATCH(
         entityType: "lead",
         entityId: id,
         type: "lost",
-        description: `Marked lost — reason: ${payload.lost_reason ?? existingLead.lost_reason}`,
+        description: `Marked lost, reason: ${payload.lost_reason ?? existingLead.lost_reason}`,
       });
     }
 

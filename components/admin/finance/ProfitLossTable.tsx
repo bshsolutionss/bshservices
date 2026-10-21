@@ -84,7 +84,7 @@ export default function ProfitLossTable({ months, totals, rangeId, basisLabel }:
                     {formatMoney(row.profit, "PKR")}
                   </td>
                   <td className="whitespace-nowrap py-2.5 text-right">
-                    {row.margin !== null ? `${row.margin}%` : "—"}
+                    {row.margin !== null ? `${row.margin}%` : "-"}
                   </td>
                 </tr>
               );
@@ -104,7 +104,7 @@ export default function ProfitLossTable({ months, totals, rangeId, basisLabel }:
                 {formatMoney(totals.profit, "PKR")}
               </td>
               <td className="whitespace-nowrap py-3 text-right">
-                {totals.margin !== null ? `${totals.margin}%` : "—"}
+                {totals.margin !== null ? `${totals.margin}%` : "-"}
               </td>
             </tr>
             <tr className="text-xs text-[#231F20]/45">

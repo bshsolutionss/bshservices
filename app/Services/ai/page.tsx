@@ -66,7 +66,7 @@ export default function AIServicesPage() {
         id="ai-automation"
         title="AI Automation"
         learnMoreHref="/Services/ai/ai-automation"
-        description="We automate workflows using AI agents, APIs, and automation platforms — helping you save hours every week."
+        description="We automate workflows using AI agents, APIs, and automation platforms, helping you save hours every week."
         features={[
           "Process automation with AI agents",
           "Data entry & reporting automation",
@@ -109,7 +109,7 @@ export default function AIServicesPage() {
         id="ai-chatbots"
         title="AI Chatbots"
         learnMoreHref="/Services/ai/ai-chatbots"
-        description="AI chatbots for websites, WhatsApp, Facebook, and CRM systems — trained on your business data."
+        description="AI chatbots for websites, WhatsApp, Facebook, and CRM systems, trained on your business data."
         features={[
           "WhatsApp AI chatbots",
           "Website AI assistants",
@@ -173,7 +173,7 @@ export default function AIServicesPage() {
         id="ai-video-automation"
         title="AI Video Automation"
         learnMoreHref="/Services/ai/ai-video-automation"
-        description="Bulk video creation using AI—script, voiceover, editing, and publishing workflows."
+        description="Bulk video creation using AI, script, voiceover, editing, and publishing workflows."
         features={[
           "Bulk video generation",
           "AI voiceovers",

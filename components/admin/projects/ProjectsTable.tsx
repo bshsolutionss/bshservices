@@ -52,7 +52,7 @@ const columns: DataTableColumn<ProjectListItem>[] = [
     key: "service",
     label: "Service",
     value: (row) => row.service_category || "",
-    render: (row) => row.service_category || "—",
+    render: (row) => row.service_category || "-",
   },
   {
     key: "amount",
@@ -62,17 +62,17 @@ const columns: DataTableColumn<ProjectListItem>[] = [
       row.billing_type === "monthly"
         ? row.monthly_fee !== null
           ? `${formatMoney(Number(row.monthly_fee), row.currency)} / mo`
-          : "—"
+          : "-"
         : row.budget !== null
           ? formatMoney(Number(row.budget), row.currency)
-          : "—",
+          : "-",
     className: "whitespace-nowrap",
   },
   {
     key: "due",
     label: "Due",
     value: (row) => row.due_date ?? "",
-    render: (row) => (row.due_date ? new Date(row.due_date).toLocaleDateString() : "—"),
+    render: (row) => (row.due_date ? new Date(row.due_date).toLocaleDateString() : "-"),
     className: "whitespace-nowrap",
   },
   {

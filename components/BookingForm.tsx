@@ -200,7 +200,7 @@ function BookingFormInner() {
         <CheckCircle2 className="w-14 h-14 text-[#1A14A5] mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-[#231F20] mb-2">You&apos;re booked! 🎉</h3>
         <p className="text-[#231F20]/70">
-          Check your email for confirmation — we&apos;ve sent the details to <strong>{form.email}</strong>.
+          Check your email for confirmation, we&apos;ve sent the details to <strong>{form.email}</strong>.
         </p>
 
         {/* While-you-wait — gives the visitor somewhere to go instead of a
@@ -248,7 +248,7 @@ function BookingFormInner() {
     <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 max-w-3xl mx-auto">
       <div className="flex items-center gap-1.5 mb-6 text-sm text-[#231F20]/60">
         <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-        <span>Trusted by 9+ clients — usually responds within a few hours</span>
+        <span>Trusted by 20+ clients, usually responds within a few hours</span>
       </div>
 
       <p className="text-sm font-semibold text-[#1A14A5] mb-1">Step 1</p>
@@ -335,7 +335,7 @@ function BookingFormInner() {
             </p>
           )}
           {!slotsLoading && !slotsError && slots.length === 0 && (
-            <p className="text-sm text-[#231F20]/60 mb-8">No slots available this day — try another date.</p>
+            <p className="text-sm text-[#231F20]/60 mb-8">No slots available this day, try another date.</p>
           )}
           {!slotsLoading && !slotsError && slots.length > 0 && (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">

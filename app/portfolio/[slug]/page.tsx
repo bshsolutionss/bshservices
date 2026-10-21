@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   // Full "<name> — <category> Case Study" when it fits Google's ~60-char
   // title width, otherwise the shorter "<name> Case Study".
-  const full = `${project.title} — ${project.category} Case Study | BSH Solutions`;
+  const full = `${project.title}, ${project.category} Case Study | BSH Solutions`;
   const title = full.length <= 60 ? full : `${project.title} Case Study | BSH Solutions`;
   return pageMetadata({
     title,

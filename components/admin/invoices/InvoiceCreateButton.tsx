@@ -322,7 +322,7 @@ export default function InvoiceCreateButton({
     }
   };
 
-  const clientName = clients.find((c) => c.id === clientId)?.company_name ?? "—";
+  const clientName = clients.find((c) => c.id === clientId)?.company_name ?? "-";
   const projectName = projects.find((p) => p.id === projectId)?.name;
 
   return (
@@ -565,7 +565,7 @@ export default function InvoiceCreateButton({
                 required
                 value={issueDate}
                 onChange={setIssueDate}
-                hint="What the invoice is dated for — finance reports use this."
+                hint="What the invoice is dated for, finance reports use this."
               />
               <div className="space-y-1.5">
                 <TextField

@@ -200,9 +200,9 @@ export function computeInvoiceTotals(
 
 /** Short, locale-aware date for list/detail screens. Keeps "—" for empty dates consistent panel-wide. */
 export function formatDate(value: string | null | undefined): string {
-  if (!value) return "—";
+  if (!value) return "-";
   const date = new Date(value);
   return Number.isNaN(date.getTime())
-    ? "—"
+    ? "-"
     : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }

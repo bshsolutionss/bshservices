@@ -90,7 +90,7 @@ export default function ProjectCreateButton({
     [clients]
   );
   const resolvedClientName =
-    clientName ?? clients?.find((c) => c.id === selectedClientId)?.company_name ?? "—";
+    clientName ?? clients?.find((c) => c.id === selectedClientId)?.company_name ?? "-";
 
   const reset = () => {
     setStep(0);
@@ -188,15 +188,15 @@ export default function ProjectCreateButton({
 
   const summaryRows: { label: string; value: string }[] = [
     { label: "Client", value: resolvedClientName },
-    { label: "Project", value: name.trim() || "—" },
-    { label: "Service", value: serviceCategory || "—" },
+    { label: "Project", value: name.trim() || "-" },
+    { label: "Service", value: serviceCategory || "-" },
     { label: "Billing", value: PROJECT_BILLING_LABELS[billingType] },
     billingType === "monthly"
       ? { label: "Monthly fee", value: `${formatMoney(Number(monthlyFee) || 0, currency)} on day ${billingDay}` }
       : { label: "Budget", value: budget === "" ? "Not set" : formatMoney(Number(budget), currency) },
     { label: "Stage", value: PROJECT_STAGE_LABELS[stage] },
-    { label: "Start", value: startDate || "—" },
-    { label: "Due", value: dueDate || "—" },
+    { label: "Start", value: startDate || "-" },
+    { label: "Due", value: dueDate || "-" },
   ];
 
   return (
@@ -270,7 +270,7 @@ export default function ProjectCreateButton({
               className="sm:col-span-2"
               value={name}
               onChange={setName}
-              placeholder="e.g. Website redesign — Phase 1"
+              placeholder="e.g. Website redesign, Phase 1"
               error={errors.name}
               autoFocus
             />

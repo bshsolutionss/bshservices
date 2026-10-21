@@ -36,7 +36,7 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
   if (service) {
     const path = `/Services/${service.category}/${service.slug}`;
     return {
-      reply: `${service.name} — ${service.description}\n\nWhat's included: ${service.features.join(
+      reply: `${service.name}, ${service.description}\n\nWhat's included: ${service.features.join(
         ", "
       )}.\n\nFull details: ${path}\n\n${CONTACT_LINE}`,
       suggestions: ["What does this cost?", "Book a free consultation", "See your past work"],
@@ -45,10 +45,10 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
 
   if (matches(text, [/price|pricing|cost|how much|rate|package|budget|quote|fee/])) {
     const retainers = PRICING_DATA[region].RETAINER.map(
-      (tier) => `• ${tier.name} — ${tier.price}/${tier.period}: ${tier.description}`
+      (tier) => `• ${tier.name}, ${tier.price}/${tier.period}: ${tier.description}`
     ).join("\n");
     return {
-      reply: `Here are our monthly retainer packages:\n\n${retainers}\n\nWe also price WordPress, eCommerce, and custom-code projects separately — the full breakdown is at ${BUSINESS_FACTS.paths.pricing}. Every project gets a tailored quote after a quick scoping call.\n\n${CONTACT_LINE}`,
+      reply: `Here are our monthly retainer packages:\n\n${retainers}\n\nWe also price WordPress, eCommerce, and custom-code projects separately, the full breakdown is at ${BUSINESS_FACTS.paths.pricing}. Every project gets a tailored quote after a quick scoping call.\n\n${CONTACT_LINE}`,
       suggestions: [
         "What's in the Standard package?",
         "How much is an eCommerce store?",
@@ -59,7 +59,7 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
 
   if (matches(text, [/service|offer|do you (do|build|make)|help with|capabilit/])) {
     const categories = Object.values(SERVICE_CATEGORIES)
-      .map((category) => `• ${category.name} — ${category.description}`)
+      .map((category) => `• ${category.name}, ${category.description}`)
       .join("\n");
     return {
       reply: `We cover ${SERVICES.length} services across ${
@@ -71,7 +71,7 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
 
   if (matches(text, [/book|consult|meeting|call|appointment|schedule|demo/])) {
     return {
-      reply: `Happy to set that up — consultations are free. Pick a time at ${BUSINESS_FACTS.paths.booking}, or send your details to ${BUSINESS_FACTS.emails.sales} and the team will come back to you. Slots are shown in Pakistan Time (PKT).`,
+      reply: `Happy to set that up, consultations are free. Pick a time at ${BUSINESS_FACTS.paths.booking}, or send your details to ${BUSINESS_FACTS.emails.sales} and the team will come back to you. Slots are shown in Pakistan Time (PKT).`,
       suggestions: ["What should I prepare?", "What does it cost?", "What services do you offer?"],
     };
   }
@@ -85,7 +85,7 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
 
   if (matches(text, [/who are you|about|company|bsh|business smart hub|team|experience|why (you|choose)/])) {
     return {
-      reply: `${SITE_FAQS[0].answer}\n\n${BUSINESS_FACTS.longName} — ${BUSINESS_FACTS.tagline} We're based in ${BUSINESS_FACTS.location} and work with ${BUSINESS_FACTS.worksWith}. More at ${BUSINESS_FACTS.paths.about}, and you can see past projects at ${BUSINESS_FACTS.paths.portfolio}.`,
+      reply: `${SITE_FAQS[0].answer}\n\n${BUSINESS_FACTS.longName}, ${BUSINESS_FACTS.tagline} We're based in ${BUSINESS_FACTS.location} and work with ${BUSINESS_FACTS.worksWith}. More at ${BUSINESS_FACTS.paths.about}, and you can see past projects at ${BUSINESS_FACTS.paths.portfolio}.`,
       suggestions: ["What services do you offer?", "What does it cost?", "Book a free consultation"],
     };
   }
@@ -106,7 +106,7 @@ export function answerFromKeywords(question: string, region: Region): FallbackAn
   }
 
   return {
-    reply: `I can help with our services, pricing, and booking a free consultation. For anything more specific, the team will answer fastest directly — ${BUSINESS_FACTS.emails.general} or ${BUSINESS_FACTS.phone}.\n\n${CONTACT_LINE}`,
+    reply: `I can help with our services, pricing, and booking a free consultation. For anything more specific, the team will answer fastest directly, ${BUSINESS_FACTS.emails.general} or ${BUSINESS_FACTS.phone}.\n\n${CONTACT_LINE}`,
     suggestions: ["What services do you offer?", "What does it cost?", "Book a free consultation"],
   };
 }

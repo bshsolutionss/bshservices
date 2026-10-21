@@ -86,4 +86,4 @@ export const STARTER_PROMPTS = [
 ] as const;
 
 export const GREETING =
-  "Hi there! Ask me anything about our services, pricing or packages — or I can set up a free consultation with the team.";
+  "Hi there! Ask me anything about our services, pricing or packages, or I can set up a free consultation with the team.";

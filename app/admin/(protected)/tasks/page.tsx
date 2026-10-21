@@ -139,7 +139,7 @@ export default async function AdminTasksPage({
                 task={task}
                 assignees={assignees}
                 readOnly={mineOnly}
-                projectName={projectNames.get(task.project_id) || "—"}
+                projectName={projectNames.get(task.project_id) || "-"}
               />
             ))}
           </ul>

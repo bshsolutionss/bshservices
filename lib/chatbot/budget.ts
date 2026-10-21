@@ -34,7 +34,7 @@ function warnOnce(error: unknown): void {
   if (warnedMissingTable) return;
   warnedMissingTable = true;
   console.warn(
-    "[chatbot/budget] usage counter unavailable — the daily budget is NOT being enforced. " +
+    "[chatbot/budget] usage counter unavailable, the daily budget is NOT being enforced. " +
       "Run supabase/migrations/0011_chatbot_usage.sql. Cause:",
     error
   );

@@ -426,7 +426,7 @@ async function AdminOverview() {
           />
           <StatCard
             label="Tasks Completed"
-            value={data.taskCompletionRate !== null ? `${data.taskCompletionRate}%` : "—"}
+            value={data.taskCompletionRate !== null ? `${data.taskCompletionRate}%` : "-"}
             description="Share of all tasks done"
             icon={CheckSquare}
             iconBg="#0d9488"
@@ -490,7 +490,7 @@ async function AdminOverview() {
                     <div className="min-w-0">
                       <p className="truncate font-medium text-[#231F20]">{lead.name}</p>
                       <p className="truncate text-sm text-[#231F20]/50">
-                        {lead.selected_service || lead.service_category || "—"} · {lead.email}
+                        {lead.selected_service || lead.service_category || "-"} · {lead.email}
                       </p>
                     </div>
                     <Badge

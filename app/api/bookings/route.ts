@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
 
   await sendAdminPush({
     title: "New consultation booked",
-    body: `${lead.name} — ${lead.booking_date} at ${lead.booking_time}`,
+    body: `${lead.name}, ${lead.booking_date} at ${lead.booking_time}`,
     url: `/admin/bookings`,
   });
 

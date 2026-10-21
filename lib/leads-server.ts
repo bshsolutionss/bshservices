@@ -99,7 +99,7 @@ export async function saveLead(input: SaveLeadInput): Promise<SaveLeadResult> {
 
   await sendAdminPush({
     title: lead.source === "chatbot" ? "New lead (chatbot)" : "New lead",
-    body: `${lead.name}${lead.business ? ` (${lead.business})` : ""} — ${
+    body: `${lead.name}${lead.business ? ` (${lead.business})` : ""}, ${
       lead.selected_service || lead.service_category || "general inquiry"
     }`,
     url: `/admin/leads/${lead.id}`,

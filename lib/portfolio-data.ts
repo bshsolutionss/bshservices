@@ -295,7 +295,7 @@ export function projectJsonLd(project: PortfolioProject) {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     "@id": `${pageUrl}#project`,
-    name: `${project.title} — ${project.category}`,
+    name: `${project.title}, ${project.category}`,
     headline: project.tagline,
     description: project.description,
     url: pageUrl,
@@ -322,7 +322,7 @@ export function portfolioIndexJsonLd(projects: PortfolioProject[] = PORTFOLIO_PR
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "BSH Solutions Portfolio — Live Client Projects",
+    name: "BSH Solutions Portfolio, Live Client Projects",
     description:
       "Real, live client projects by BSH Solutions: websites, eCommerce stores, dashboards and custom software.",
     url: `${SITE_URL}/portfolio`,

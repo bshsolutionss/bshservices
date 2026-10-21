@@ -152,8 +152,8 @@ export default function EmailSettingsForm({ initial }: { initial: EmailSettingsV
         )}
         <p className="text-sm font-semibold text-[#231F20]">
           {s.connected
-            ? `Connected via ${s.transport === "smtp" ? "SMTP" : "Resend"} — emails are ready to send.`
-            : "Not connected — pick a provider below. Task assignment emails won't send until you do."}
+            ? `Connected via ${s.transport === "smtp" ? "SMTP" : "Resend"}, emails are ready to send.`
+            : "Not connected, pick a provider below. Task assignment emails won't send until you do."}
         </p>
       </div>
 
@@ -210,7 +210,7 @@ export default function EmailSettingsForm({ initial }: { initial: EmailSettingsV
                   label="Password / app password"
                   value={smtpPass}
                   onChange={setSmtpPass}
-                  placeholder={s.has_smtp_pass ? "•••••••• saved — type to replace" : "Paste app password"}
+                  placeholder={s.has_smtp_pass ? "•••••••• saved, type to replace" : "Paste app password"}
                   hint="Gmail needs an App Password (Google Account → Security → 2-Step Verification → App passwords), not your normal password. Stored encrypted."
                 />
               </div>
@@ -232,14 +232,14 @@ export default function EmailSettingsForm({ initial }: { initial: EmailSettingsV
               label="Resend API key"
               value={resendKey}
               onChange={setResendKey}
-              placeholder={s.has_resend_key ? "•••••••• saved — type to replace" : "re_..."}
+              placeholder={s.has_resend_key ? "•••••••• saved, type to replace" : "re_..."}
               hint="Your sending domain must be verified in Resend. Stored encrypted."
             />
           )}
 
           {s.provider === "env" && (
             <Alert tone="info">
-              Uses the <strong>RESEND_API_KEY</strong> configured on the server — the same setup the website forms use.
+              Uses the <strong>RESEND_API_KEY</strong> configured on the server, the same setup the website forms use.
             </Alert>
           )}
         </div>

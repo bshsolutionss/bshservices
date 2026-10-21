@@ -176,7 +176,7 @@ export default async function AdminProjectsPage({
       </PageHeader>
 
       <ProjectsTable
-        projects={projects.map((p) => ({ ...p, clientName: clientNames.get(p.client_id) || "—" }))}
+        projects={projects.map((p) => ({ ...p, clientName: clientNames.get(p.client_id) || "-" }))}
         emptyTitle={showArchived ? "No archived projects" : "No projects yet"}
         emptyMessage={showArchived ? "Archived projects appear here." : "Create a project for a client to start tracking tasks and billing."}
         emptyAction={showArchived ? undefined : <ProjectCreateButton clients={clients} label="Create first project" />}

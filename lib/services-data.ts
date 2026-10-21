@@ -184,7 +184,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Website Development",
     shortDescription: "Responsive, SEO-friendly websites built for speed and conversions.",
     description:
-      "We design and build fast, secure, and visually polished websites that turn visitors into customers. Every site is coded with clean, semantic markup, optimized for Core Web Vitals, and structured for search engines from day one — so you get a website that looks great and actually ranks.",
+      "We design and build fast, secure, and visually polished websites that turn visitors into customers. Every site is coded with clean, semantic markup, optimized for Core Web Vitals, and structured for search engines from day one, so you get a website that looks great and actually ranks.",
     image: "/images/development/1.png",
     features: [
       "Fast and secure performance",
@@ -208,7 +208,7 @@ export const SERVICES: ServiceDefinition[] = [
     ],
     faqs: [
       { question: "How long does a custom website take to build?", answer: "Most business websites launch within 3–6 weeks depending on page count and features. We confirm an exact timeline after the first scoping call." },
-      { question: "Will my website be mobile-friendly?", answer: "Yes — every site we build is fully responsive and tested across phones, tablets, and desktops before launch." },
+      { question: "Will my website be mobile-friendly?", answer: "Yes, every site we build is fully responsive and tested across phones, tablets, and desktops before launch." },
       { question: "Do you handle hosting and domain setup too?", answer: "Yes, we can set up hosting, domain connection, and SSL for you, or work alongside your existing provider." },
     ],
     keywords: ["custom website development", "business website design", "responsive web design", "SEO friendly website"],
@@ -219,7 +219,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "E-Commerce Development",
     shortDescription: "An ecommerce development company building Shopify, WooCommerce, and custom online stores that turn visitors into paying customers.",
     description:
-      "Ecommerce development is the process of planning, building, and maintaining the technical and design foundation that lets you sell products online — from the storefront and inventory systems to secure payment gateways and hosting. As a full-service ecommerce web development company, we manage strategy, design, development, testing, and post-launch support under one roof, so your store is built with conversion in mind from the very first wireframe.",
+      "Ecommerce development is the process of planning, building, and maintaining the technical and design foundation that lets you sell products online, from the storefront and inventory systems to secure payment gateways and hosting. As a full-service ecommerce web development company, we manage strategy, design, development, testing, and post-launch support under one roof, so your store is built with conversion in mind from the very first wireframe.",
     image: "/images/development/2.png",
     features: [
       "Shopify Ecommerce Development",
@@ -289,7 +289,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Custom Software Development",
     shortDescription: "A custom software development company building CRMs, ERPs, and SaaS platforms shaped entirely around how your business actually works.",
     description:
-      "Custom software development is the process of designing, building, and maintaining software created specifically for one business rather than sold as a generic product to many different companies — shaped around your actual workflows, terminology, and data instead of forcing your team to adapt to generic settings. As a full-service custom software development agency, we manage discovery, design, development, testing, and long-term support ourselves, giving you one accountable team instead of coordinating separate vendors.",
+      "Custom software development is the process of designing, building, and maintaining software created specifically for one business rather than sold as a generic product to many different companies, shaped around your actual workflows, terminology, and data instead of forcing your team to adapt to generic settings. As a full-service custom software development agency, we manage discovery, design, development, testing, and long-term support ourselves, giving you one accountable team instead of coordinating separate vendors.",
     image: "/images/development/4.png",
     features: [
       "Custom CRM Development",
@@ -325,7 +325,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Web Application Development",
     shortDescription: "Interactive, API-driven web apps built for performance at scale.",
     description:
-      "We build web applications — not just websites. Real-time dashboards, SaaS products, and interactive tools built with modern frameworks, optimized databases, and clean API design, so your app stays fast and reliable as usage grows.",
+      "We build web applications, not just websites. Real-time dashboards, SaaS products, and interactive tools built with modern frameworks, optimized databases, and clean API design, so your app stays fast and reliable as usage grows.",
     image: "/images/development/5.png",
     features: [
       "Real-time functionality",
@@ -345,7 +345,7 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "Prisma", icon: SiPrisma, color: "#2D3748" },
     ],
     faqs: [
-      { question: "What's the difference between a website and a web application?", answer: "A web application is interactive and data-driven — think dashboards, SaaS tools, or booking systems — rather than mostly static content." },
+      { question: "What's the difference between a website and a web application?", answer: "A web application is interactive and data-driven, think dashboards, SaaS tools, or booking systems, rather than mostly static content." },
       { question: "Can you build a SaaS product from scratch?", answer: "Yes, from database design and authentication to billing integration and the front-end UI." },
       { question: "Do you support real-time features like live updates?", answer: "Yes, we implement real-time data sync using tools like Supabase and Firebase where it fits the product." },
     ],
@@ -357,7 +357,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Website Maintenance & Support",
     shortDescription: "24/7 monitoring, updates, and security patches for peace of mind.",
     description:
-      "A website is never really \"done\" — it needs updates, security patches, and monitoring to stay fast and safe. We keep your site running smoothly with regular maintenance, performance audits, and rapid support when something needs attention.",
+      "A website is never really \"done\", it needs updates, security patches, and monitoring to stay fast and safe. We keep your site running smoothly with regular maintenance, performance audits, and rapid support when something needs attention.",
     image: "/images/development/6.png",
     features: [
       "24/7 monitoring",
@@ -377,7 +377,7 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "CI/CD", icon: FaTools, color: "#E24329" },
     ],
     faqs: [
-      { question: "Do I need a maintenance plan if my site already works fine?", answer: "Yes — most issues (security vulnerabilities, plugin conflicts, slow load times) build up silently until something breaks. Maintenance catches them early." },
+      { question: "Do I need a maintenance plan if my site already works fine?", answer: "Yes, most issues (security vulnerabilities, plugin conflicts, slow load times) build up silently until something breaks. Maintenance catches them early." },
       { question: "How fast do you respond to urgent issues?", answer: "Critical issues (site down, security incidents) are prioritized and addressed as fast as possible; typical response is same business day." },
       { question: "Can you take over maintenance for a site you didn't build?", answer: "Yes, we regularly take over maintenance for existing sites after a short technical review." },
     ],
@@ -391,7 +391,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Branding & Identity Design",
     shortDescription: "A branding agency that builds brand strategy, identity design, and guidelines people actually remember.",
     description:
-      "Branding is more than a logo — it's the complete impression your business leaves, from your name and visual identity to your tone of voice and the experience customers have with you. As a full-service branding agency, we start with brand strategy and positioning, then bring it to life through logo, color palette, typography, and documented brand guidelines, so your identity feels consistent and intentional everywhere your audience encounters it.",
+      "Branding is more than a logo, it's the complete impression your business leaves, from your name and visual identity to your tone of voice and the experience customers have with you. As a full-service branding agency, we start with brand strategy and positioning, then bring it to life through logo, color palette, typography, and documented brand guidelines, so your identity feels consistent and intentional everywhere your audience encounters it.",
     image: "/images/Designing/1.png",
     features: [
       "Brand strategy and positioning",
@@ -404,7 +404,7 @@ export const SERVICES: ServiceDefinition[] = [
     benefits: [
       { title: "Strategy before design", description: "Every visual decision is grounded in real brand positioning and audience research, not guesswork." },
       { title: "One accountable team", description: "Strategy, identity design, and messaging happen under one roof, so your brand feels cohesive instead of stitched together by different vendors." },
-      { title: "Consistency that lasts", description: "Documented brand guidelines keep your identity consistent everywhere — website, social, print, and packaging — no matter who applies it." },
+      { title: "Consistency that lasts", description: "Documented brand guidelines keep your identity consistent everywhere, website, social, print, and packaging, no matter who applies it." },
     ],
     technologies: [
       { name: "Adobe Illustrator", icon: SiAdobe, color: "#FF9A00" },
@@ -427,7 +427,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "UI/UX Design",
     shortDescription: "Intuitive interfaces that improve usability and conversion.",
     description:
-      "Good design isn't just how it looks — it's how it works. We research your users, wireframe the experience, and design interfaces that are intuitive, accessible, and built to move people toward the action you want them to take.",
+      "Good design isn't just how it looks, it's how it works. We research your users, wireframe the experience, and design interfaces that are intuitive, accessible, and built to move people toward the action you want them to take.",
     image: "/images/Designing/2.png",
     features: [
       "User research and wireframing",
@@ -449,7 +449,7 @@ export const SERVICES: ServiceDefinition[] = [
     faqs: [
       { question: "Do you design for both web and mobile?", answer: "Yes, we design responsive interfaces for web, and native-feeling layouts for iOS and Android." },
       { question: "Can you design a system for our existing product?", answer: "Yes, we audit the current experience first and design improvements or a full design system around it." },
-      { question: "What do you hand off to developers?", answer: "Interactive Figma prototypes, a component design system, and specs — everything a development team needs to build accurately." },
+      { question: "What do you hand off to developers?", answer: "Interactive Figma prototypes, a component design system, and specs, everything a development team needs to build accurately." },
     ],
     keywords: ["UI UX design agency", "user interface design", "product design services", "design system creation"],
   },
@@ -480,7 +480,7 @@ export const SERVICES: ServiceDefinition[] = [
     ],
     faqs: [
       { question: "Do you design for both digital and print?", answer: "Yes, we design for social media, web, and print-ready formats including brochures, posters, and business cards." },
-      { question: "How many revisions are included?", answer: "We work through structured revision rounds until the design meets your brief — exact rounds depend on the package agreed at kickoff." },
+      { question: "How many revisions are included?", answer: "We work through structured revision rounds until the design meets your brief, exact rounds depend on the package agreed at kickoff." },
       { question: "Can you match our existing brand style?", answer: "Yes, we design within your existing brand guidelines, or help establish them if you don't have any yet." },
     ],
     keywords: ["graphic design services", "social media graphics", "print design agency", "marketing visuals design"],
@@ -491,7 +491,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Logo Design",
     shortDescription: "Unique, memorable logos that create instant recognition.",
     description:
-      "Your logo carries your brand everywhere. We design unique, scalable logos that capture your business's personality — from initial concepts through refined vector artwork ready for web, print, and merchandise.",
+      "Your logo carries your brand everywhere. We design unique, scalable logos that capture your business's personality, from initial concepts through refined vector artwork ready for web, print, and merchandise.",
     image: "/images/Designing/4.png",
     features: [
       "Custom concept creation",
@@ -500,7 +500,7 @@ export const SERVICES: ServiceDefinition[] = [
       "Brand alignment and scalability",
     ],
     benefits: [
-      { title: "Truly custom", description: "Original concepts built for your business — not a template with your name added." },
+      { title: "Truly custom", description: "Original concepts built for your business, not a template with your name added." },
       { title: "Scales cleanly", description: "Vector artwork stays crisp from a favicon to a billboard." },
       { title: "Multiple use-ready variations", description: "Light, dark, icon-only, and horizontal versions for every placement." },
     ],
@@ -523,7 +523,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Motion Graphics",
     shortDescription: "Engaging motion visuals for ads, explainers, and brand videos.",
     description:
-      "We bring static ideas to life with smooth, engaging motion design — animated logos, explainer videos, and social content that hold attention and explain your product or story faster than a static image ever could.",
+      "We bring static ideas to life with smooth, engaging motion design, animated logos, explainer videos, and social content that hold attention and explain your product or story faster than a static image ever could.",
     image: "/images/Designing/5.png",
     features: [
       "Animated logos and intros",
@@ -543,7 +543,7 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "Cinema 4D", icon: SiCinema4D, color: "#011A6A" },
     ],
     faqs: [
-      { question: "How long is a typical explainer video?", answer: "Most explainer videos run 30–90 seconds — long enough to explain, short enough to hold attention." },
+      { question: "How long is a typical explainer video?", answer: "Most explainer videos run 30–90 seconds, long enough to explain, short enough to hold attention." },
       { question: "Can you animate our existing logo?", answer: "Yes, we can turn a static logo into an animated intro/outro sting for videos and social content." },
       { question: "Do you write the script too?", answer: "Yes, we can handle scripting and storyboarding, or work from a script you already have." },
     ],
@@ -609,9 +609,9 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "Google Analytics", icon: SiGoogleanalytics, color: "#F9AB00" },
     ],
     faqs: [
-      { question: "What's a realistic monthly ad budget to start?", answer: "It depends on your industry and goals — we'll recommend a starting budget after reviewing your market and competition." },
+      { question: "What's a realistic monthly ad budget to start?", answer: "It depends on your industry and goals, we'll recommend a starting budget after reviewing your market and competition." },
       { question: "Which platforms do you run ads on?", answer: "Primarily Google Ads and Meta Ads, with LinkedIn Ads for B2B campaigns where it fits." },
-      { question: "How do you measure success?", answer: "Through conversion tracking tied to real business outcomes — leads, sales, or signups — not just clicks or impressions." },
+      { question: "How do you measure success?", answer: "Through conversion tracking tied to real business outcomes, leads, sales, or signups, not just clicks or impressions." },
     ],
     keywords: ["PPC advertising agency", "Google Ads management", "Meta ads campaigns", "paid search marketing"],
   },
@@ -641,8 +641,8 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "Hootsuite", icon: SiHootsuite, color: "#FF7A00" },
     ],
     faqs: [
-      { question: "Which platforms do you manage?", answer: "Instagram, Facebook, LinkedIn, and TikTok most commonly — we'll recommend the platforms that fit your audience." },
-      { question: "Do you create the content or do we?", answer: "We handle content creation end-to-end — planning, design, captions, and scheduling — with your review before anything goes live." },
+      { question: "Which platforms do you manage?", answer: "Instagram, Facebook, LinkedIn, and TikTok most commonly, we'll recommend the platforms that fit your audience." },
+      { question: "Do you create the content or do we?", answer: "We handle content creation end-to-end, planning, design, captions, and scheduling, with your review before anything goes live." },
       { question: "How often will you post?", answer: "Posting frequency is set in your content calendar based on your goals and package; we'll agree on cadence upfront." },
     ],
     keywords: ["social media marketing agency", "social media management services", "Instagram marketing", "content calendar management"],
@@ -707,7 +707,7 @@ export const SERVICES: ServiceDefinition[] = [
     ],
     faqs: [
       { question: "Can you set up automated welcome and abandoned-cart sequences?", answer: "Yes, we design and configure automated flows including welcome series, abandoned cart, and re-engagement campaigns." },
-      { question: "Do you write the email copy?", answer: "Yes, copywriting and design are both included — you review and approve before anything sends." },
+      { question: "Do you write the email copy?", answer: "Yes, copywriting and design are both included, you review and approve before anything sends." },
       { question: "What platform do you use?", answer: "Most commonly Mailchimp or HubSpot, depending on your existing tools and the complexity of automation needed." },
     ],
     keywords: ["email marketing agency", "email automation services", "newsletter design", "drip campaign setup"],
@@ -718,7 +718,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Content Marketing",
     shortDescription: "A content marketing agency building SEO content strategy, blog writing, and website copy that actually drives business growth.",
     description:
-      "Content marketing services cover the full process of planning, creating, publishing, and measuring content designed to attract, engage, and convert a target audience — content strategy, SEO content writing, blog writing, and website copy, plus ongoing optimization based on how content actually performs once it's live. As a full-service digital content marketing agency, we handle strategy, writing, optimization, and distribution all under one roof, so your content program stays cohesive instead of fragmented across separate vendors.",
+      "Content marketing services cover the full process of planning, creating, publishing, and measuring content designed to attract, engage, and convert a target audience, content strategy, SEO content writing, blog writing, and website copy, plus ongoing optimization based on how content actually performs once it's live. As a full-service digital content marketing agency, we handle strategy, writing, optimization, and distribution all under one roof, so your content program stays cohesive instead of fragmented across separate vendors.",
     image: "/images/Marketing/5.png",
     features: [
       "Content Strategy Services",
@@ -788,7 +788,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Product Photography",
     shortDescription: "High-quality product imagery designed to boost sales.",
     description:
-      "Great product photos sell products. We shoot detail-oriented, high-resolution imagery — studio or lifestyle — with lighting and composition dialed in to make your products look their absolute best online and in print.",
+      "Great product photos sell products. We shoot detail-oriented, high-resolution imagery, studio or lifestyle, with lighting and composition dialed in to make your products look their absolute best online and in print.",
     image: "/images/Photography/1.png",
     features: [
       "E-commerce and catalog photography",
@@ -809,7 +809,7 @@ export const SERVICES: ServiceDefinition[] = [
     ],
     faqs: [
       { question: "Do you shoot on white background for marketplaces?", answer: "Yes, we shoot marketplace-compliant white-background images alongside lifestyle shots if needed." },
-      { question: "How many products can you shoot in a session?", answer: "It depends on product complexity — we'll confirm an estimated count and timeline once we know your catalogue." },
+      { question: "How many products can you shoot in a session?", answer: "It depends on product complexity, we'll confirm an estimated count and timeline once we know your catalogue." },
       { question: "Is retouching included?", answer: "Yes, color correction, background cleanup, and detail retouching are included on all selected images." },
     ],
     keywords: ["product photography services", "eCommerce product photos", "studio product photography", "catalog photography"],
@@ -820,7 +820,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Brand Shoots",
     shortDescription: "A brand photography company capturing genuine, custom imagery that shows your real people, spaces, and personality.",
     description:
-      "Brand photography covers imagery specifically created to represent a business's identity, culture, and personality — team portraits, workspace imagery, and styled shots that communicate a brand's specific tone, rather than relying on generic stock photos other businesses are also using. As a full-service brand photoshoot agency, we handle concept development, planning, photography, and editing all under one roof, keeping your visual content genuinely aligned with your brand.",
+      "Brand photography covers imagery specifically created to represent a business's identity, culture, and personality, team portraits, workspace imagery, and styled shots that communicate a brand's specific tone, rather than relying on generic stock photos other businesses are also using. As a full-service brand photoshoot agency, we handle concept development, planning, photography, and editing all under one roof, keeping your visual content genuinely aligned with your brand.",
     image: "/images/Photography/2.png",
     features: [
       "Corporate Brand Photography",
@@ -876,7 +876,7 @@ export const SERVICES: ServiceDefinition[] = [
       { name: "DaVinci Resolve", icon: SiDavinciresolve, color: "#223FFF" },
     ],
     faqs: [
-      { question: "How many photographers cover an event?", answer: "Team size scales with event size — we'll recommend coverage based on venue, duration, and number of moments to capture." },
+      { question: "How many photographers cover an event?", answer: "Team size scales with event size, we'll recommend coverage based on venue, duration, and number of moments to capture." },
       { question: "Can we get same-day highlight photos?", answer: "Yes, we offer on-site or rapid-turnaround editing for a same-day highlight selection." },
       { question: "Do you cover corporate and personal events both?", answer: "Yes, from corporate conferences and product launches to personal celebrations." },
     ],
@@ -888,7 +888,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Video Production",
     shortDescription: "Full-scale video production from concept to final edit.",
     description:
-      "We handle the full video production pipeline — concept, scripting, filming, and post-production — to deliver cinematic content that tells your story. Whether it's a brand film or a product video, every stage is handled in-house.",
+      "We handle the full video production pipeline, concept, scripting, filming, and post-production, to deliver cinematic content that tells your story. Whether it's a brand film or a product video, every stage is handled in-house.",
     image: "/images/Photography/4.png",
     features: [
       "Concept, scripting, and storyboarding",
@@ -897,7 +897,7 @@ export const SERVICES: ServiceDefinition[] = [
       "Sound design and motion graphics",
     ],
     benefits: [
-      { title: "One team, full pipeline", description: "Concept through final edit handled by one team — no coordinating separate vendors." },
+      { title: "One team, full pipeline", description: "Concept through final edit handled by one team, no coordinating separate vendors." },
       { title: "Cinematic quality", description: "4K filming, color grading, and sound design produce a genuinely polished final product." },
       { title: "Story-first approach", description: "Scripting and storyboarding ensure the video actually communicates, not just looks nice." },
     ],
@@ -909,7 +909,7 @@ export const SERVICES: ServiceDefinition[] = [
     ],
     faqs: [
       { question: "Do you write the script and storyboard?", answer: "Yes, scripting and storyboarding are part of the process, or we can work from a script you already have." },
-      { question: "What video length do you typically produce?", answer: "It depends on the use case — brand films, product videos, and social cuts all have different ideal lengths, which we'll advise on." },
+      { question: "What video length do you typically produce?", answer: "It depends on the use case, brand films, product videos, and social cuts all have different ideal lengths, which we'll advise on." },
       { question: "Is color grading and sound design included?", answer: "Yes, professional color grading and sound design are included in the post-production process." },
     ],
     keywords: ["video production company", "corporate video production", "brand video production", "commercial video services"],
@@ -920,7 +920,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Photo Editing & Retouching",
     shortDescription: "Expert retouching that enhances every shot to perfection.",
     description:
-      "We bring every shot to its best version through careful color correction, compositing, and digital retouching — enhancing natural detail without over-processing, and delivering files ready for web or print.",
+      "We bring every shot to its best version through careful color correction, compositing, and digital retouching, enhancing natural detail without over-processing, and delivering files ready for web or print.",
     image: "/images/Photography/5.png",
     features: [
       "High-end retouching",
@@ -952,7 +952,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "Drone Photography",
     shortDescription: "A licensed drone photography service capturing real estate, construction, corporate, and event footage from a perspective ground cameras can't reach.",
     description:
-      "Professional drone photography and videography covers the operation of unmanned aerial vehicles to capture images and video from perspectives that would otherwise be impossible or prohibitively expensive to achieve through ground-based photography alone — with proper flight planning, licensing, and genuine piloting skill behind every shot. As a full-service drone photography provider, we handle flight planning, capture, and post-production all under one roof, keeping your aerial content cohesive and genuinely professional.",
+      "Professional drone photography and videography covers the operation of unmanned aerial vehicles to capture images and video from perspectives that would otherwise be impossible or prohibitively expensive to achieve through ground-based photography alone, with proper flight planning, licensing, and genuine piloting skill behind every shot. As a full-service drone photography provider, we handle flight planning, capture, and post-production all under one roof, keeping your aerial content cohesive and genuinely professional.",
     image: "/images/Photography/6.png",
     features: [
       "Real Estate Drone Photography",
@@ -990,7 +990,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "AI Automation",
     shortDescription: "An AI automation agency building workflow automation and AI agents that give your team back real time.",
     description:
-      "AI automation services cover the design, development, and implementation of systems that use artificial intelligence and workflow automation to handle tasks that previously required manual human effort — from straightforward workflow automation to more sophisticated AI that can interpret unstructured information and make contextual decisions. As a full-service AI automation agency, we handle discovery, solution design, development, and ongoing monitoring all under one roof, so your automation strategy stays cohesive and accountable.",
+      "AI automation services cover the design, development, and implementation of systems that use artificial intelligence and workflow automation to handle tasks that previously required manual human effort, from straightforward workflow automation to more sophisticated AI that can interpret unstructured information and make contextual decisions. As a full-service AI automation agency, we handle discovery, solution design, development, and ongoing monitoring all under one roof, so your automation strategy stays cohesive and accountable.",
     image: "/images/ai/1.png",
     features: [
       "Business Process Automation",
@@ -1026,7 +1026,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "AI Social Media Automation",
     shortDescription: "Auto-posting, AI content, and smart scheduling to stay active 24/7.",
     description:
-      "We set up systems that keep your social presence active without daily manual effort — AI-assisted content generation, auto-posting schedules, and safe engagement automation that runs in the background while you focus on the business.",
+      "We set up systems that keep your social presence active without daily manual effort, AI-assisted content generation, auto-posting schedules, and safe engagement automation that runs in the background while you focus on the business.",
     image: "/images/ai/2.png",
     features: [
       "Auto-posting systems",
@@ -1094,7 +1094,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "AI Website Integration",
     shortDescription: "An AI website integration company adding chat, search, and recommendation features that make your site genuinely smarter.",
     description:
-      "AI website integration services cover the process of adding artificial intelligence capabilities into an existing or new website — chatbots, AI-powered search, recommendation engines, and personalization — connected to your site's actual functionality rather than bolted on as a generic, disconnected widget. As a full-service AI integration agency, we handle discovery, development, testing, and ongoing monitoring all under one roof, keeping your AI features cohesive and genuinely reliable.",
+      "AI website integration services cover the process of adding artificial intelligence capabilities into an existing or new website, chatbots, AI-powered search, recommendation engines, and personalization, connected to your site's actual functionality rather than bolted on as a generic, disconnected widget. As a full-service AI integration agency, we handle discovery, development, testing, and ongoing monitoring all under one roof, keeping your AI features cohesive and genuinely reliable.",
     image: "/images/ai/4.png",
     features: [
       "ChatGPT Integration for Websites",
@@ -1127,10 +1127,10 @@ export const SERVICES: ServiceDefinition[] = [
   {
     slug: "aeo-ai-enablement",
     category: "ai",
-    name: "AEO — AI Enablement",
+    name: "AEO: AI Enablement",
     shortDescription: "An AEO agency helping your business get cited inside AI-generated answers, plus AI strategy consulting for adopting AI internally.",
     description:
-      "Answer engine optimization (AEO) focuses on making sure your content is structured and written in a way AI systems can easily understand, trust, and actually cite when generating answers — different from traditional SEO, which focuses on ranking within a list of links. As a full-service AI optimization services provider, we handle both content-focused AEO work and broader AI strategy and enablement consulting under one roof, giving your business a coherent, genuinely informed approach to AI.",
+      "Answer engine optimization (AEO) focuses on making sure your content is structured and written in a way AI systems can easily understand, trust, and actually cite when generating answers, different from traditional SEO, which focuses on ranking within a list of links. As a full-service AI optimization services provider, we handle both content-focused AEO work and broader AI strategy and enablement consulting under one roof, giving your business a coherent, genuinely informed approach to AI.",
     image: "/images/ai/5.png",
     features: [
       "AEO Audit and Strategy",
@@ -1141,9 +1141,9 @@ export const SERVICES: ServiceDefinition[] = [
       "AI Strategy Consulting and Readiness Assessment",
     ],
     benefits: [
-      { title: "Built for how AI systems actually evaluate content", description: "Work is grounded in clear structure, genuine expertise signals, and direct, extractable answers — the fundamentals AI systems actually favor when selecting sources." },
+      { title: "Built for how AI systems actually evaluate content", description: "Work is grounded in clear structure, genuine expertise signals, and direct, extractable answers, the fundamentals AI systems actually favor when selecting sources." },
       { title: "AEO and internal AI adoption, connected", description: "We treat visibility within AI systems and using AI internally as connected priorities, not separate initiatives handled by disconnected teams." },
-      { title: "Honest, not hype", description: "No legitimate provider can guarantee specific citations — we focus on proven principles that genuinely improve your odds of inclusion, not empty promises." },
+      { title: "Honest, not hype", description: "No legitimate provider can guarantee specific citations, we focus on proven principles that genuinely improve your odds of inclusion, not empty promises." },
     ],
     technologies: [
       { name: "AI Audit Tools", icon: FaSearch, color: "#1C7ED6" },
@@ -1166,7 +1166,7 @@ export const SERVICES: ServiceDefinition[] = [
     name: "AI Video Automation",
     shortDescription: "An AI video automation agency turning one idea into a constant, sustainable stream of platform-ready video content.",
     description:
-      "AI video automation services cover the tools, workflows, and AI-powered systems that reduce the manual effort required to produce, edit, and distribute video content — automated editing, AI-generated content, and automated repurposing across platforms, with human oversight kept on creative direction and final review. As a full-service AI video automation agency, we handle workflow design, tool implementation, and ongoing support all under one roof, keeping your production process cohesive and genuinely efficient.",
+      "AI video automation services cover the tools, workflows, and AI-powered systems that reduce the manual effort required to produce, edit, and distribute video content, automated editing, AI-generated content, and automated repurposing across platforms, with human oversight kept on creative direction and final review. As a full-service AI video automation agency, we handle workflow design, tool implementation, and ongoing support all under one roof, keeping your production process cohesive and genuinely efficient.",
     image: "/images/ai/6.png",
     features: [
       "Automated Video Production",
@@ -1177,7 +1177,7 @@ export const SERVICES: ServiceDefinition[] = [
       "Scalable Video Production Systems",
     ],
     benefits: [
-      { title: "Automation where it helps, humans where it matters", description: "AI handles the repetitive, technical work — resizing, initial cuts, captions — while creative direction and brand voice stay in human hands." },
+      { title: "Automation where it helps, humans where it matters", description: "AI handles the repetitive, technical work, resizing, initial cuts, captions, while creative direction and brand voice stay in human hands." },
       { title: "Built around how your team actually works", description: "Workflow automation is designed to genuinely reflect how your specific team works, not a rigid, generic automation template." },
       { title: "Reviewed, not fully hands-off", description: "Genuine review checkpoints catch any drift in quality or brand alignment before it becomes a pattern across a growing volume of content." },
     ],

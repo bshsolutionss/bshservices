@@ -47,13 +47,13 @@ const columns: DataTableColumn<Client>[] = [
     key: "industry",
     label: "Industry",
     value: (row) => row.industry || "",
-    render: (row) => row.industry || "—",
+    render: (row) => row.industry || "-",
   },
   {
     key: "account_manager",
     label: "Account Manager",
     value: (row) => row.account_manager || "",
-    render: (row) => row.account_manager || "—",
+    render: (row) => row.account_manager || "-",
   },
   {
     key: "since",
@@ -75,7 +75,7 @@ export default function ClientsTable({ clients, toolbarExtra, emptyTitle, emptyA
       getRowKey={(row) => row.id}
       toolbarExtra={toolbarExtra}
       searchPlaceholder="Search clients…"
-      emptyMessage="No clients yet — they're created automatically when a lead is marked Won, or added manually above."
+      emptyMessage="No clients yet, they're created automatically when a lead is marked Won, or added manually above."
     />
   );
 }

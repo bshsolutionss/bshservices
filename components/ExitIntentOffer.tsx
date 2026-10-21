@@ -3,31 +3,70 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { X, CalendarCheck } from "lucide-react";
+import { X, ArrowRight, Check, Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 const DISMISS_KEY = "bsh_exit_offer_dismissed_at";
-const DISMISS_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // don't re-nag for a week
-const ARM_DELAY_MS = 10_000; // ignore intent signals in the first 10s — avoids firing on an accidental top-of-page mouse pass
-const SCROLL_DEPTH_THRESHOLD = 0.6; // mobile has no mouseleave — 60% scrolled stands in for it
+const SUBMITTED_KEY = "bsh_exit_offer_submitted_at";
+const SESSION_START_KEY = "bsh_session_started_at";
+const DISMISS_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // closed it — leave them alone for a week
+const SUBMITTED_COOLDOWN_MS = 90 * 24 * 60 * 60 * 1000; // already gave an email — don't ask again
+const SHOW_AFTER_MS = 2 * 60 * 1000; // show by the 2-minute mark on site at the latest
+const ARM_DELAY_MS = 15_000; // exit intent ignored in the first 15s — avoids firing on an accidental top-of-page mouse pass
+const BUSY_RETRY_MS = 15_000; // visitor is typing in a form — try again shortly instead of interrupting
 
-// Pages where the visitor is already mid-conversion — showing "book a free
-// consultation" here would interrupt the exact thing they're already doing.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Pages where the visitor is already mid-conversion — a popup here would
+// interrupt the exact thing they're already doing.
 const SUPPRESSED_PATHS = ["/contact", "/book-consultation"];
 
+type StorageKind = "localStorage" | "sessionStorage";
+
+function readNumber(kind: StorageKind, key: string) {
+  try {
+    return Number(window[kind].getItem(key) ?? 0);
+  } catch {
+    return 0; // storage unavailable (private mode etc.)
+  }
+}
+
+function writeNow(kind: StorageKind, key: string) {
+  try {
+    window[kind].setItem(key, String(Date.now()));
+  } catch {
+    // Ignore — worst case it can show again.
+  }
+}
+
+function isVisitorBusy() {
+  const el = document.activeElement;
+  return (
+    document.visibilityState !== "visible" ||
+    el instanceof HTMLInputElement ||
+    el instanceof HTMLTextAreaElement ||
+    el instanceof HTMLSelectElement
+  );
+}
+
 /**
- * Soft slide-in (not a modal, nothing blocks the page) offering the free
- * consultation once — triggered by desktop exit-intent (mouse leaving
- * through the top of the viewport) or, on touch devices where that signal
- * doesn't exist, by scroll depth. Shows at most once per DISMISS_COOLDOWN_MS,
- * tracked in localStorage.
+ * Free-month email popup. Opens once per visit at most: on desktop
+ * exit-intent (cursor leaving through the top of the viewport), or at the
+ * latest after SHOW_AFTER_MS on the site. The timer is per browser session
+ * and survives client-side navigation, so moving between pages doesn't
+ * restart it. Kept low-friction: never on conversion pages, never while the
+ * visitor is typing in a form, closes on Esc / backdrop click, and stays
+ * away for a week after closing (or for good after submitting).
  */
 export default function ExitIntentOffer() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+  const [error, setError] = useState("");
   const armedRef = useRef(false);
   const firedRef = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const trigger = useCallback((reason: string) => {
     if (firedRef.current) return;
@@ -37,15 +76,26 @@ export default function ExitIntentOffer() {
   }, []);
 
   useEffect(() => {
-    if (SUPPRESSED_PATHS.includes(pathname ?? "")) return;
+    if (firedRef.current || SUPPRESSED_PATHS.includes(pathname ?? "")) return;
 
-    let lastDismissed = 0;
-    try {
-      lastDismissed = Number(localStorage.getItem(DISMISS_KEY) ?? 0);
-    } catch {
-      // localStorage unavailable (private mode etc.) — treat as never dismissed.
+    const now = Date.now();
+    if (now - readNumber("localStorage", DISMISS_KEY) < DISMISS_COOLDOWN_MS) return;
+    if (now - readNumber("localStorage", SUBMITTED_KEY) < SUBMITTED_COOLDOWN_MS) return;
+
+    let sessionStart = readNumber("sessionStorage", SESSION_START_KEY);
+    if (!sessionStart) {
+      writeNow("sessionStorage", SESSION_START_KEY);
+      sessionStart = now;
     }
-    if (Date.now() - lastDismissed < DISMISS_COOLDOWN_MS) return;
+
+    let showTimer: ReturnType<typeof setTimeout>;
+    const scheduleTimed = (delay: number) => {
+      showTimer = setTimeout(() => {
+        if (isVisitorBusy()) scheduleTimed(BUSY_RETRY_MS);
+        else trigger("timer");
+      }, delay);
+    };
+    scheduleTimed(Math.max(0, SHOW_AFTER_MS - (now - sessionStart)));
 
     const armTimer = setTimeout(() => {
       armedRef.current = true;
@@ -53,81 +103,196 @@ export default function ExitIntentOffer() {
 
     const onMouseOut = (e: MouseEvent) => {
       if (!armedRef.current) return;
-      // Standard exit-intent check: cursor left through the top edge with
-      // nothing to relate to (i.e. actually left the document, not just
-      // moved onto a child element).
+      // Cursor left through the top edge with nothing to relate to (i.e.
+      // actually left the document, not just moved onto a child element).
       if (e.clientY <= 0 && !e.relatedTarget) trigger("exit_intent");
     };
-
-    const onScroll = () => {
-      if (!armedRef.current) return;
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-      if (window.scrollY / scrollable >= SCROLL_DEPTH_THRESHOLD) trigger("scroll_depth");
-    };
-
     document.addEventListener("mouseout", onMouseOut);
-    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
+      clearTimeout(showTimer);
       clearTimeout(armTimer);
       document.removeEventListener("mouseout", onMouseOut);
-      window.removeEventListener("scroll", onScroll);
     };
   }, [pathname, trigger]);
 
-  const dismiss = (converted: boolean) => {
+  const close = useCallback(() => {
     setVisible(false);
-    try {
-      localStorage.setItem(DISMISS_KEY, String(Date.now()));
-    } catch {
-      // Ignore — worst case it can show again this session.
+    if (status !== "done") {
+      writeNow("localStorage", DISMISS_KEY);
+      trackEvent("exit_intent_dismiss");
     }
-    trackEvent(converted ? "exit_intent_convert" : "exit_intent_dismiss");
+  }, [status]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [visible, close]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = email.trim();
+    if (!EMAIL_RE.test(value)) {
+      setError("Please enter a valid email address.");
+      setStatus("error");
+      inputRef.current?.focus();
+      return;
+    }
+
+    setStatus("submitting");
+    setError("");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "exit_popup",
+          email: value,
+          page_path: pathname,
+          message: "Claimed the free month from the website popup.",
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || "Something went wrong.");
+      setStatus("done");
+      writeNow("localStorage", SUBMITTED_KEY);
+      trackEvent("exit_intent_convert");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   };
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 40, x: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          // bottom-24 on desktop clears InstallAppButton's bottom-right pill
-          // (SiteChrome renders both) — no overlap even if both show at once.
-          className="fixed bottom-4 sm:bottom-24 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm bg-white rounded-3xl shadow-2xl border border-[#1A14A5]/10 p-5"
-          role="dialog"
-          aria-label="Free consultation offer"
+          key="exit-offer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#231F20]/50 backdrop-blur-sm"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) close();
+          }}
+          data-lenis-prevent
         >
-          <button
-            type="button"
-            onClick={() => dismiss(false)}
-            aria-label="Dismiss"
-            className="absolute top-3 right-3 p-1 text-[#231F20]/40 hover:text-[#231F20] rounded-full hover:bg-[#F4F7FE]"
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="exit-offer-title"
+            className="relative w-full max-w-[510px] max-h-[calc(100vh-2rem)] overflow-y-auto rounded-[28px] border border-[#1A14A5]/10 bg-white px-6 py-10 sm:px-14 sm:py-12 text-center text-[#231F20] shadow-[0_30px_80px_-20px_rgba(26,20,165,0.45)]"
           >
-            <X className="w-4 h-4" />
-          </button>
+            {/* Brand accent bar + soft glow, matching the site's light-blue theme */}
+            <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#1A14A5] via-[#4F46E5] to-[#1A14A5]" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#E8EDFF] to-transparent" />
 
-          <div className="flex items-start gap-3">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-[#1A14A5]/10 flex items-center justify-center">
-              <CalendarCheck className="w-5 h-5 text-[#1A14A5]" />
-            </div>
-            <div>
-              <p className="font-bold text-[#231F20] leading-snug">Before you go — got a project in mind?</p>
-              <p className="text-sm text-[#231F20]/70 mt-1">
-                Grab a free 15-minute consultation. No pressure, no obligation.
-              </p>
-            </div>
-          </div>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full border border-[#1A14A5]/15 bg-white text-[#231F20]/60 hover:text-[#1A14A5] hover:bg-[#F4F7FE] transition-colors z-10"
+            >
+              <X className="w-4 h-4" />
+            </button>
 
-          <Link
-            href="/book-consultation"
-            onClick={() => dismiss(true)}
-            className="mt-4 flex items-center justify-center w-full rounded-2xl bg-[#1A14A5] hover:bg-[#0e0a7a] text-white text-sm font-semibold py-3 transition-colors"
-          >
-            Book My Free Call
-          </Link>
+            {status === "done" ? (
+              <div className="relative py-6">
+                <div className="mx-auto w-14 h-14 rounded-full bg-[#1A14A5] flex items-center justify-center">
+                  <Check className="w-7 h-7 text-white" />
+                </div>
+                <h2 id="exit-offer-title" className="mt-6 text-3xl font-extrabold text-[#1A14A5]">
+                  You&apos;re in!
+                </h2>
+                <p className="mt-3 text-[#231F20]/70 leading-relaxed">
+                  We&apos;ll email you within 24 hours to get your free month started.
+                </p>
+                <button
+                  type="button"
+                  onClick={close}
+                  className="mt-8 w-full rounded-full bg-[#1A14A5] py-3.5 font-semibold text-white hover:bg-[#231F20] transition-colors"
+                >
+                  Continue browsing
+                </button>
+              </div>
+            ) : (
+              <div className="relative">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#1A14A5]/15 bg-[#1A14A5]/10 px-4 py-1.5 text-[11px] font-semibold tracking-[0.2em] uppercase text-[#1A14A5]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1A14A5] animate-pulse" />
+                  Wait, before you go
+                </span>
+
+                <h2 id="exit-offer-title" className="mt-6 text-[28px] sm:text-[34px] font-extrabold leading-tight text-[#231F20]">
+                  Leaving with leads still
+                  <br />
+                  <span className="text-[#1A14A5]">slipping away?</span>
+                </h2>
+
+                <p className="mt-4 text-[15px] text-[#231F20]/70 leading-relaxed">
+                  Grab your <strong className="font-semibold text-[#1A14A5]">free month</strong> before you go, we&apos;ll
+                  build your entire growth system in 24 hours. $0 today, cancel anytime.
+                </p>
+
+                <form onSubmit={submit} noValidate className="mt-8 space-y-3">
+                  <label htmlFor="exit-offer-email" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    ref={inputRef}
+                    id="exit-offer-email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (status === "error") setStatus("idle");
+                    }}
+                    aria-invalid={status === "error"}
+                    aria-describedby={status === "error" ? "exit-offer-error" : undefined}
+                    className="w-full rounded-full border border-[#1A14A5]/15 bg-[#F4F7FE] px-6 py-3.5 text-center text-[#231F20] placeholder:text-[#231F20]/45 outline-none focus:border-[#1A14A5] focus:bg-white focus:ring-4 focus:ring-[#1A14A5]/10 transition-all"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="w-full flex items-center justify-center gap-2 rounded-full bg-[#1A14A5] py-3.5 font-semibold text-white shadow-[0_12px_30px_-10px_rgba(26,20,165,0.6)] hover:bg-[#231F20] disabled:opacity-70 transition-colors"
+                  >
+                    {status === "submitting" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        Claim My Free Month <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                  {status === "error" && (
+                    <p id="exit-offer-error" role="alert" className="text-sm text-red-600">
+                      {error}
+                    </p>
+                  )}
+                </form>
+
+                <p className="mt-5 text-xs text-[#231F20]/50">No contracts · No setup fees · Cancel anytime</p>
+
+                <button
+                  type="button"
+                  onClick={close}
+                  className="mt-5 text-sm text-[#231F20]/55 underline underline-offset-4 decoration-[#231F20]/25 hover:text-[#1A14A5] transition-colors"
+                >
+                  No thanks, maybe later
+                </button>
+              </div>
+            )}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

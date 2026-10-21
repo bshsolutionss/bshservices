@@ -74,7 +74,7 @@ export function wrapEmailLayout(opts: { preheader: string; bodyHtml: string }): 
               <td style="background:${BRAND_BG};padding:24px 32px;text-align:center;">
                 <div style="margin-bottom:14px;">${socialLinks}</div>
                 <p style="margin:0;font-size:12px;color:#8a8a8a;">
-                  BSH Solutions — Business Smart Hub &middot; Karachi, Pakistan<br />
+                  BSH Solutions, Business Smart Hub &middot; Karachi, Pakistan<br />
                   <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;">${SITE_HOST}</a>
                 </p>
               </td>
@@ -107,6 +107,7 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   // this Record stays exhaustive over LeadSource.
   lead_magnet: "Lead Magnet Download",
   chatbot: "Website Chatbot",
+  exit_popup: "Website Popup",
   manual: "Added manually",
 };
 
@@ -114,7 +115,7 @@ export function clientConfirmationEmail(lead: Lead): { subject: string; html: st
   const firstName = lead.name.split(" ")[0] || lead.name;
 
   const bodyHtml = `
-    <h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">Thanks, ${escapeHtml(firstName)} — we've got your message 👋</h1>
+    <h1 style="margin:0 0 12px;font-size:22px;color:${BRAND_DARK};">Thanks, ${escapeHtml(firstName)}, we've got your message 👋</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND_DARK};">
       A member of the BSH Solutions team will review your request and get back to you shortly.
       Here's a copy of what you sent us:
@@ -123,13 +124,13 @@ export function clientConfirmationEmail(lead: Lead): { subject: string; html: st
       ${leadDetailRows(lead)}
     </table>
     <p style="margin:0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">
-      Need to add anything in the meantime? Just reply to this email — it goes straight to our team.
+      Need to add anything in the meantime? Just reply to this email, it goes straight to our team.
     </p>`;
 
   return {
-    subject: "We've received your message — BSH Solutions",
+    subject: "We've received your message, BSH Solutions",
     html: wrapEmailLayout({
-      preheader: "Thanks for reaching out to BSH Solutions — we'll be in touch shortly.",
+      preheader: "Thanks for reaching out to BSH Solutions, we'll be in touch shortly.",
       bodyHtml,
     }),
   };
@@ -154,7 +155,7 @@ export function adminNotificationEmail(lead: Lead): { subject: string; html: str
     </p>`;
 
   return {
-    subject: `New lead: ${lead.name}${lead.selected_service ? ` — ${lead.selected_service}` : ""}`,
+    subject: `New lead: ${lead.name}${lead.selected_service ? `, ${lead.selected_service}` : ""}`,
     html: wrapEmailLayout({
       preheader: `New lead from ${lead.name} (${lead.email})`,
       bodyHtml,
@@ -189,7 +190,7 @@ export function bookingClientConfirmationEmail(lead: Lead): { subject: string; h
     </p>`;
 
   return {
-    subject: `Consultation confirmed — ${when || "BSH Solutions"}`,
+    subject: `Consultation confirmed, ${when || "BSH Solutions"}`,
     html: wrapEmailLayout({
       preheader: `Your free consultation is confirmed for ${when}.`,
       bodyHtml,
@@ -224,7 +225,7 @@ export function bookingAdminNotificationEmail(lead: Lead): { subject: string; ht
     </p>`;
 
   return {
-    subject: `New consultation: ${lead.name} — ${when}`,
+    subject: `New consultation: ${lead.name}, ${when}`,
     html: wrapEmailLayout({
       preheader: `${lead.name} booked a consultation for ${when}`,
       bodyHtml,
@@ -234,19 +235,19 @@ export function bookingAdminNotificationEmail(lead: Lead): { subject: string; ht
 
 const FOLLOW_UP_COPY: Record<1 | 2 | 3, { subject: string; heading: string; body: string }> = {
   1: {
-    subject: "Still thinking it over? — BSH Solutions",
+    subject: "Still thinking it over?, BSH Solutions",
     heading: "Just checking in 👋",
     body: "You reached out to us recently and we wanted to make sure your message didn't get lost in the shuffle. Happy to answer any questions or jump on a quick call whenever suits you.",
   },
   2: {
-    subject: "Following up on your request — BSH Solutions",
+    subject: "Following up on your request, BSH Solutions",
     heading: "Still here whenever you're ready",
-    body: "We haven't connected yet, so we wanted to follow up one more time. If now isn't the right time, no worries at all — just let us know and we'll check back later.",
+    body: "We haven't connected yet, so we wanted to follow up one more time. If now isn't the right time, no worries at all, just let us know and we'll check back later.",
   },
   3: {
     subject: "One last note from BSH Solutions",
     heading: "Last check-in from us",
-    body: "This is our final follow-up for now — we don't want to clutter your inbox. If you'd like to pick this back up at any point, just reply to this email and we'll be right here.",
+    body: "This is our final follow-up for now, we don't want to clutter your inbox. If you'd like to pick this back up at any point, just reply to this email and we'll be right here.",
   },
 };
 
@@ -299,7 +300,7 @@ export function taskAssignedEmail(input: {
     <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">Questions? Just reply to this email.</p>`;
   return {
     subject: `New task: ${input.taskTitle}`,
-    html: wrapEmailLayout({ preheader: `${input.taskTitle} — ${input.priorityLabel} priority`, bodyHtml }),
+    html: wrapEmailLayout({ preheader: `${input.taskTitle}, ${input.priorityLabel} priority`, bodyHtml }),
   };
 }
 
@@ -324,7 +325,7 @@ export function invoiceEmail(input: {
     <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:${BRAND_DARK};">The invoice is attached as a PDF. Reply to this email with any questions.</p>`;
   return {
     subject: `Invoice ${input.invoiceNumber} from BSH Solutions`,
-    html: wrapEmailLayout({ preheader: `Invoice ${input.invoiceNumber} — ${input.totalLabel}`, bodyHtml }),
+    html: wrapEmailLayout({ preheader: `Invoice ${input.invoiceNumber}, ${input.totalLabel}`, bodyHtml }),
   };
 }
 

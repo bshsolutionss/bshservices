@@ -247,11 +247,11 @@ const ContactformInner = () => {
           <div className="flex items-center gap-4 pt-2 text-sm text-[#231F20]/70">
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4 text-[#1A14A5]" />
-              <span>9+ happy clients</span>
+              <span>20+ happy clients</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Award className="w-4 h-4 text-[#1A14A5]" />
-              <span>99% success rate</span>
+              <span>100% success rate</span>
             </div>
           </div>
 
@@ -472,7 +472,7 @@ const ContactformInner = () => {
                 <Check className="w-7 h-7 text-[#1A14A5]" />
               </div>
               <h3 className="text-2xl font-bold text-[#231F20] mb-2">Message sent! 🎉</h3>
-              <p className="text-[#231F20]/70 mb-6">Check your email for confirmation — we&apos;ll be in touch soon.</p>
+              <p className="text-[#231F20]/70 mb-6">Check your email for confirmation, we&apos;ll be in touch soon.</p>
               <Link
                 href="/book-consultation"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1A14A5] hover:bg-[#0e0a7a] text-white font-semibold px-6 py-3 transition-colors"

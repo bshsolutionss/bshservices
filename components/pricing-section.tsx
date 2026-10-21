@@ -169,8 +169,8 @@ export default function PricingSection({ region: regionProp = "GLOBAL" }: Pricin
               { s: "Graphic Designing", d: "Social posts, banners, ads, infographics & branded creative assets." },
               { s: "Branding", d: "Logo, brand identity, color palette, typography & brand guidelines." },
               { s: "Social Media Mgmt", d: "Content strategy, scheduling & community management." },
-              { s: "Video Editing", d: "Reels, ad videos, product showcases — optimized for every platform." },
-              { s: "WordPress Website", d: "Business sites, blogs & WooCommerce stores — fast & mobile-ready." },
+              { s: "Video Editing", d: "Reels, ad videos, product showcases, optimized for every platform." },
+              { s: "WordPress Website", d: "Business sites, blogs & WooCommerce stores, fast & mobile-ready." },
               { s: "Custom Website", d: "High-performance, fully coded websites built for speed & scalability." },
               { s: "SEO", d: "Keyword research, on-page optimization, technical SEO & backlink building." },
             ].map((service, i) => (

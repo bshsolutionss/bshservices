@@ -42,7 +42,7 @@ export default function BookConsultationPage() {
       />
       <Hero
         title="Book a Free Consultation"
-        subtitle="Pick a date and time that works for you. We'll walk through your project, answer questions, and map out next steps — no obligation."
+        subtitle="Pick a date and time that works for you. We'll walk through your project, answer questions, and map out next steps, no obligation."
         image="/images/3dlogo.jpeg"
       />
 

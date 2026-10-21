@@ -113,7 +113,7 @@ export default function PushNotificationToggle({ className }: { className?: stri
   if (status === "denied") {
     return (
       <p className={cn("px-3 py-2 text-xs text-white/40 leading-snug", className)}>
-        Notifications blocked — enable them in your browser&apos;s site settings.
+        Notifications blocked, enable them in your browser&apos;s site settings.
       </p>
     );
   }

@@ -112,7 +112,7 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
                     : "Not set"
                 }
               />
-              <Row label="Department" value={employee.department || "—"} />
+              <Row label="Department" value={employee.department || "-"} />
               <Row label="Since" value={formatDate(employee.hire_date)} />
               <Row
                 label="Email"
@@ -127,7 +127,7 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
                   )
                 }
               />
-              <Row label="Phone" value={employee.phone || "—"} />
+              <Row label="Phone" value={employee.phone || "-"} />
             </dl>
             {employee.notes && (
               <p className="mt-4 whitespace-pre-wrap rounded-xl bg-[#F4F7FE] p-3 text-sm text-[#231F20]/70">{employee.notes}</p>

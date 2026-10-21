@@ -178,7 +178,7 @@ export default function InvoiceItemsEditor({
         ) : (
           <Alert tone="info" title="Not itemised">
             This invoice was billed as a single amount of {formatMoney(amount, currency)}. Add line items to show the
-            client what they are paying for — the total stays yours to control.
+            client what they are paying for, the total stays yours to control.
           </Alert>
         )}
 
@@ -301,7 +301,7 @@ export default function InvoiceItemsEditor({
 
       {hasPayments && (
         <Alert tone="warning">
-          Payments are already recorded against this invoice. Changing the total does not change those payments — the
+          Payments are already recorded against this invoice. Changing the total does not change those payments, the
           status is recalculated against the new total.
         </Alert>
       )}

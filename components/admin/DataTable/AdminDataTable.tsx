@@ -274,7 +274,7 @@ export default function AdminDataTable<T>({
               <tr key={getRowKey(row)} className="hover:bg-[#F4F7FE] transition">
                 {visibleColumns.map((column) => (
                   <td key={column.key} className={cn("px-6 py-4 text-[#231F20]/70", column.className)}>
-                    {column.render ? column.render(row) : String(column.value(row) ?? "—")}
+                    {column.render ? column.render(row) : String(column.value(row) ?? "-")}
                   </td>
                 ))}
               </tr>

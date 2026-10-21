@@ -2,7 +2,6 @@ import Heros from "@/components/heros";
 import Services from "@/components/services";
 // import Testimonial from "@/components/testimonial";
 import About from "@/components/about";
-import MovingText from "@/components/MovingText";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata, webPageJsonLd } from "@/lib/seo";
@@ -39,7 +38,6 @@ const page = () => {
       <JsonLd data={webPageJsonLd({ name: TITLE, description: DESCRIPTION, path: "/" })} />
       <Heros />
       <StatCounter />
-      <MovingText />
 
       <About />
       <Services />

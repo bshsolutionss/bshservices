@@ -18,7 +18,7 @@ const PROJECT_TYPES: { label: string; category: PricingCategory }[] = [
 const TIMELINES = ["ASAP (within 2 weeks)", "1–2 months", "Flexible / just exploring"];
 
 /** All three pricing categories here have exactly 3 tiers, cheapest → priciest — this indexes directly into that order. */
-const BUDGET_LABELS = ["Starter — keep it lean", "Mid-range — the full package", "Advanced — no compromises"];
+const BUDGET_LABELS = ["Starter, keep it lean", "Mid-range, the full package", "Advanced, no compromises"];
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -186,7 +186,7 @@ export default function QuoteQuiz() {
                   Get This Quote <ArrowRight className="w-4 h-4" />
                 </Button>
                 <p className="text-xs text-center text-[#231F20]/50 mt-3">
-                  A real, starting estimate — we&apos;ll confirm exact scope on the call.
+                  A real, starting estimate, we&apos;ll confirm exact scope on the call.
                 </p>
               </motion.div>
             )}

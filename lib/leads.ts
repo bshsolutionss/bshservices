@@ -17,12 +17,15 @@ export type LeadStatus =
 // "chatbot" added for the site AI assistant (components/chatbot/ChatWidget.tsx
 // -> app/api/chat), which captures a lead mid-conversation once the visitor
 // hands over their name and email.
+// "exit_popup" added for the timed/exit-intent email popup
+// (components/ExitIntentOffer.tsx) — email only, name derived server-side.
 export type LeadSource =
   | "contact_form"
   | "service_form"
   | "consultation_booking"
   | "lead_magnet"
   | "chatbot"
+  | "exit_popup"
   | "manual";
 export type LeadPriority = "low" | "medium" | "high" | "urgent";
 export type LeadLostReason = "budget" | "timing" | "competitor" | "no_response" | "other";

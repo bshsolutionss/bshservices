@@ -49,6 +49,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  // The popup only asks for an email — derive a placeholder name from it so
+  // the lead still reads sensibly in the admin list.
+  if (payload.source === "exit_popup" && !isNonEmptyString(payload.name) && isNonEmptyString(payload.email)) {
+    payload.name = payload.email.trim().split("@")[0];
+  }
+
   if (!isNonEmptyString(payload.name) || !isNonEmptyString(payload.email)) {
     return NextResponse.json(
       { ok: false, error: "Name and email are required." },
@@ -60,7 +66,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid email address." }, { status: 400 });
   }
 
-  const VALID_SOURCES: LeadSource[] = ["contact_form", "service_form", "lead_magnet"];
+  const VALID_SOURCES: LeadSource[] = ["contact_form", "service_form", "lead_magnet", "exit_popup"];
   if (!VALID_SOURCES.includes(payload.source)) {
     return NextResponse.json({ ok: false, error: "Invalid source." }, { status: 400 });
   }

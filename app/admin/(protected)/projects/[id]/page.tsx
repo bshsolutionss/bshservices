@@ -224,7 +224,7 @@ export default async function AdminProjectDetailPage({
               <EmptyState
                 icon={Receipt}
                 title="No invoices for this project"
-                description="Create one from the budget — it starts as a draft you can review before sending."
+                description="Create one from the budget, it starts as a draft you can review before sending."
               />
             ) : (
               <ul className="divide-y divide-[#1A14A5]/5">

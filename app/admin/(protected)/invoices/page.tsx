@@ -48,8 +48,8 @@ export default async function AdminInvoicesPage() {
       ...balance,
       invoice_number:
         balance.invoice_number || numberFallback.get(balance.invoice_id) || balance.invoice_id.slice(0, 8),
-      clientName: clientNames.get(balance.client_id) ?? "—",
-      projectName: balance.project_id ? (projectNames.get(balance.project_id) ?? "—") : "—",
+      clientName: clientNames.get(balance.client_id) ?? "-",
+      projectName: balance.project_id ? (projectNames.get(balance.project_id) ?? "-") : "-",
     }))
     .sort((a, b) => String(b.issue_date ?? b.created_at ?? "").localeCompare(String(a.issue_date ?? a.created_at ?? "")));
 

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Automation Services | Smart AI Agents for Your Business",
     description:
-      "Automate tasks, reduce costs, and scale your business with custom AI solutions. From chatbots to full workflow automation — we build intelligent systems for your needs.",
+      "Automate tasks, reduce costs, and scale your business with custom AI solutions. From chatbots to full workflow automation, we build intelligent systems for your needs.",
     url: "/Services/ai",
     siteName: "Business Smart Hub (BSH)",
     images: [

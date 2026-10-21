@@ -114,7 +114,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
 };
 
 function formatDate(value: string | null): string {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
@@ -257,9 +257,9 @@ export function InvoiceDocument({
               <View key={payment.id} style={styles.tableRow}>
                 <Text style={styles.colDate}>{formatDate(payment.paid_on)}</Text>
                 <Text style={styles.colMethod}>
-                  {payment.method ? (PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] ?? payment.method) : "—"}
+                  {payment.method ? (PAYMENT_METHOD_LABELS[payment.method as PaymentMethod] ?? payment.method) : "-"}
                 </Text>
-                <Text style={styles.colRef}>{payment.reference || "—"}</Text>
+                <Text style={styles.colRef}>{payment.reference || "-"}</Text>
                 <Text style={styles.colAmount}>{formatMoney(payment.amount, invoice.currency)}</Text>
               </View>
             ))}

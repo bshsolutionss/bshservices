@@ -113,7 +113,7 @@ export default async function AdminExpensesPage() {
         />
         <StatCard
           label="Biggest category"
-          value={topCategory ? topCategory[0] : "—"}
+          value={topCategory ? topCategory[0] : "-"}
           icon={PieChart}
           iconBg="#0d9488"
           description={topCategory ? `${formatMoney(topCategory[1], "PKR")} this year` : "Nothing recorded yet"}

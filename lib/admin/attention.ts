@@ -132,7 +132,7 @@ export async function getAttention(options: Options): Promise<Attention> {
     const { projects, ...rest } = t;
     return {
       ...rest,
-      projectName: one(projects)?.name ?? "—",
+      projectName: one(projects)?.name ?? "-",
       daysLate: t.due_date ? daysBetween(t.due_date, today) : -9999,
     };
   });
@@ -168,7 +168,7 @@ export async function getAttention(options: Options): Promise<Attention> {
     overdueInvoices: invoiceRows.map((i) => ({
       invoice_id: i.invoice_id,
       invoice_number: i.invoice_number,
-      clientName: clientNames.get(i.client_id) ?? "—",
+      clientName: clientNames.get(i.client_id) ?? "-",
       due_date: i.due_date,
       balance: Number(i.balance),
       currency: i.currency,
@@ -184,7 +184,7 @@ export async function getAttention(options: Options): Promise<Attention> {
     }[]).map((c) => ({
       id: c.id,
       client_id: c.client_id,
-      clientName: one(c.clients)?.company_name ?? "—",
+      clientName: one(c.clients)?.company_name ?? "-",
       subject: c.subject,
       follow_up_on: c.follow_up_on,
       daysLate: daysBetween(c.follow_up_on, today),
@@ -198,7 +198,7 @@ export async function getAttention(options: Options): Promise<Attention> {
     }[]).map((p) => ({
       id: p.id,
       name: p.name,
-      clientName: one(p.clients)?.company_name ?? "—",
+      clientName: one(p.clients)?.company_name ?? "-",
       due_date: p.due_date,
       stage: p.stage,
       daysLate: daysBetween(p.due_date, today),

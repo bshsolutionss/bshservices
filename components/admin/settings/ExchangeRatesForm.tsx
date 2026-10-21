@@ -53,7 +53,7 @@ export default function ExchangeRatesForm({ rates: initialRates }: { rates: Exch
         <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">{CURRENCY_LABELS.PKR}</label>
         <div className="flex items-center gap-3">
           <Input value="1" disabled className="max-w-[160px] bg-[#F4F7FE]" />
-          <span className="text-xs text-[#231F20]/50">Base currency — always 1:1 with itself.</span>
+          <span className="text-xs text-[#231F20]/50">Base currency, always 1:1 with itself.</span>
         </div>
       </div>
 

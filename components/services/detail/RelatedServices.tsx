@@ -28,7 +28,7 @@ export default function RelatedServices({ services }: RelatedServicesProps) {
               <div className="relative h-40 w-full bg-white">
                 <Image
                   src={service.image}
-                  alt={`${service.name} — BSH Solutions`}
+                  alt={`${service.name}, BSH Solutions`}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"

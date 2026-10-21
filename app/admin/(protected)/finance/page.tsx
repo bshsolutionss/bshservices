@@ -203,7 +203,7 @@ export default async function AdminFinancePage({
         />
         <StatCard
           label="Margin"
-          value={report.totals.margin !== null ? `${report.totals.margin}%` : "—"}
+          value={report.totals.margin !== null ? `${report.totals.margin}%` : "-"}
           icon={Percent}
           valueColor="#1A14A5"
           iconBg="#1A14A5"
@@ -248,7 +248,7 @@ export default async function AdminFinancePage({
             <SectionCard title="Revenue by project" subtitle="Top 6 in this period">
               <BreakdownList
                 items={projectBreakdown}
-                emptyMessage="No revenue linked to a project — link invoices to projects to see this."
+                emptyMessage="No revenue linked to a project, link invoices to projects to see this."
               />
             </SectionCard>
           </div>

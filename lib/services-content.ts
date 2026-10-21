@@ -53,22 +53,22 @@ export function getProcessSteps(service: ServiceDefinition): ProcessStep[] {
 
 const WHY_CHOOSE_US: Record<ServiceCategorySlug, string[]> = {
   development: [
-    "Senior developers only — no outsourced juniors learning on your project.",
-    "Clean, documented code you fully own — no vendor lock-in.",
+    "Senior developers only, no outsourced juniors learning on your project.",
+    "Clean, documented code you fully own, no vendor lock-in.",
     "Launch support and post-go-live monitoring included.",
     "Transparent, fixed-scope quotes with no surprise change fees.",
   ],
   designing: [
     "In-house designers who understand both aesthetics and conversion.",
     "Structured revision rounds until you're genuinely happy with the result.",
-    "Full source files handed over — you own every asset.",
+    "Full source files handed over, you own every asset.",
     "Fast turnaround without cutting corners on quality.",
   ],
   marketing: [
-    "Data-driven strategy, not guesswork — every decision backed by analytics.",
+    "Data-driven strategy, not guesswork, every decision backed by analytics.",
     "Transparent, regular reporting so you always know your ROI.",
     "Specialists across Google, Meta, and SEO tooling.",
-    "Flexible engagements — no long lock-in contracts.",
+    "Flexible engagements, no long lock-in contracts.",
   ],
   photography: [
     "Professional-grade equipment and licensed drone operators.",
@@ -91,6 +91,6 @@ export function getWhyChooseUs(category: ServiceCategorySlug): string[] {
 export function getCtaContent(service: ServiceDefinition): { heading: string; subtext: string } {
   return {
     heading: `Ready to get started with ${service.name.toLowerCase()}?`,
-    subtext: `Tell us about your project and we'll follow up with next steps for ${service.name.toLowerCase()} — no obligation.`,
+    subtext: `Tell us about your project and we'll follow up with next steps for ${service.name.toLowerCase()}, no obligation.`,
   };
 }

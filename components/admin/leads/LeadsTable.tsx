@@ -51,7 +51,7 @@ const columns: DataTableColumn<LeadListItem>[] = [
     value: (row) => row.email ?? row.phone ?? "",
     render: (row) => (
       <>
-        <div>{row.email || row.phone || "—"}</div>
+        <div>{row.email || row.phone || "-"}</div>
         {row.email && row.phone && <div className="text-xs text-[#231F20]/50">{row.phone}</div>}
       </>
     ),
@@ -60,7 +60,7 @@ const columns: DataTableColumn<LeadListItem>[] = [
     key: "service",
     label: "Service",
     value: (row) => row.selected_service || row.service_category || "",
-    render: (row) => row.selected_service || row.service_category || "—",
+    render: (row) => row.selected_service || row.service_category || "-",
   },
   {
     key: "priority",
@@ -72,7 +72,7 @@ const columns: DataTableColumn<LeadListItem>[] = [
     label: "Value",
     value: (row) => row.expected_value ?? 0,
     render: (row) =>
-      row.expected_value !== null ? formatMoney(Number(row.expected_value), row.expected_value_currency) : "—",
+      row.expected_value !== null ? formatMoney(Number(row.expected_value), row.expected_value_currency) : "-",
     className: "whitespace-nowrap",
   },
   {

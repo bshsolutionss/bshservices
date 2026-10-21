@@ -34,7 +34,7 @@ export default function InvestmentsTable({ investments, emptyTitle, emptyAction 
       label: "Type",
       value: (row) => (row.investment_type ? types.labelFor(row.investment_type) : ""),
       render: (row) =>
-        row.investment_type ? <Badge label={types.labelFor(row.investment_type)} colors={types.colorsFor(row.investment_type)} /> : "—",
+        row.investment_type ? <Badge label={types.labelFor(row.investment_type)} colors={types.colorsFor(row.investment_type)} /> : "-",
     },
     {
       key: "invested",

@@ -31,7 +31,7 @@ const PRICING_CATEGORY_LABELS: Record<PricingCategory, string> = {
 
 function renderTier(tier: PricingTier): string {
   const lines = [
-    `  - ${tier.name} — ${tier.price}${tier.period ? ` per ${tier.period}` : ""}${
+    `  - ${tier.name}, ${tier.price}${tier.period ? ` per ${tier.period}` : ""}${
       tier.isPopular ? " (most popular)" : ""
     }`,
     `    ${tier.description}`,
@@ -48,7 +48,7 @@ function renderPricing(region: Region): string {
     if (!tiers?.length) return "";
     return `${PRICING_CATEGORY_LABELS[category]}:\n${tiers.map(renderTier).join("\n")}`;
   });
-  return `PRICE LIST — quoted in ${currency}:\n${blocks.filter(Boolean).join("\n\n")}`;
+  return `PRICE LIST, quoted in ${currency}:\n${blocks.filter(Boolean).join("\n\n")}`;
 }
 
 function renderCatalogue(): string {
@@ -57,7 +57,7 @@ function renderCatalogue(): string {
     const items = services
       .map((service) => `  - ${service.name}: ${service.shortDescription}`)
       .join("\n");
-    return `${category.name} (${category.overviewPath}) — ${category.description}\n${items}`;
+    return `${category.name} (${category.overviewPath}), ${category.description}\n${items}`;
   });
   return `SERVICE CATALOGUE (${SERVICES.length} services across ${
     Object.keys(SERVICE_CATEGORIES).length
@@ -128,7 +128,7 @@ export function buildFocusedKnowledge(query: string, limit = 3): string {
       `${service.name} (${path})`,
       service.description,
       `What's included: ${service.features.join("; ")}`,
-      `Why clients choose it: ${service.benefits.map((b) => `${b.title} — ${b.description}`).join(" ")}`,
+      `Why clients choose it: ${service.benefits.map((b) => `${b.title}, ${b.description}`).join(" ")}`,
       service.faqs.length
         ? `Service FAQs:\n${service.faqs.map((f) => `  Q: ${f.question}\n  A: ${f.answer}`).join("\n")}`
         : "",

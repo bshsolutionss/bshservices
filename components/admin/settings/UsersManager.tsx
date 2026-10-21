@@ -160,7 +160,7 @@ export default function UsersManager({
   const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const employeeName = (id: string | null) => employees.find((e) => e.id === id)?.name ?? "—";
+  const employeeName = (id: string | null) => employees.find((e) => e.id === id)?.name ?? "-";
 
   const patch = async (id: string, body: Record<string, unknown>) => {
     setError(null);

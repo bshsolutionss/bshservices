@@ -95,7 +95,7 @@ export default function CommunicationTable({
             {formatDate(row.follow_up_on)}
           </span>
         ) : (
-          "—"
+          "-"
         ),
       className: "whitespace-nowrap",
     },

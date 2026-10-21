@@ -15,6 +15,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   consultation_booking: "Consultation Booking",
   lead_magnet: "Lead Magnet Download",
   chatbot: "Website Chatbot",
+  exit_popup: "Website Popup",
   manual: "Added manually",
 };
 

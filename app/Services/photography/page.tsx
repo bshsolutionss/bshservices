@@ -153,7 +153,7 @@ export default function PhotographyPage() {
         <ServiceSection
           title="Video Production"
           learnMoreHref="/Services/photography/video-production"
-          description="Full-scale video production services — from concept to final edit — delivering cinematic visuals that tell powerful stories."
+          description="Full-scale video production services, from concept to final edit, delivering cinematic visuals that tell powerful stories."
           features={[
             "Concept, scripting, and storyboarding",
             "4K filming and direction",
@@ -213,7 +213,7 @@ export default function PhotographyPage() {
         <ServiceSection
           title="Drone Photography"
           learnMoreHref="/Services/photography/drone-photography"
-          description="Aerial imagery that adds cinematic perspectives to your visuals — perfect for real estate, events, and creative brand films."
+          description="Aerial imagery that adds cinematic perspectives to your visuals, perfect for real estate, events, and creative brand films."
           features={[
             "4K aerial photo and video",
             "Licensed drone operators",

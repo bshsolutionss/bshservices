@@ -12,7 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "BSH Solutions",
     short_name: "BSH Solutions",
     description:
-      "Business Smart Hub — scalable digital, software & IT solutions: web development, SEO and digital marketing.",
+      "Business Smart Hub, scalable digital, software & IT solutions: web development, SEO and digital marketing.",
     start_url: "/",
     scope: "/",
     display: "standalone",
