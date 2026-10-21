@@ -8,6 +8,8 @@ import ProjectGrid from "@/components/portfolio/ProjectGrid";
 import Contactform from "@/components/contactform";
 import Image from "next/image";
 import { safeJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/seo";
+import { truncateForMeta } from "@/lib/services-articles";
 import {
   PORTFOLIO_PROJECTS,
   displayHost,
@@ -30,26 +32,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = getProject(slug);
   if (!project) return {};
 
-  const title = `${project.title} — ${project.category} Case Study`;
-  return {
+  // Full "<name> — <category> Case Study" when it fits Google's ~60-char
+  // title width, otherwise the shorter "<name> Case Study".
+  const full = `${project.title} — ${project.category} Case Study | BSH Solutions`;
+  const title = full.length <= 60 ? full : `${project.title} Case Study | BSH Solutions`;
+  return pageMetadata({
     title,
-    description: project.description,
+    description: truncateForMeta(project.description, 160),
+    path: getProjectPath(project),
     keywords: [project.title, project.category, ...project.keywords, "BSH Solutions portfolio"],
-    alternates: { canonical: getProjectPath(project) },
-    openGraph: {
-      type: "article",
-      title: `${title} | BSH Solutions`,
-      description: project.description,
-      url: getProjectPath(project),
-      images: [{ url: project.image, alt: `${project.title} website screenshot` }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${title} | BSH Solutions`,
-      description: project.description,
-      images: [project.image],
-    },
-  };
+    image: { url: project.image, alt: `${project.title} website screenshot` },
+    type: "article",
+  });
 }
 
 export default async function ProjectPage({ params }: PageProps) {

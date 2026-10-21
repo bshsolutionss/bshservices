@@ -4,9 +4,17 @@ import Services from "@/components/services";
 import About from "@/components/about";
 import MovingText from "@/components/MovingText";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata, webPageJsonLd } from "@/lib/seo";
 import dynamic from "next/dynamic";
 
 import { StatCounter } from "@/components/stat-counter";
+
+const TITLE = "BSH Solutions | Web Development, AI & Digital Marketing";
+const DESCRIPTION =
+  "BSH Solutions (Business Smart Hub) builds fast websites, custom software and AI chatbots, and grows brands with SEO and digital marketing. Get a free quote.";
+
+export const metadata = pageMetadata({ title: TITLE, description: DESCRIPTION, path: "/" });
 
 // Below-the-fold sections are code-split so the first load ships less JS
 // (they still server-render, so SEO and no-JS content are unaffected).
@@ -28,6 +36,7 @@ const Contactform = dynamic(() => import("@/components/contactform"));
 const page = () => {
   return (
     <div>
+      <JsonLd data={webPageJsonLd({ name: TITLE, description: DESCRIPTION, path: "/" })} />
       <Heros />
       <StatCounter />
       <MovingText />

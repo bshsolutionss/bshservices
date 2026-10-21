@@ -177,10 +177,21 @@ export function getPostDescription(post: WPPost | null | undefined): string {
   return cmsDescription || truncateAtWord(excerpt || content, 155);
 }
 
+/**
+ * Drops the site-name suffix Rank Math appends to titles (e.g. " - BSH
+ * Solutions | Digital Marketing & Web Solutions"), which pushes most post
+ * titles past 100 characters. The brand is re-added as a short " | BSH
+ * Solutions" by getPostSeoTitle.
+ */
+export function stripSiteSuffix(title: string): string {
+  return title.replace(/\s*[-–—|]\s*BSH Solutions\b.*$/i, "").trim();
+}
+
 export function getPostSeoTitle(post: WPPost | null | undefined): string {
-  const rankMathTitle = wpToPlainText(post?.seo?.title);
-  if (rankMathTitle) return rankMathTitle;
-  const sourceTitle = wpToPlainText(post?.title?.rendered) || "BSH Solutions Blog";
+  const sourceTitle =
+    stripSiteSuffix(wpToPlainText(post?.seo?.title)) ||
+    wpToPlainText(post?.title?.rendered) ||
+    "BSH Solutions Blog";
   const branded = `${sourceTitle} | BSH Solutions`;
 
   if (branded.length <= 65) return branded;

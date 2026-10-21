@@ -4,10 +4,9 @@ import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
-import { getCategoryFaqs } from "@/lib/services-data";
+import { SERVICE_CATEGORIES, getCategoryFaqs, getServicePath, getServicesByCategory } from "@/lib/services-data";
 import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
 import { CATEGORY_BLOG_LINKS } from "@/lib/blog-links";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 import {
   SiGoogleads,
@@ -31,30 +30,47 @@ import {
 } from "react-icons/si";
 
 import { FaSearchengin, FaUserFriends, FaGoogle } from "react-icons/fa";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Digital Marketing Services",
-  description:
-    "BSH Solutions helps your brand grow, engage, and convert through data-driven digital marketing — SEO, PPC, social media marketing, and analytics.",
+const TITLE = "Digital Marketing, SEO & PPC Services | BSH Solutions";
+const DESCRIPTION =
+  "Data-driven digital marketing from BSH Solutions: SEO, PPC advertising, social media, email, content and influencer marketing that grow traffic and leads.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services/marketing",
   keywords: [
     "digital marketing services",
     "SEO agency",
     "PPC advertising",
     "social media marketing",
   ],
-  alternates: { canonical: "/Services/marketing" },
-  openGraph: {
-    title: "Digital Marketing Services | BSH Solutions",
-    description:
-      "Grow, engage, and convert through data-driven digital marketing strategies.",
-    url: "/Services/marketing",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function MarketingPage() {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services/marketing",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+            { name: SERVICE_CATEGORIES.marketing.name, path: "/Services/marketing" },
+          ],
+          extra: [
+            itemListJsonLd(
+              SERVICE_CATEGORIES.marketing.name,
+              getServicesByCategory("marketing").map((s) => ({ name: s.name, path: getServicePath(s) })),
+            ),
+          ],
+        })}
+      />
       <Hero
         title="Digital Marketing Services"
         subtitle="We help your brand grow, engage, and convert through data-driven digital marketing strategies."

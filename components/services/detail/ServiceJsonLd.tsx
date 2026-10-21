@@ -3,6 +3,8 @@ import { SERVICE_CATEGORIES, getServicePath } from "@/lib/services-data";
 import { SERVICE_ARTICLES } from "@/lib/services-articles";
 import { safeJsonLd } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site";
+import { SERVICE_SEO } from "@/lib/service-seo";
+import { ORGANIZATION_ID } from "@/lib/seo";
 
 interface ServiceJsonLdProps {
   service: ServiceDefinition;
@@ -21,17 +23,25 @@ export default function ServiceJsonLd({ service }: ServiceJsonLdProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${url}#service`,
     name,
     description,
+    disambiguatingDescription: SERVICE_SEO[service.slug]?.description ?? service.shortDescription,
     url,
+    image: `${SITE_URL}${service.image}`,
     serviceType: service.name,
     category: category.name,
-    provider: {
-      "@type": "Organization",
-      name: "BSH Solutions",
-      url: SITE_URL,
-    },
+    // Points at the full Organization entity the root layout emits.
+    provider: { "@id": ORGANIZATION_ID },
+    brand: { "@id": ORGANIZATION_ID },
     areaServed: "Worldwide",
+    ...(service.keywords.length > 0 && { keywords: service.keywords.join(", ") }),
+    mainEntityOfPage: url,
+    potentialAction: {
+      "@type": "ReserveAction",
+      name: "Book a free consultation",
+      target: `${SITE_URL}/book-consultation`,
+    },
   };
 
   return (

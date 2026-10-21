@@ -10,38 +10,56 @@ import ProcessFlow from "@/components/ProcessFlow";
 import { OurPortfolio } from "@/components/our-portfolio";
 
 import OurTechnologies from "@/components/Ourtechnologies";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
+import { SERVICE_CATEGORIES } from "@/lib/services-data";
 
-export const metadata: Metadata = {
-  title: "Our Services",
-  description:
-    "Explore BSH Solutions' full range of services — web & software development, UI/UX design, digital marketing, AI automation, and photography — built to scale your business.",
+const TITLE = "Web, AI, Design & Marketing Services | BSH Solutions";
+const DESCRIPTION =
+  "Explore BSH Solutions services: web and software development, UI/UX and brand design, SEO and digital marketing, AI automation, photography and video.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services",
   keywords: [
     "BSH Solutions services",
     "web development services",
     "digital marketing agency",
     "AI automation services",
+    "UI/UX design services",
+    "photography services",
   ],
-  alternates: { canonical: "/Services" },
-  openGraph: {
-    title: "Our Services | BSH Solutions",
-    description:
-      "Web & software development, design, marketing, AI automation, and photography services built to scale your business.",
-    url: "/Services",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 const page = () => {
   return (
     <div>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+          ],
+          extra: [
+            itemListJsonLd(
+              "BSH Solutions services",
+              Object.values(SERVICE_CATEGORIES).map((c) => ({ name: c.name, path: c.overviewPath })),
+            ),
+          ],
+        })}
+      />
       {/* This page has no separate Hero — "Our Services" below is this page's own H1. */}
       <Services headingLevel="h1" />
       <ProcessFlow />
       <OurTechnologies />
       <OurPortfolio limit={6} showViewAll={true} />
       <Testimonial />
-      <Faq />
+      <Faq schema={false} />
       <Contactform />
     </div>
   );

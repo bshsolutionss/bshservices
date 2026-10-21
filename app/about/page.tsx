@@ -6,7 +6,6 @@ import Faq from "@/components/faq";
 import Contactform from "@/components/contactform";
 import OurTeamSection from "@/components/Ourteam";
 import Testimonial from "@/components/testimonial";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 // ==== ICONS IMPORTS ====
 import {
@@ -19,30 +18,57 @@ import {
   SiMeta,
   SiGoogleanalytics,
 } from "react-icons/si";
+import JsonLd from "@/components/JsonLd";
+import { ORGANIZATION_ID, pageMetadata, webPageJsonLd } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "Meet BSH Solutions — Business Smart Hub. Learn about our team and mission to deliver smart, scalable digital, software, and IT solutions for growing businesses.",
-  keywords: [
-    "About BSH Solutions",
-    "Business Smart Hub team",
-    "IT company Pakistan",
-    "software development team",
-  ],
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "About BSH Solutions",
-    description:
-      "Meet the team behind BSH Solutions and our mission to build smart, scalable, future-ready digital solutions.",
-    url: "/about",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+const TITLE = "About BSH Solutions | Web, AI & Marketing Team";
+const DESCRIPTION =
+  "Meet the team behind BSH Solutions (Business Smart Hub): developers, designers and marketers building websites, software and AI automation for growing brands.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/about",
+  keywords: ["About BSH Solutions", "Business Smart Hub team", "software house", "web development agency", "AI automation agency"],
+});
 
 const page = () => {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "AboutPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/about",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "About", path: "/about" },
+          ],
+          extra: [
+            {
+              "@type": "Person",
+              name: "Muhammad Bilal",
+              jobTitle: "Full Stack Developer & SEO Specialist",
+              email: "mailto:bilal@bshsolutions.net",
+              image: `${SITE_URL}/team/bilal.jpeg`,
+              worksFor: { "@id": ORGANIZATION_ID },
+              knowsAbout: ["React", "Next.js", "Node.js", "Tailwind CSS", "SEO"],
+            },
+            {
+              "@type": "Person",
+              name: "Muhammad Shahzaib",
+              jobTitle: "Website Developer & Digital Marketer",
+              email: "mailto:shahzaib@bshsolutions.net",
+              image: `${SITE_URL}/team/shahzaib.jpeg`,
+              worksFor: { "@id": ORGANIZATION_ID },
+              knowsAbout: ["WordPress", "PHP", "Meta Ads", "Google Analytics", "Digital Marketing"],
+            },
+          ],
+          page: { mainEntity: { "@id": ORGANIZATION_ID } },
+        })}
+      />
       <Hero
         title="About BSH"
         subtitle="BSH – Business Smart Hub is your one-stop technology partner, helping physical and digital businesses transform, innovate, and thrive through smart, scalable, and future-ready solutions."
@@ -86,7 +112,7 @@ const page = () => {
 
       <Testimonial />
       <ProcessFlow />
-      <Faq />
+      <Faq schema={false} />
       <Contactform />
     </>
   );

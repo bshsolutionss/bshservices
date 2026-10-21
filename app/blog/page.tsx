@@ -20,7 +20,7 @@ type BlogPageProps = {
 
 const POSTS_PER_PAGE = 9;
 const BLOG_DESCRIPTION =
-  "Practical guides from BSH Solutions on web development, digital marketing, design, AI automation, and business technology.";
+  "Practical guides from BSH Solutions on web development, SEO, digital marketing, design and AI automation to help your business grow with technology.";
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const page = parsePageNumber((await searchParams).page);

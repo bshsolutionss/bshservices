@@ -4,37 +4,53 @@ import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
-import { getCategoryFaqs } from "@/lib/services-data";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
+import { SERVICE_CATEGORIES, getCategoryFaqs, getServicePath, getServicesByCategory } from "@/lib/services-data";
 
 // Icons
 import { FaRobot, FaCogs, FaVideo, FaSearch } from "react-icons/fa";
 import { SiGooglecloud, SiZapier, SiOpenai } from "react-icons/si";
 import { MdIntegrationInstructions } from "react-icons/md";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "AI-Powered Business Services",
-  description:
-    "Automate, scale, and grow your business with BSH Solutions' AI services — workflow automation, AI chatbots, video automation, and AI website integration.",
+const TITLE = "AI Automation & AI Chatbot Services | BSH Solutions";
+const DESCRIPTION =
+  "AI automation, AI chatbots for websites and WhatsApp, AI website integration, AEO and AI video automation from BSH Solutions. Save time and grow faster.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services/ai",
   keywords: [
     "AI automation services",
     "AI chatbots",
     "business AI solutions",
     "AI website integration",
   ],
-  alternates: { canonical: "/Services/ai" },
-  openGraph: {
-    title: "AI-Powered Business Services | BSH Solutions",
-    description:
-      "AI automation, chatbots, video automation, and AI website integration for modern businesses.",
-    url: "/Services/ai",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function AIServicesPage() {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services/ai",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+            { name: SERVICE_CATEGORIES.ai.name, path: "/Services/ai" },
+          ],
+          extra: [
+            itemListJsonLd(
+              SERVICE_CATEGORIES.ai.name,
+              getServicesByCategory("ai").map((s) => ({ name: s.name, path: getServicePath(s) })),
+            ),
+          ],
+        })}
+      />
       <Hero
         title="AI-Powered Business Services"
         subtitle="We help businesses automate, scale, and grow using modern AI solutions that deliver real, measurable results."

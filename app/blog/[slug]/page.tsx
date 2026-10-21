@@ -17,6 +17,7 @@ import {
   getPostCategories,
   getPostDescription,
   getPostSeoTitle,
+  stripSiteSuffix,
   wpToPlainText,
 } from "@/lib/wp";
 
@@ -75,7 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "max-video-preview": -1,
     },
     openGraph: {
-      title: seo?.ogTitle || seoTitle,
+      title: (seo?.ogTitle && stripSiteSuffix(seo.ogTitle)) || seoTitle,
       description: seo?.ogDescription || description,
       url: canonical,
       type: "article",
@@ -97,7 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: seo?.twitterTitle || seo?.ogTitle || seoTitle,
+      title: stripSiteSuffix(seo?.twitterTitle || seo?.ogTitle || "") || seoTitle,
       description: seo?.twitterDescription || seo?.ogDescription || description,
       ...(featuredImage && { images: [seo?.twitterImage || featuredImage] }),
     },

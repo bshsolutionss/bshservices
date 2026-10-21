@@ -12,6 +12,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { GoogleTagManager, GoogleTagManagerNoScript } from "@/components/GoogleTagManager";
 import { safeJsonLd } from "@/lib/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
+import { SERVICE_CATEGORIES } from "@/lib/services-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,21 +29,28 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "BSH Solutions | Business Smart Hub",
+    default: "BSH Solutions | Web Development, AI & Digital Marketing",
     template: "%s | BSH Solutions",
   },
   description:
-    "Business Smart Hub – A hub for all business tech needs. BSH Solutions provides scalable digital, software, and IT solutions for modern businesses.",
+    "BSH Solutions (Business Smart Hub) builds fast websites, custom software and AI chatbots, and grows brands with SEO and digital marketing. Get a free quote.",
   keywords: [
     "BSH Solutions",
     "Business Smart Hub",
-    "IT Company Pakistan",
-    "Software Development",
-    "Web Development",
-    "Mobile App Development",
-    "Digital Marketing",
-    "Tech Services",
+    "web development company",
+    "software house",
+    "AI automation agency",
+    "AI chatbot development",
+    "digital marketing agency",
+    "SEO services",
+    "UI/UX design agency",
+    "mobile app development",
   ],
+  applicationName: "BSH Solutions",
+  category: "technology",
+  creator: "BSH Solutions",
+  publisher: "BSH Solutions",
+  formatDetection: { telephone: false, email: false, address: false },
   authors: [{ name: "BSH Solutions", url: SITE_URL }],
   robots: {
     index: true,
@@ -50,15 +58,18 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
   alternates: {
     canonical: "./",
   },
   openGraph: {
-    title: "BSH Solutions | Business Smart Hub",
+    title: "BSH Solutions | Web Development, AI & Digital Marketing",
     description:
-      "Smart, scalable, and future-ready digital solutions for growing businesses.",
+      "Websites, custom software, AI automation and digital marketing from BSH Solutions (Business Smart Hub). Smart, scalable solutions for growing businesses.",
     url: "./",
     siteName: "BSH Solutions",
     images: [
@@ -74,9 +85,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BSH Solutions | Business Smart Hub",
+    title: "BSH Solutions | Web Development, AI & Digital Marketing",
     description:
-      "A hub for all business tech needs — powered by BSH Solutions.",
+      "Websites, custom software, AI automation and digital marketing from BSH Solutions (Business Smart Hub). Smart, scalable solutions for growing businesses.",
     images: [DEFAULT_OG_IMAGE.url],
     // NOTE: this Twitter/X handle has an extra "s" ("BSHSolutionss") — not
     // touched here since it's a social-media identity, not a domain
@@ -145,8 +156,36 @@ export default function RootLayout({
               "@type": "Organization",
               "@id": `${SITE_URL}/#organization`,
               name: "BSH Solutions",
-              alternateName: "Business Smart Hub",
+              alternateName: ["Business Smart Hub", "BSH"],
               url: SITE_URL,
+              description:
+                "BSH Solutions (Business Smart Hub) is a technology partner offering web and software development, UI/UX and brand design, digital marketing, AI automation, and photography for growing businesses.",
+              slogan: "A hub for all business tech needs",
+              image: `${SITE_URL}${DEFAULT_OG_IMAGE.url}`,
+              areaServed: "Worldwide",
+              knowsAbout: [
+                "Web development",
+                "Custom software development",
+                "Mobile app development",
+                "eCommerce development",
+                "UI/UX design",
+                "Brand identity design",
+                "Search engine optimization",
+                "Digital marketing",
+                "AI automation",
+                "AI chatbots",
+                "Answer engine optimization",
+                "Photography and video production",
+              ],
+              hasOfferCatalog: {
+                "@type": "OfferCatalog",
+                name: "BSH Solutions services",
+                itemListElement: Object.values(SERVICE_CATEGORIES).map((category) => ({
+                  "@type": "OfferCatalog",
+                  name: category.name,
+                  url: `${SITE_URL}${category.overviewPath}`,
+                })),
+              },
               logo: {
                 "@type": "ImageObject",
                 url: `${SITE_URL}/android-chrome-512x512.png`,
@@ -197,6 +236,8 @@ export default function RootLayout({
               url: SITE_URL,
               name: "BSH Solutions",
               alternateName: "Business Smart Hub",
+              description:
+                "Web development, custom software, AI automation, design and digital marketing services from BSH Solutions.",
               publisher: { "@id": `${SITE_URL}/#organization` },
               inLanguage: "en",
             }),

@@ -17,6 +17,8 @@ import {
   type ServiceCategorySlug,
 } from "@/lib/services-data";
 import { SERVICE_ARTICLES, truncateForMeta } from "@/lib/services-articles";
+import { SERVICE_SEO } from "@/lib/service-seo";
+import { pageMetadata } from "@/lib/seo";
 import ServiceDetailPage from "@/components/services/detail/ServiceDetailPage";
 
 type PageProps = {
@@ -37,32 +39,21 @@ export function makeServiceCategoryPage(category: ServiceCategorySlug) {
     }
 
     const path = getServicePath(service);
-    // Relative — resolved against the root layout's metadataBase (lib/site.ts's
-    // SITE_URL), so this factory (shared by all ~30 sub-service pages) never
-    // needs to hardcode the domain itself.
+    // Hand-written title/description first (lib/service-seo.ts); the
+    // generated pair is only a fallback for a newly added service.
     const article = SERVICE_ARTICLES[service.slug];
-    const title = `${service.name} Services`;
-    const description = article ? truncateForMeta(article.intro.join(" "), 160) : service.shortDescription;
+    const seo = SERVICE_SEO[service.slug];
+    const title = seo?.title ?? `${service.name} Services | BSH Solutions`;
+    const description =
+      seo?.description ?? (article ? truncateForMeta(article.intro.join(" "), 160) : service.shortDescription);
 
-    return {
+    return pageMetadata({
       title,
       description,
+      path,
       keywords: service.keywords,
-      alternates: { canonical: path },
-      openGraph: {
-        title: `${title} | BSH Solutions`,
-        description,
-        url: path,
-        type: "website",
-        images: [{ url: service.image, alt: title }],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: `${title} | BSH Solutions`,
-        description,
-        images: [service.image],
-      },
-    };
+      image: { url: service.image, alt: `${service.name} by BSH Solutions` },
+    });
   }
 
   async function ServicePage({ params }: PageProps) {

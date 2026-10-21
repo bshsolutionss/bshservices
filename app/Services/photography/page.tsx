@@ -5,8 +5,7 @@ import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
-import { getCategoryFaqs } from "@/lib/services-data";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
+import { SERVICE_CATEGORIES, getCategoryFaqs, getServicePath, getServicesByCategory } from "@/lib/services-data";
 
 // ==== ICONS ====
 import {
@@ -22,30 +21,47 @@ import {
   SiCanva,
 } from "react-icons/si";
 import { TbDrone, TbCameraSelfie } from "react-icons/tb";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Photography & Videography Services",
-  description:
-    "BSH Solutions captures moments, products, and stories with a blend of creativity, precision, and professional artistry — product photography, brand shoots, and video.",
+const TITLE = "Photography & Video Production Services | BSH Solutions";
+const DESCRIPTION =
+  "Product photography, brand shoots, event coverage, video production, drone shots and retouching from BSH Solutions: visuals that sell your brand.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services/photography",
   keywords: [
     "photography services",
     "videography services",
     "product photography",
     "brand shoots",
   ],
-  alternates: { canonical: "/Services/photography" },
-  openGraph: {
-    title: "Photography & Videography Services | BSH Solutions",
-    description:
-      "We capture moments, products, and stories with creativity, precision, and professional artistry.",
-    url: "/Services/photography",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function PhotographyPage() {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services/photography",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+            { name: SERVICE_CATEGORIES.photography.name, path: "/Services/photography" },
+          ],
+          extra: [
+            itemListJsonLd(
+              SERVICE_CATEGORIES.photography.name,
+              getServicesByCategory("photography").map((s) => ({ name: s.name, path: getServicePath(s) })),
+            ),
+          ],
+        })}
+      />
       <Hero
         title="Photography & Videography Services"
         subtitle="We capture moments, products, and stories with a perfect blend of creativity, precision, and professional artistry."

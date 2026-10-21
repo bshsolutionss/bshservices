@@ -5,10 +5,9 @@ import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import QuoteQuiz from "@/components/services/QuoteQuiz";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
-import { getCategoryFaqs } from "@/lib/services-data";
+import { SERVICE_CATEGORIES, getCategoryFaqs, getServicePath, getServicesByCategory } from "@/lib/services-data";
 import RelatedBlogPosts from "@/components/services/detail/RelatedBlogPosts";
 import { CATEGORY_BLOG_LINKS } from "@/lib/blog-links";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 import {
   SiJavascript,
@@ -37,30 +36,47 @@ import {
 } from "react-icons/si";
 
 import { FaJava, FaAws, FaTools } from "react-icons/fa";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Web Development Services",
-  description:
-    "BSH Solutions crafts fast, scalable, and beautiful web experiences — custom websites, eCommerce, and software development tailored to your business.",
+const TITLE = "Web & Software Development Services | BSH Solutions";
+const DESCRIPTION =
+  "Custom websites, eCommerce stores, mobile apps and web applications built with Next.js and React: fast, SEO-ready and made to scale. Get a free quote.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services/development",
   keywords: [
     "web development services",
     "custom software development",
     "eCommerce development",
     "Next.js development agency",
   ],
-  alternates: { canonical: "/Services/development" },
-  openGraph: {
-    title: "Web Development Services | BSH Solutions",
-    description:
-      "Fast, scalable, and beautiful web experiences tailored to your business.",
-    url: "/Services/development",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function DevelopmentPage() {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services/development",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+            { name: SERVICE_CATEGORIES.development.name, path: "/Services/development" },
+          ],
+          extra: [
+            itemListJsonLd(
+              SERVICE_CATEGORIES.development.name,
+              getServicesByCategory("development").map((s) => ({ name: s.name, path: getServicePath(s) })),
+            ),
+          ],
+        })}
+      />
       <Hero
         title="Web Development Services"
         subtitle="We craft fast, scalable, and beautiful web experiences tailored to your business."

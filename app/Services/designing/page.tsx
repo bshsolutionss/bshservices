@@ -4,8 +4,7 @@ import Testimonial from "@/components/testimonial";
 import ServiceSection from "@/components/services/ServiceSection";
 import Form from "@/components/services/Form";
 import FaqAccordion from "@/components/services/detail/FaqAccordion";
-import { getCategoryFaqs } from "@/lib/services-data";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
+import { SERVICE_CATEGORIES, getCategoryFaqs, getServicePath, getServicesByCategory } from "@/lib/services-data";
 
 // 🎨 React Icons Imports
 import {
@@ -19,30 +18,47 @@ import {
   SiCinema4D,
 } from "react-icons/si";
 import { FaBoxOpen } from "react-icons/fa";
+import JsonLd from "@/components/JsonLd";
+import { itemListJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Creative Design Services",
-  description:
-    "BSH Solutions transforms your vision into visually stunning designs — branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
+const TITLE = "Brand, UI/UX & Graphic Design Services | BSH Solutions";
+const DESCRIPTION =
+  "Brand identity, logo, UI/UX, graphic, packaging and motion design from BSH Solutions: visuals that make your business memorable and convert visitors.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/Services/designing",
   keywords: [
     "creative design services",
     "branding agency",
     "UI/UX design",
     "graphic design services",
   ],
-  alternates: { canonical: "/Services/designing" },
-  openGraph: {
-    title: "Creative Design Services | BSH Solutions",
-    description:
-      "Branding, UI/UX, and creative design that inspires, engages, and connects with your audience.",
-    url: "/Services/designing",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function DesigningPage() {
   return (
     <>
+      <JsonLd
+        data={webPageJsonLd({
+          type: "CollectionPage",
+          name: TITLE,
+          description: DESCRIPTION,
+          path: "/Services/designing",
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/Services" },
+            { name: SERVICE_CATEGORIES.designing.name, path: "/Services/designing" },
+          ],
+          extra: [
+            itemListJsonLd(
+              SERVICE_CATEGORIES.designing.name,
+              getServicesByCategory("designing").map((s) => ({ name: s.name, path: getServicePath(s) })),
+            ),
+          ],
+        })}
+      />
       <Hero
         title="Creative Design Services"
         subtitle="We transform your vision into visually stunning designs that inspire, engage, and connect with your audience."

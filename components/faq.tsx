@@ -1,23 +1,30 @@
 import { safeJsonLd } from "@/lib/json-ld";
 import { SITE_FAQS } from "@/lib/faq-data";
 
-export default function Faq() {
+/**
+ * `schema` emits the FAQPage JSON-LD. Only the homepage keeps it on — the same
+ * Q&A set is also shown on /about, /contact and /Services, and identical
+ * FAQPage markup on several URLs is duplicate structured data.
+ */
+export default function Faq({ schema = true }: { schema?: boolean }) {
   return (
     <section id="faq" className="bg-[#F4F7FE] px-6 py-20 lg:px-20">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: safeJsonLd({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: SITE_FAQS.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: { "@type": "Answer", text: faq.answer },
-            })),
-          }),
-        }}
-      />
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLd({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: SITE_FAQS.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: { "@type": "Answer", text: faq.answer },
+              })),
+            }),
+          }}
+        />
+      )}
 
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">Frequently Asked Questions</h2>

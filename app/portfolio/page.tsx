@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import Contactform from "@/components/contactform";
 import { OurPortfolio } from "@/components/our-portfolio";
 import { safeJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/seo";
 import { PORTFOLIO_PROJECTS, portfolioIndexJsonLd } from "@/lib/portfolio-data";
 
-const TITLE = "Web Design & Development Portfolio";
+const TITLE = "Web Design & Development Portfolio | BSH Solutions";
 const DESCRIPTION =
-  "Explore real, live client projects by BSH Solutions — websites, eCommerce stores, dashboards and custom software. Preview each one on a computer screen or read the full case study.";
+  "Live client projects by BSH Solutions: business websites, eCommerce stores, dashboards and custom software. Preview each site or read the full case study.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: TITLE,
   description: DESCRIPTION,
+  path: "/portfolio",
   keywords: [
     "BSH Solutions portfolio",
     "web development projects",
@@ -19,15 +21,8 @@ export const metadata: Metadata = {
     "eCommerce website examples",
     "custom software examples",
   ],
-  alternates: { canonical: "/portfolio" },
-  openGraph: {
-    title: "Portfolio | BSH Solutions",
-    description: DESCRIPTION,
-    url: "/portfolio",
-    type: "website",
-    images: [{ url: PORTFOLIO_PROJECTS[0].image, alt: `${PORTFOLIO_PROJECTS[0].title} website` }],
-  },
-};
+  image: { url: PORTFOLIO_PROJECTS[0].image, alt: `${PORTFOLIO_PROJECTS[0].title} website` },
+});
 
 export default function PortfolioPage() {
   return (
