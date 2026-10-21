@@ -28,6 +28,7 @@ import { useOptions } from "@/lib/admin/use-options";
 
 interface ProjectEditControlProps {
   projectId: string;
+  projectName: string;
   initialStage: ProjectStage;
   initialBudget: number | null;
   initialCurrency: Currency;
@@ -47,6 +48,7 @@ interface ProjectEditControlProps {
 /** Everything editable about a project, plus archive/delete, in the sidebar of its detail page. */
 export default function ProjectEditControl({
   projectId,
+  projectName,
   initialStage,
   initialBudget,
   initialCurrency,
@@ -252,7 +254,7 @@ export default function ProjectEditControl({
             label="Delete project"
             display="block"
             icon={<Trash2 className="h-4 w-4" />}
-            title="Delete this project?"
+            title={`Delete project "${projectName}"?`}
             confirmLabel="Delete permanently"
             message={
               <>

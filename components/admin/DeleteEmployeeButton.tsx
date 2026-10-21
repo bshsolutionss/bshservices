@@ -1,42 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/admin/ui";
 
-export default function DeleteEmployeeButton({ employeeId }: { employeeId: string }) {
+export default function DeleteEmployeeButton({ employeeId, employeeName }: { employeeId: string; employeeName: string }) {
   const router = useRouter();
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleDelete = async () => {
-    if (!confirm("Delete this employee permanently? This cannot be undone.")) return;
-
-    setDeleting(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/employees/${employeeId}`, { method: "DELETE" });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body.error || "Failed to delete.");
-      router.push("/admin/employees");
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete employee.");
-      setDeleting(false);
-    }
-  };
-
   return (
-    <div>
-      <Button
-        onClick={handleDelete}
-        disabled={deleting}
-        variant="outline"
-        className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50"
-      >
-        {deleting ? "Deleting..." : "Delete Employee"}
-      </Button>
-      {error && <p className="text-sm text-red-600 mt-2">❌ {error}</p>}
-    </div>
+    <ConfirmButton
+      label="Delete team member"
+      display="block"
+      icon={<Trash2 className="h-4 w-4" />}
+      title={`Delete "${employeeName}"?`}
+      confirmLabel="Delete team member"
+      message="Their profile is removed and tasks assigned to them become unassigned (the name stays on the task for reference). This cannot be undone. If they have just left, set their status to Inactive instead."
+      onConfirm={async () => {
+        const res = await fetch(`/api/admin/employees/${employeeId}`, { method: "DELETE" });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Could not delete the team member.");
+        router.push("/admin/employees");
+        router.refresh();
+      }}
+    />
   );
 }

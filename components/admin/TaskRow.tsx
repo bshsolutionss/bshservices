@@ -14,6 +14,8 @@ import {
   type TaskPriority,
 } from "@/lib/tasks";
 import TaskStatusInlineControl from "@/components/admin/TaskStatusInlineControl";
+import { Badge, ConfirmButton } from "@/components/admin/ui";
+import { dueText, daysLateOf } from "@/lib/due-text";
 
 interface TaskRowProps {
   task: Task;
@@ -21,14 +23,15 @@ interface TaskRowProps {
   assignees?: AssigneeOption[];
   /** Shown + linked when this row appears on the cross-project /admin/tasks list. */
   projectName?: string;
+  /** Show status only - no edit or delete (employees updating their own work). */
+  readOnly?: boolean;
 }
 
 /** Shared task row — display + inline edit toggle + delete. Used on both /admin/tasks and a project's detail page. */
-export default function TaskRow({ task, assignees = [], projectName }: TaskRowProps) {
+export default function TaskRow({ task, assignees = [], projectName, readOnly = false }: TaskRowProps) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState(task.title);
@@ -69,20 +72,8 @@ export default function TaskRow({ task, assignees = [], projectName }: TaskRowPr
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm("Delete this task permanently? This cannot be undone.")) return;
 
-    setDeleting(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/tasks/${task.id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete.");
-      router.refresh();
-    } catch {
-      setError("Failed to delete task.");
-      setDeleting(false);
-    }
-  };
+  const lateDays = task.due_date ? daysLateOf(task.due_date, new Date().toISOString().slice(0, 10)) : null;
 
   if (editing) {
     return (
@@ -123,7 +114,7 @@ export default function TaskRow({ task, assignees = [], projectName }: TaskRowPr
             disabled={saving}
             className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-xl text-sm h-8 px-3"
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? "Saving…" : "Save task"}
           </Button>
           <Button
             type="button"
@@ -146,20 +137,32 @@ export default function TaskRow({ task, assignees = [], projectName }: TaskRowPr
         <p className="text-xs text-[#231F20]/50">
           {projectName && (
             <>
-              <Link href={`/admin/projects/${task.project_id}`} className="hover:text-[#1A14A5] hover:underline">
-                {projectName}
-              </Link>{" "}
+              {readOnly ? (
+                projectName
+              ) : (
+                <Link href={`/admin/projects/${task.project_id}`} className="hover:text-[#1A14A5] hover:underline">
+                  {projectName}
+                </Link>
+              )}{" "}
               &middot;{" "}
             </>
           )}
-          {task.assignee_name || "Unassigned"} &middot; {TASK_PRIORITY_LABELS[task.priority as TaskPriority]}
-          {task.due_date ? ` · Due ${new Date(task.due_date).toLocaleDateString()}` : ""}
+          Owner: {task.assignee_name || "Unassigned"} &middot; {TASK_PRIORITY_LABELS[task.priority as TaskPriority]} priority
+          {task.due_date ? ` · Due ${new Date(task.due_date).toLocaleDateString()}` : " · No deadline"}
         </p>
         {error && <p className="text-xs text-red-600 mt-0.5">❌ {error}</p>}
         {notice && <p className="text-xs text-emerald-700 mt-0.5">{notice}</p>}
       </div>
       <div className="flex items-center gap-3 shrink-0">
+        {lateDays !== null && lateDays >= 0 && task.status !== "completed" && (
+          <Badge
+            label={dueText(lateDays)}
+            colors={lateDays > 0 ? { bg: "#FEE2E2", text: "#991B1B" } : { bg: "#FEF3C7", text: "#92400E" }}
+          />
+        )}
         <TaskStatusInlineControl taskId={task.id} initialStatus={task.status as TaskStatus} />
+        {!readOnly && (
+          <>
         <button
           type="button"
           onClick={() => setEditing(true)}
@@ -167,14 +170,21 @@ export default function TaskRow({ task, assignees = [], projectName }: TaskRowPr
         >
           Edit
         </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={deleting}
-          className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
-        >
-          {deleting ? "..." : "Delete"}
-        </button>
+        <ConfirmButton
+          label="Delete"
+          display="inline"
+          title={`Delete task "${task.title}"?`}
+          confirmLabel="Delete task"
+          message="This cannot be undone. If the work is finished, mark it Completed instead so it stays in your history."
+          onConfirm={async () => {
+            const res = await fetch(`/api/admin/tasks/${task.id}`, { method: "DELETE" });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.error || "Could not delete the task.");
+            router.refresh();
+          }}
+        />
+          </>
+        )}
       </div>
     </li>
   );

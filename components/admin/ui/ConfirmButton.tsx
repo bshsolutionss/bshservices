@@ -70,7 +70,14 @@ export default function ConfirmButton({
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={triggerClass}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className={triggerClass}
+        // Icon-only triggers (a bin in a table row) still need a name for screen readers and a tooltip for everyone.
+        aria-label={label ? undefined : title}
+        title={label ? undefined : title}
+      >
         {icon}
         {label}
       </button>

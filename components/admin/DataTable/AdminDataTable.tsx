@@ -48,6 +48,10 @@ interface AdminDataTableProps<T> {
   toolbarExtra?: React.ReactNode;
   searchPlaceholder?: string;
   emptyMessage?: string;
+  /** Headline for a table with no records at all, e.g. "No projects yet". */
+  emptyTitle?: string;
+  /** The button that fixes an empty table, e.g. <CreateProjectButton /> - shown only when there are no records. */
+  emptyAction?: React.ReactNode;
 }
 
 /**
@@ -66,6 +70,8 @@ export default function AdminDataTable<T>({
   toolbarExtra,
   searchPlaceholder = "Search…",
   emptyMessage = "No records found.",
+  emptyTitle,
+  emptyAction,
 }: AdminDataTableProps<T>) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
@@ -251,8 +257,16 @@ export default function AdminDataTable<T>({
           <tbody className="divide-y divide-[#1A14A5]/5">
             {filteredRows.length === 0 && (
               <tr>
-                <td colSpan={visibleColumns.length || 1} className="px-6 py-10 text-center text-[#231F20]/50">
-                  {emptyMessage}
+                <td colSpan={visibleColumns.length || 1} className="px-6 py-12 text-center">
+                  {rows.length === 0 ? (
+                    <div className="mx-auto flex max-w-sm flex-col items-center gap-2">
+                      <p className="font-semibold text-[#231F20]">{emptyTitle ?? "Nothing here yet"}</p>
+                      <p className="text-sm text-[#231F20]/55">{emptyMessage}</p>
+                      {emptyAction && <div className="mt-2">{emptyAction}</div>}
+                    </div>
+                  ) : (
+                    <p className="text-[#231F20]/55">No results match your search or filters. Clear them to see everything.</p>
+                  )}
                 </td>
               </tr>
             )}

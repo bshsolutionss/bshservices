@@ -137,7 +137,7 @@ export default async function AdminLeadDetailPage({
         </div>
 
         <div className="space-y-6">
-          {isBooking && lead.booking_status === "confirmed" && <BookingCancelButton leadId={lead.id} />}
+          {isBooking && lead.booking_status === "confirmed" && <BookingCancelButton leadId={lead.id} guestName={lead.name} />}
 
           <LeadStatusControl
             leadId={lead.id}
@@ -149,7 +149,7 @@ export default async function AdminLeadDetailPage({
             initialLostReason={lead.lost_reason as LeadLostReason | null}
           />
 
-          <DeleteLeadButton leadId={lead.id} isBooking={isBooking} />
+          <DeleteLeadButton leadId={lead.id} leadName={lead.name} isBooking={isBooking} />
         </div>
       </div>
     </div>

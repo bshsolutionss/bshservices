@@ -64,10 +64,12 @@ const columns: DataTableColumn<Client>[] = [
   },
 ];
 
-export default function ClientsTable({ clients, toolbarExtra }: { clients: Client[]; toolbarExtra?: React.ReactNode }) {
+export default function ClientsTable({ clients, toolbarExtra, emptyTitle, emptyAction }: { clients: Client[]; toolbarExtra?: React.ReactNode; emptyTitle?: string; emptyAction?: React.ReactNode }) {
   return (
     <AdminDataTable
       tableId="clients"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={clients}
       getRowKey={(row) => row.id}

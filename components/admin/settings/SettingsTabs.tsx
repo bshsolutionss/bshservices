@@ -9,8 +9,10 @@ const TABS = [
   { href: "/admin/settings/email", label: "Email" },
   { href: "/admin/settings/invoices", label: "Invoices" },
   { href: "/admin/settings/lists", label: "Lists" },
+  { href: "/admin/settings/statuses", label: "Statuses" },
   { href: "/admin/settings/templates", label: "Message templates" },
   { href: "/admin/settings/exchange-rates", label: "Exchange rates" },
+  { href: "/admin/settings/users", label: "Users & roles" },
 ];
 
 export default function SettingsTabs() {

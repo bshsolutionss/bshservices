@@ -71,7 +71,7 @@ export default function FollowUpList({ items, today }: { items: FollowUpItem[]; 
                 disabled={busyId === item.id}
                 className="inline-flex items-center gap-1 rounded-xl bg-[#1A14A5] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0e0a7a] disabled:opacity-50"
               >
-                <Check className="h-3.5 w-3.5" /> {busyId === item.id ? "…" : "Done"}
+                <Check className="h-3.5 w-3.5" /> {busyId === item.id ? "Saving…" : "Mark done"}
               </button>
             </div>
           </li>

@@ -32,6 +32,19 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
   }
 
+  // Employees can move their own tasks forward (status) and nothing else.
+  if (auth.user.role === "employee") {
+    const touched = Object.keys(payload).filter((k) => (payload as Record<string, unknown>)[k] !== undefined);
+    if (touched.some((k) => k !== "status")) {
+      return NextResponse.json({ ok: false, error: "You can update the status of your own tasks. Ask a manager to change anything else." }, { status: 403 });
+    }
+    const check = createServiceRoleClient();
+    const { data: own } = await check.from("tasks").select("assignee_id").eq("id", id).single<{ assignee_id: string | null }>();
+    if (!own || !auth.user.employeeId || own.assignee_id !== auth.user.employeeId) {
+      return NextResponse.json({ ok: false, error: "This task is assigned to someone else, so only they or a manager can update it." }, { status: 403 });
+    }
+  }
+
   const updates: Record<string, unknown> = {};
 
   if (payload.status !== undefined) {
@@ -110,6 +123,9 @@ export async function DELETE(
 ) {
   const auth = await requireAdminUser();
   if (auth.unauthorized) return auth.unauthorized;
+  if (auth.user.role === "employee") {
+    return NextResponse.json({ ok: false, error: "Only managers and admins can delete tasks." }, { status: 403 });
+  }
 
   const { id } = await params;
   const service = createServiceRoleClient();

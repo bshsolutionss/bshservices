@@ -18,6 +18,8 @@ interface ExpensesTableProps {
   employees: { id: string; name: string }[];
   projects?: { id: string; name: string }[];
   toolbarExtra?: React.ReactNode;
+  emptyTitle?: string;
+  emptyAction?: React.ReactNode;
 }
 
 /**
@@ -25,7 +27,7 @@ interface ExpensesTableProps {
  * customisation and CSV export work exactly as they do on Leads, Projects and
  * Invoices, instead of this page having its own hand-rolled <table>.
  */
-export default function ExpensesTable({ expenses, employees, projects = [], toolbarExtra }: ExpensesTableProps) {
+export default function ExpensesTable({ expenses, employees, projects = [], toolbarExtra, emptyTitle, emptyAction }: ExpensesTableProps) {
   const router = useRouter();
   const categories = useOptions("expense_categories");
 
@@ -88,7 +90,7 @@ export default function ExpensesTable({ expenses, employees, projects = [], tool
           <ConfirmButton
             label="Remove"
             display="inline"
-            title="Remove this expense?"
+            title={`Remove the ${row.vendor || row.category} expense?`}
             confirmLabel="Remove expense"
             message={`${formatMoney(row.amount, row.currency)} on ${formatDate(
               row.expense_date
@@ -109,6 +111,8 @@ export default function ExpensesTable({ expenses, employees, projects = [], tool
   return (
     <AdminDataTable
       tableId="expenses"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={expenses}
       getRowKey={(row) => row.id}

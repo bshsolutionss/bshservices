@@ -157,3 +157,13 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Admin: always show where keyboard focus is (links, buttons, summary toggles). */
+#admin-main a:focus-visible,
+#admin-main button:focus-visible,
+#admin-main summary:focus-visible,
+#admin-main [role="button"]:focus-visible {
+  outline: 2px solid #1A14A5;
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}

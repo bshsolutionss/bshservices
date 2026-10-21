@@ -19,7 +19,15 @@ export type CommunicationRow = Communication & {
 };
 
 /** The full communication history on the shared admin table (sort, filter, search, export). */
-export default function CommunicationTable({ rows, hideClient = false }: { rows: CommunicationRow[]; hideClient?: boolean }) {
+export default function CommunicationTable({
+  rows,
+  hideClient = false,
+  emptyAction,
+}: {
+  rows: CommunicationRow[];
+  hideClient?: boolean;
+  emptyAction?: React.ReactNode;
+}) {
   const router = useRouter();
 
   const columns: DataTableColumn<CommunicationRow>[] = [
@@ -101,7 +109,7 @@ export default function CommunicationTable({ rows, hideClient = false }: { rows:
         <ConfirmButton
           label="Delete"
           display="inline"
-          title="Delete this entry?"
+          title={`Delete "${row.subject || COMM_CHANNEL_LABELS[row.channel]}" for ${row.clientName}?`}
           confirmLabel="Delete"
           message="It is removed from the client's communication history."
           onConfirm={async () => {
@@ -122,7 +130,9 @@ export default function CommunicationTable({ rows, hideClient = false }: { rows:
       rows={rows}
       getRowKey={(row) => row.id}
       searchPlaceholder="Search client, subject, notes…"
-      emptyMessage="No communication logged yet."
+      emptyTitle="No communication logged yet"
+      emptyAction={emptyAction}
+      emptyMessage="Log a call, chat or meeting - or email a client from here - so the history is never lost."
     />
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import { cn } from "@/lib/utils";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads";
 import { PageHeader } from "@/components/admin/ui";
@@ -22,6 +23,7 @@ export default async function AdminLeadsPage({
   const activeStatus = isLeadStatus(statusParam) ? statusParam : undefined;
   const view = viewParam === "board" ? "board" : "list";
 
+  await ensureStatusOverrides();
   const supabase = createServiceRoleClient();
   let query = supabase
     .from("leads")
@@ -109,7 +111,7 @@ export default async function AdminLeadsPage({
         </div>
       </PageHeader>
 
-      {view === "board" ? <LeadsKanban leads={leads as unknown as KanbanLead[]} /> : <LeadsTable leads={leads} />}
+      {view === "board" ? <LeadsKanban leads={leads as unknown as KanbanLead[]} /> : <LeadsTable leads={leads} emptyTitle="No leads yet" emptyAction={<LeadFormModal />} />}
     </div>
   );
 }

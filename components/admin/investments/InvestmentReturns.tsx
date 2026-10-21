@@ -61,7 +61,7 @@ export default function InvestmentReturns({
         </div>
         <button type="submit" disabled={saving} className={btnPrimary}>
           <Plus className="h-4 w-4" />
-          {saving ? "Adding…" : "Add"}
+          {saving ? "Adding…" : "Add return"}
         </button>
       </form>
       {error && <Alert tone="error">{error}</Alert>}

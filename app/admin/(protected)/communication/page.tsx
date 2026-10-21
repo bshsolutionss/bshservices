@@ -49,7 +49,10 @@ export default async function AdminCommunicationPage() {
         </SectionCard>
       )}
 
-      <CommunicationTable rows={rows} />
+      <CommunicationTable
+        rows={rows}
+        emptyAction={<LogCommunicationModal clients={clients} projects={projects} />}
+      />
     </div>
   );
 }

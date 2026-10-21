@@ -94,14 +94,20 @@ export default function ProjectsTable({
   projects,
   toolbarExtra,
   emptyMessage,
+  emptyTitle,
+  emptyAction,
 }: {
   projects: ProjectListItem[];
   toolbarExtra?: React.ReactNode;
   emptyMessage: string;
+  emptyTitle?: string;
+  emptyAction?: React.ReactNode;
 }) {
   return (
     <AdminDataTable
       tableId="projects"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={projects}
       getRowKey={(row) => row.id}

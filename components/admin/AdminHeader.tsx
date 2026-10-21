@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, Maximize, Minimize, User } from "lucide-react";
 import AdminSearch from "@/components/admin/AdminSearch";
 import SignOutButton from "@/components/admin/SignOutButton";
+import { useRole } from "@/components/admin/RoleContext";
 
 interface AdminHeaderProps {
   onOpenMobileMenu: () => void;
@@ -43,6 +44,7 @@ function FullscreenToggle() {
 }
 
 function AccountMenu({ userEmail }: { userEmail: string | null }) {
+  const { roleLabel } = useRole();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -70,7 +72,10 @@ function AccountMenu({ userEmail }: { userEmail: string | null }) {
       {open && (
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-[#1A14A5]/10 py-2 z-50">
           {userEmail && (
-            <p className="px-4 py-2 text-xs text-[#231F20]/50 truncate border-b border-[#1A14A5]/5 mb-1">{userEmail}</p>
+            <div className="px-4 py-2 border-b border-[#1A14A5]/5 mb-1">
+              <p className="text-xs text-[#231F20]/50 truncate">{userEmail}</p>
+              <p className="mt-0.5 text-xs font-semibold text-[#1A14A5]">Role: {roleLabel}</p>
+            </div>
           )}
           <SignOutButton variant="light" className="w-full px-4 py-2" />
         </div>
@@ -85,6 +90,7 @@ function AccountMenu({ userEmail }: { userEmail: string | null }) {
  * fullscreen stay reachable while a long list scrolls underneath.
  */
 export default function AdminHeader({ onOpenMobileMenu, userEmail }: AdminHeaderProps) {
+  const { roleLabel, canView } = useRole();
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-[#1A14A5]/10 shadow-sm">
       <div className="flex items-center gap-3 px-4 md:px-6 py-3">
@@ -97,9 +103,12 @@ export default function AdminHeader({ onOpenMobileMenu, userEmail }: AdminHeader
           <Menu className="w-6 h-6" />
         </button>
 
-        <AdminSearch className="max-w-md" />
+        {canView("clients") && <AdminSearch className="max-w-md" />}
 
         <div className="ml-auto flex items-center gap-1.5">
+          <span className="hidden rounded-full bg-[#E8E7FB] px-2.5 py-1 text-xs font-bold text-[#1A14A5] sm:inline-block">
+            {roleLabel}
+          </span>
           <FullscreenToggle />
           <AccountMenu userEmail={userEmail} />
         </div>

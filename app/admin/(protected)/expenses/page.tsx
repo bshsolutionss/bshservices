@@ -64,7 +64,7 @@ export default async function AdminExpensesPage() {
         title="Expenses"
         subtitle={
           <>
-            {expenses.length} record{expenses.length === 1 ? "" : "s"} · feeds the{" "}
+            Money going out - one-time and monthly costs. {expenses.length} record{expenses.length === 1 ? "" : "s"} · feeds the{" "}
             <Link href="/admin/finance" className="font-medium text-[#1A14A5] hover:underline">
               P&amp;L report
             </Link>
@@ -120,7 +120,13 @@ export default async function AdminExpensesPage() {
         />
       </div>
 
-      <ExpensesTable expenses={expenses} employees={employees} projects={projects} />
+      <ExpensesTable
+        expenses={expenses}
+        employees={employees}
+        projects={projects}
+        emptyTitle="No expenses yet"
+        emptyAction={<ExpenseFormModal employees={employees} projects={projects} label="Add first expense" />}
+      />
     </div>
   );
 }

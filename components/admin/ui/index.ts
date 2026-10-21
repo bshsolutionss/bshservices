@@ -14,5 +14,7 @@ export { default as StatCard } from "./StatCard";
 export { default as Alert } from "./Alert";
 export { default as EmptyState } from "./EmptyState";
 export { default as PageHeader } from "./PageHeader";
+export { default as AdvancedSection } from "./AdvancedSection";
+export { useToast } from "./Toast";
 export * from "./Fields";
 export * from "./styles";

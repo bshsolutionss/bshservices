@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { lookupRole } from '@/lib/admin/roles';
+import { canView, canWrite, moduleForApi, moduleForPath, restrictionReason } from '@/lib/permissions';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,6 +11,31 @@ export async function proxy(request: NextRequest) {
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.pathname = `/Services${pathname.slice("/services".length)}`;
     return NextResponse.redirect(canonicalUrl, 308);
+  }
+
+  // Admin API: sign-in AND role are enforced here once, for every route, so a
+  // restricted role is rejected before any handler runs (hiding a button is not security).
+  if (pathname.startsWith('/api/admin')) {
+    const { response, authenticated, email } = await updateSession(request, new Headers(request.headers));
+    if (!authenticated) {
+      return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+    }
+    const info = await lookupRole(email);
+    if (!info) {
+      return NextResponse.json({ ok: false, error: 'Your account does not have access to the admin panel.' }, { status: 403 });
+    }
+    const area = moduleForApi(pathname);
+    if (area) {
+      const isWrite = request.method !== 'GET' && request.method !== 'HEAD';
+      const allowed = isWrite ? canWrite(info.role, area) : canView(info.role, area);
+      if (!allowed) {
+        return NextResponse.json(
+          { ok: false, error: restrictionReason(info.role, area, isWrite ? 'write' : 'view') },
+          { status: 403 }
+        );
+      }
+    }
+    return response;
   }
 
   // 1. Check for manual override via cookie
@@ -46,8 +73,9 @@ export async function proxy(request: NextRequest) {
   const isAdminRoute = pathname.startsWith('/admin');
   let response: NextResponse;
   let authenticated = false;
+  let email: string | null = null;
   if (isAdminRoute) {
-    ({ response, authenticated } = await updateSession(request, requestHeaders));
+    ({ response, authenticated, email } = await updateSession(request, requestHeaders));
   } else {
     response = NextResponse.next({ request: { headers: requestHeaders } });
   }
@@ -67,6 +95,18 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Role guard for pages: a signed-in person only reaches the screens their role allows.
+  if (isAdminRoute && authenticated && pathname !== '/admin/login' && pathname !== '/admin/restricted') {
+    const info = await lookupRole(email);
+    if (!info) {
+      return NextResponse.redirect(new URL('/admin/restricted?reason=norole', request.url));
+    }
+    const area = moduleForPath(pathname);
+    if (area && !canView(info.role, area)) {
+      return NextResponse.redirect(new URL(`/admin/restricted?module=${area}`, request.url));
+    }
+  }
+
   return response;
 }
 
@@ -74,5 +114,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/api/admin/:path*',
   ],
 };

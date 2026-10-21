@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, ChoiceField, SectionCard, TextField, TextareaField, btnPrimary } from "@/components/admin/ui";
+import { useOptions } from "@/lib/admin/use-options";
 import { CLIENT_TYPES, CLIENT_TYPE_LABELS, type ClientType } from "@/lib/clients";
 
 interface ClientEditControlProps {
@@ -21,6 +22,7 @@ interface ClientEditControlProps {
 
 export default function ClientEditControl({ clientId, initial }: ClientEditControlProps) {
   const router = useRouter();
+  const industries = useOptions("industries");
   const [fields, setFields] = useState({
     company_name: initial.company_name,
     contact_name: initial.contact_name ?? "",
@@ -88,7 +90,13 @@ export default function ClientEditControl({ clientId, initial }: ClientEditContr
           hint="Invoices are emailed here."
         />
         <TextField id="cl-phone" label="Phone" type="tel" value={fields.contact_phone} onChange={set("contact_phone")} />
-        <TextField id="cl-industry" label="Industry" value={fields.industry} onChange={set("industry")} />
+        <TextField
+          id="cl-industry"
+          label="Industry"
+          value={fields.industry}
+          onChange={set("industry")}
+          suggestions={industries.options.map((o) => o.label)}
+        />
         <TextField id="cl-manager" label="Account manager" value={fields.account_manager} onChange={set("account_manager")} />
         <TextareaField id="cl-notes" label="Notes" rows={4} value={fields.notes} onChange={set("notes")} />
 

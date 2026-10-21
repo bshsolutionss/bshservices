@@ -1,5 +1,6 @@
 import { AlertTriangle, CheckCircle2, Receipt, Wallet } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import { formatMoney, type InvoiceBalance } from "@/lib/invoices";
 import { sumToPKR } from "@/lib/currency";
 import { getExchangeRates } from "@/lib/admin/exchange-rates";
@@ -7,11 +8,13 @@ import type { Client } from "@/lib/clients";
 import type { Project } from "@/lib/projects";
 import { PageHeader, StatCard } from "@/components/admin/ui";
 import InvoiceCreateButton from "@/components/admin/invoices/InvoiceCreateButton";
+import { WriteGate } from "@/components/admin/RoleContext";
 import InvoicesTable, { type InvoiceListItem } from "@/components/admin/invoices/InvoicesTable";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminInvoicesPage() {
+  await ensureStatusOverrides();
   const supabase = createServiceRoleClient();
 
   const [{ data: balancesData }, { data: clientsData }, { data: projectsData }, rates] = await Promise.all([
@@ -72,18 +75,20 @@ export default async function AdminInvoicesPage() {
     <div className="space-y-6">
       <PageHeader
         title="Invoices"
-        subtitle={`${rows.length} invoice${rows.length === 1 ? "" : "s"} · ${outstanding.length} awaiting payment`}
+        subtitle={`Bill clients, email invoices and track what has been paid. ${rows.length} invoice${rows.length === 1 ? "" : "s"} · ${outstanding.length} awaiting payment.`}
         actions={
-          <InvoiceCreateButton
-            clients={clients}
-            projects={projects.map((p) => ({
-              id: p.id,
-              name: p.name,
-              client_id: p.client_id,
-              budget: p.budget,
-              currency: p.currency,
-            }))}
-          />
+          <WriteGate module="invoices">
+            <InvoiceCreateButton
+              clients={clients}
+              projects={projects.map((p) => ({
+                id: p.id,
+                name: p.name,
+                client_id: p.client_id,
+                budget: p.budget,
+                currency: p.currency,
+              }))}
+            />
+          </WriteGate>
         }
       />
 
@@ -121,7 +126,17 @@ export default async function AdminInvoicesPage() {
         />
       </div>
 
-      <InvoicesTable invoices={rows} />
+      <InvoicesTable
+        invoices={rows}
+        emptyTitle="No invoices yet"
+        emptyAction={
+          <InvoiceCreateButton
+            clients={clients}
+            projects={projects.map((p) => ({ id: p.id, name: p.name, client_id: p.client_id, budget: p.budget, currency: p.currency }))}
+            label="Create first invoice"
+          />
+        }
+      />
     </div>
   );
 }

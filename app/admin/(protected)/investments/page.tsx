@@ -37,7 +37,7 @@ export default async function AdminInvestmentsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Investments"
-        subtitle={`${rows.length} investment${rows.length === 1 ? "" : "s"} · ${open.length} active · totals in PKR`}
+        subtitle={`Track what you have invested and what it is earning. ${rows.length} investment${rows.length === 1 ? "" : "s"} · ${open.length} active · totals in PKR.`}
         actions={<InvestmentFormModal defaultCurrency={company.default_currency} />}
       />
 
@@ -55,7 +55,7 @@ export default async function AdminInvestmentsPage() {
         <StatCard label="Income received" value={formatMoney(income, "PKR")} icon={Coins} iconBg="#f97316" description="Dividends, rent, profit share" />
       </div>
 
-      <InvestmentsTable investments={rows} />
+      <InvestmentsTable investments={rows} emptyTitle="No investments yet" emptyAction={<InvestmentFormModal defaultCurrency={company.default_currency} />} />
     </div>
   );
 }

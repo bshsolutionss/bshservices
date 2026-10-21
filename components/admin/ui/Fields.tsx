@@ -13,6 +13,8 @@ interface FieldProps {
   hint?: string;
   error?: string | null;
   className?: string;
+  /** Suppress the automatic "optional" tag (for choices that always have a value). */
+  hideOptional?: boolean;
   children: React.ReactNode;
 }
 
@@ -22,12 +24,20 @@ interface FieldProps {
  * alone, which disappear the moment you start typing) and validation
  * messages always appear in the same spot.
  */
-export function Field({ label, htmlFor, required, hint, error, className, children }: FieldProps) {
+export function Field({ label, htmlFor, required, hint, error, className, hideOptional, children }: FieldProps) {
   return (
     <div className={cn("space-y-1.5", className)}>
       <label htmlFor={htmlFor} className={labelBase}>
         {label}
-        {required && <span className="ml-0.5 text-red-500">*</span>}
+        {required ? (
+          <span className="ml-0.5 text-red-500" aria-label="required">
+            *
+          </span>
+        ) : (
+          !hideOptional && (
+            <span className="ml-1.5 text-[10px] font-medium normal-case tracking-normal text-[#231F20]/35">optional</span>
+          )
+        )}
       </label>
       {children}
       {error ? (
@@ -52,6 +62,8 @@ interface TextFieldProps extends BaseControlProps {
   step?: string;
   disabled?: boolean;
   autoFocus?: boolean;
+  /** Offered as suggestions while typing; any other text is still accepted. */
+  suggestions?: string[];
 }
 
 export function TextField({
@@ -63,13 +75,23 @@ export function TextField({
   step,
   disabled,
   autoFocus,
+  suggestions,
   id,
   ...field
 }: TextFieldProps) {
+  const listId = suggestions && suggestions.length > 0 && id ? `${id}-suggestions` : undefined;
   return (
     <Field {...field} htmlFor={id}>
+      {listId && (
+        <datalist id={listId}>
+          {suggestions!.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
+      )}
       <input
         id={id}
+        list={listId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -102,7 +124,7 @@ interface SelectFieldProps extends BaseControlProps {
 
 export function SelectField({ value, onChange, options, placeholder, disabled, id, ...field }: SelectFieldProps) {
   return (
-    <Field {...field} htmlFor={id}>
+    <Field {...field} htmlFor={id} hideOptional={!placeholder}>
       <select
         id={id}
         value={value}
@@ -225,8 +247,8 @@ export function ChoiceField({
   ...field
 }: BaseControlProps & { value: string; onChange: (value: string) => void; options: SelectOption[] }) {
   return (
-    <Field {...field}>
-      <div className="flex flex-wrap gap-1.5 rounded-xl bg-[#F4F7FE] p-1">
+    <Field {...field} hideOptional>
+      <div className="flex flex-wrap gap-1.5 rounded-xl bg-[#F4F7FE] p-1" role="group" aria-label={field.label}>
         {options.map((option) => (
           <button
             key={option.value}

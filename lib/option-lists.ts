@@ -10,7 +10,9 @@ export type OptionListKey =
   | "service_categories"
   | "lead_sources"
   | "investment_types"
-  | "payment_methods";
+  | "payment_methods"
+  | "departments"
+  | "industries";
 
 export interface OptionLite {
   value: string;
@@ -31,6 +33,8 @@ export const OPTION_LISTS: { key: OptionListKey; label: string; description: str
   { key: "lead_sources", label: "Lead sources", description: "Where a manually-added lead came from.", colored: false },
   { key: "investment_types", label: "Investment types", description: "Used on the Investments page.", colored: true },
   { key: "payment_methods", label: "Payment methods", description: "Offered when recording a payment on an invoice.", colored: false },
+  { key: "departments", label: "Departments", description: "Suggested when adding a team member.", colored: false },
+  { key: "industries", label: "Client industries", description: "Suggested when adding a client.", colored: false },
 ];
 
 export const DEFAULT_OPTIONS: Record<OptionListKey, OptionLite[]> = {
@@ -61,6 +65,23 @@ export const DEFAULT_OPTIONS: Record<OptionListKey, OptionLite[]> = {
     label: v,
     color: null,
   })),
+  departments: ["Development", "Design", "Marketing", "Sales", "Operations", "Management"].map((v) => ({
+    value: v,
+    label: v,
+    color: null,
+  })),
+  industries: [
+    "E-commerce",
+    "Retail",
+    "Healthcare",
+    "Education",
+    "Real estate",
+    "Immigration services",
+    "Hospitality",
+    "Technology",
+    "Manufacturing",
+    "Other",
+  ].map((v) => ({ value: v, label: v, color: null })),
   payment_methods: [
     { value: "cash", label: "Cash", color: null },
     { value: "bank_transfer", label: "Bank transfer", color: null },

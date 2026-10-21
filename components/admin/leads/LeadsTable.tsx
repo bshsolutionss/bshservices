@@ -97,15 +97,17 @@ const columns: DataTableColumn<LeadListItem>[] = [
   },
 ];
 
-export default function LeadsTable({ leads }: { leads: LeadListItem[] }) {
+export default function LeadsTable({ leads, emptyTitle, emptyAction }: { leads: LeadListItem[]; emptyTitle?: string; emptyAction?: React.ReactNode }) {
   return (
     <AdminDataTable
       tableId="leads"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={leads}
       getRowKey={(row) => row.id}
       searchPlaceholder="Search leads…"
-      emptyMessage="No leads found."
+      emptyMessage="Add the first one by hand, or wait for the website forms to bring them in."
     />
   );
 }

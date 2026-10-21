@@ -157,7 +157,7 @@ export default async function AdminFinancePage({
     <div className="space-y-6">
       <PageHeader
         title="Profit & Loss"
-        subtitle={`${rangeTitle} · ${report.months.length} month${report.months.length === 1 ? "" : "s"} · ${
+        subtitle={`Profit and loss for ${rangeTitle} · ${report.months.length} month${report.months.length === 1 ? "" : "s"} · ${
           REVENUE_BASIS_LABELS[basis]
         }`}
       />

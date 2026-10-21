@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge, ConfirmButton } from "@/components/admin/ui";
+import { WriteGate } from "@/components/admin/RoleContext";
 import GoalFormModal from "@/components/admin/goals/GoalFormModal";
 import { formatMoney } from "@/lib/invoices";
 import { GOAL_METRIC_BY_KEY, type GoalProgress, type GoalState } from "@/lib/goals";
@@ -76,8 +77,9 @@ export default function GoalCard({ goal, compact = false }: { goal: GoalProgress
       {goal.notes && !compact && <p className="mt-3 text-xs text-[#231F20]/55">{goal.notes}</p>}
 
       {!compact && (
+        <WriteGate module="goals" hideWhenBlocked>
         <div className="mt-4 flex items-center gap-4 border-t border-[#1A14A5]/10 pt-3">
-          <GoalFormModal goal={goal} periodType={goal.period_type} periodKey={goal.period_key} variant="link" label={goal.metric === "custom" ? "Update" : "Edit"} />
+          <GoalFormModal goal={goal} periodType={goal.period_type} periodKey={goal.period_key} variant="link" label={goal.metric === "custom" ? "Update progress" : "Edit goal"} />
           <ConfirmButton
             label="Delete"
             display="inline"
@@ -93,6 +95,7 @@ export default function GoalCard({ goal, compact = false }: { goal: GoalProgress
             }}
           />
         </div>
+        </WriteGate>
       )}
     </div>
   );

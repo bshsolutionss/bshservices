@@ -33,6 +33,9 @@ import {
 import { cn } from "@/lib/utils";
 import InstallAppButton from "@/components/InstallAppButton";
 import PushNotificationToggle from "@/components/admin/PushNotificationToggle";
+import { useRole } from "@/components/admin/RoleContext";
+import { moduleForPath } from "@/lib/permissions";
+import { Users as UsersIcon } from "lucide-react";
 
 interface SubNavItem {
   href: string;
@@ -52,7 +55,7 @@ interface NavGroup {
 // Grouped from the previous flat 10-item list into 5 rail icons — a
 // two-tier "icon rail + flyout panel" nav (layout borrowed from a reference
 // screenshot the user provided; colors/branding stayed BSH's own).
-const NAV_GROUPS: NavGroup[] = [
+const ALL_NAV_GROUPS: NavGroup[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { id: "goals", label: "Goals", icon: Target, href: "/admin/goals" },
   {
@@ -105,6 +108,20 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
+/** Only the screens this person's role can open - a link they could not use is just noise. */
+function useVisibleGroups(): NavGroup[] {
+  const { role, canView } = useRole();
+  const allowed = (href: string) => {
+    const area = moduleForPath(href);
+    return !area || canView(area);
+  };
+  return ALL_NAV_GROUPS.map((group): NavGroup => {
+    const label = group.id === "dashboard" && role === "employee" ? "My work" : group.label;
+    if (group.href) return { ...group, label };
+    return { ...group, label, items: group.items?.filter((item) => allowed(item.href)) };
+  }).filter((group) => (group.href ? allowed(group.href) : (group.items?.length ?? 0) > 0));
+}
+
 function isPathActive(pathname: string, href: string): boolean {
   return href === "/admin" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -143,24 +160,7 @@ export default function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebar
 function SettingsPanelContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
-      {[
-        { href: "/admin/settings/company", label: "Company", icon: Building },
-        { href: "/admin/settings/email", label: "Email", icon: Mail },
-        { href: "/admin/settings/invoices", label: "Invoice settings", icon: FileText },
-        { href: "/admin/settings/lists", label: "Lists", icon: ListChecks },
-        { href: "/admin/settings/templates", label: "Message templates", icon: MessageSquareText },
-        { href: "/admin/settings/exchange-rates", label: "Exchange Rates", icon: Coins },
-      ].map(({ href, label, icon: Icon }) => (
-        <Link
-          key={href}
-          href={href}
-          onClick={onNavigate}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition"
-        >
-          <Icon className="w-[18px] h-[18px] shrink-0" />
-          {label}
-        </Link>
-      ))}
+      <SettingsLinks onNavigate={onNavigate} />
       <PushNotificationToggle className="w-full" />
       <InstallAppButton variant="inline" className="w-full" />
     </>
@@ -183,7 +183,9 @@ function DesktopRail() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const openGroup = NAV_GROUPS.find((g) => g.id === openGroupId);
+  const groups = useVisibleGroups();
+  const { canView: canViewModule } = useRole();
+  const openGroup = groups.find((g) => g.id === openGroupId);
 
   return (
     <div className="hidden md:block">
@@ -194,7 +196,7 @@ function DesktopRail() {
         </div>
 
         <nav className="flex-1 w-full px-2 space-y-1 overflow-y-auto">
-          {NAV_GROUPS.map((group) => {
+          {groups.map((group) => {
             const Icon = group.icon;
             const active = isGroupActive(pathname, group) || openGroupId === group.id;
             const commonClasses = cn(
@@ -204,7 +206,7 @@ function DesktopRail() {
 
             if (group.href) {
               return (
-                <Link key={group.id} href={group.href} className={commonClasses}>
+                <Link key={group.id} href={group.href} className={commonClasses} aria-current={isPathActive(pathname, group.href) ? "page" : undefined}>
                   <Icon className="w-5 h-5 shrink-0" />
                   {group.label}
                 </Link>
@@ -226,6 +228,7 @@ function DesktopRail() {
           })}
         </nav>
 
+        {canViewModule("settings") && (
         <button
           type="button"
           onClick={() => setOpenGroupId((current) => (current === "settings" ? null : "settings"))}
@@ -238,6 +241,7 @@ function DesktopRail() {
           <Settings className="w-5 h-5 shrink-0" />
           Settings
         </button>
+        )}
       </aside>
 
       {/* Backdrop + flyout — overlays the page content rather than pushing it, same as the reference. */}
@@ -264,6 +268,7 @@ function DesktopRail() {
                         <Link
                           key={item.href}
                           href={item.href}
+                          aria-current={active ? "page" : undefined}
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition",
                             active ? "bg-white text-[#1A14A5] shadow-sm" : "text-white/70 hover:bg-white/10 hover:text-white"
@@ -288,8 +293,9 @@ function DesktopRail() {
 /** Mobile: the same groups as a slide-in accordion — a second flyout column doesn't make sense at phone widths. */
 function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
+  const groups = useVisibleGroups();
   const [expanded, setExpanded] = useState<Set<string>>(() => {
-    const activeGroup = NAV_GROUPS.find((g) => !g.href && isGroupActive(pathname, g));
+    const activeGroup = groups.find((g) => !g.href && isGroupActive(pathname, g));
     return new Set(activeGroup ? [activeGroup.id] : []);
   });
 
@@ -316,7 +322,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
 
         <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
-          {NAV_GROUPS.map((group) => {
+          {groups.map((group) => {
             const Icon = group.icon;
 
             if (group.href) {
@@ -387,5 +393,34 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
       </div>
     </div>
+  );
+}
+
+function SettingsLinks({ onNavigate }: { onNavigate?: () => void }) {
+  const { canView } = useRole();
+  const links = [
+    { href: "/admin/settings/company", label: "Company", icon: Building, module: "settings" as const },
+    { href: "/admin/settings/email", label: "Email", icon: Mail, module: "settings" as const },
+    { href: "/admin/settings/invoices", label: "Invoice settings", icon: FileText, module: "settings" as const },
+    { href: "/admin/settings/lists", label: "Lists", icon: ListChecks, module: "settings" as const },
+    { href: "/admin/settings/statuses", label: "Statuses & stages", icon: ListChecks, module: "settings" as const },
+    { href: "/admin/settings/templates", label: "Message templates", icon: MessageSquareText, module: "settings" as const },
+    { href: "/admin/settings/exchange-rates", label: "Exchange Rates", icon: Coins, module: "settings" as const },
+    { href: "/admin/settings/users", label: "Users & roles", icon: UsersIcon, module: "users" as const },
+  ].filter((link) => canView(link.module));
+  return (
+    <>
+      {links.map(({ href, label, icon: Icon }) => (
+        <Link
+          key={href}
+          href={href}
+          onClick={onNavigate}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition"
+        >
+          <Icon className="w-[18px] h-[18px] shrink-0" />
+          {label}
+        </Link>
+      ))}
+    </>
   );
 }

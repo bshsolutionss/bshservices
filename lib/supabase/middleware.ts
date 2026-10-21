@@ -32,7 +32,7 @@ const SUPABASE_ANON_KEY =
 export async function updateSession(
   request: NextRequest,
   requestHeaders: Headers
-): Promise<{ response: NextResponse; authenticated: boolean }> {
+): Promise<{ response: NextResponse; authenticated: boolean; email: string | null }> {
   let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -54,5 +54,6 @@ export async function updateSession(
   // expired session through setAll above — no auth-server round trip per request.
   const { data } = await supabase.auth.getClaims();
 
-  return { response, authenticated: !!data?.claims?.sub };
+  const email = typeof data?.claims?.email === "string" ? data.claims.email : null;
+  return { response, authenticated: !!data?.claims?.sub, email };
 }

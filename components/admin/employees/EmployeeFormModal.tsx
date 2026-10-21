@@ -14,6 +14,7 @@ import {
   btnGhost,
   btnPrimary,
   btnSecondary,
+  AdvancedSection,
 } from "@/components/admin/ui";
 import {
   EMPLOYEE_STATUSES,
@@ -28,6 +29,7 @@ import {
   type PayBasis,
 } from "@/lib/employees";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
+import { useOptions } from "@/lib/admin/use-options";
 
 interface EmployeeFormModalProps {
   /** Omit to add a team member; pass one to edit. */
@@ -51,6 +53,7 @@ export default function EmployeeFormModal({
 }: EmployeeFormModalProps) {
   const router = useRouter();
   const editing = !!employee;
+  const departments = useOptions("departments");
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<EmploymentType>(employee?.employment_type ?? defaultType);
@@ -183,7 +186,13 @@ export default function EmployeeFormModal({
             autoFocus
           />
           <TextField id="employee-role" label="Role / skill" value={role} onChange={setRole} placeholder="e.g. UI designer" />
-          <TextField id="employee-department" label="Department" value={department} onChange={setDepartment} />
+          <TextField
+            id="employee-department"
+            label="Department"
+            value={department}
+            onChange={setDepartment}
+            suggestions={departments.options.map((o) => o.label)}
+          />
           <TextField
             id="employee-email"
             label="Email"
@@ -194,6 +203,25 @@ export default function EmployeeFormModal({
           />
           <TextField id="employee-phone" label="Phone / WhatsApp" type="tel" value={phone} onChange={setPhone} />
 
+          {editing && (
+            <SelectField
+              id="employee-status"
+              label="Status"
+              value={status}
+              onChange={(v) => setStatus(v as EmployeeStatus)}
+              options={EMPLOYEE_STATUSES.map((s) => ({ value: s, label: EMPLOYEE_STATUS_LABELS[s] }))}
+            />
+          )}
+          <TextareaField
+            id="employee-notes"
+            label="Notes"
+            className="sm:col-span-2"
+            value={notes}
+            onChange={setNotes}
+            rows={2}
+            placeholder="Portfolio link, availability, payment details…"
+          />
+          <AdvancedSection title="Pay and dates" hint="salary or rate, hire date" defaultOpen={editing}>
           <SelectField
             id="employee-pay-basis"
             label="Paid"
@@ -218,24 +246,7 @@ export default function EmployeeFormModal({
             value={hireDate}
             onChange={setHireDate}
           />
-          {editing && (
-            <SelectField
-              id="employee-status"
-              label="Status"
-              value={status}
-              onChange={(v) => setStatus(v as EmployeeStatus)}
-              options={EMPLOYEE_STATUSES.map((s) => ({ value: s, label: EMPLOYEE_STATUS_LABELS[s] }))}
-            />
-          )}
-          <TextareaField
-            id="employee-notes"
-            label="Notes"
-            className="sm:col-span-2"
-            value={notes}
-            onChange={setNotes}
-            rows={2}
-            placeholder="Portfolio link, availability, payment details…"
-          />
+          </AdvancedSection>
         </div>
 
         {error && <Alert tone="error" className="mt-4">{error}</Alert>}

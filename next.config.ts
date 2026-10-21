@@ -76,6 +76,9 @@ function buildCsp(): string {
 }
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: ["lucide-react", "react-icons", "framer-motion"],
+  },
   turbopack: {
     root: __dirname,
   },

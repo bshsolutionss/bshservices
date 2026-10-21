@@ -26,8 +26,13 @@ import { sumToPKR } from "@/lib/currency";
 import { getExchangeRates } from "@/lib/admin/exchange-rates";
 import { todayInPkt } from "@/lib/availability";
 import { computeGoalProgress, listGoals } from "@/lib/admin/goals";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import { periodLabel } from "@/lib/goals";
 import GoalCard from "@/components/admin/goals/GoalCard";
+import AttentionPanel from "@/components/admin/dashboard/AttentionPanel";
+import { EmployeeDashboard, ManagerDashboard } from "@/components/admin/dashboard/RoleDashboards";
+import { getAttention } from "@/lib/admin/attention";
+import { getAdminSession } from "@/lib/admin/session";
 import {
   buildProfitLoss,
   currentMonthKey,
@@ -252,20 +257,25 @@ function monthDelta(current: number, previous: number, { invert = false } = {}) 
   };
 }
 
-export default async function AdminDashboardPage() {
+async function AdminOverview() {
+  await ensureStatusOverrides();
   const monthKey = todayInPkt().slice(0, 7);
-  const [data, goals] = await Promise.all([
+  const [data, goals, attention] = await Promise.all([
     getDashboardData(),
     // A failure here (e.g. goals table not created yet) must not take the whole dashboard down.
     listGoals("monthly", monthKey).then(computeGoalProgress).catch(() => []),
+    getAttention({ scope: "all", includeMoney: true, includeClientData: true }),
   ]);
 
   return (
     <div className="space-y-8">
       <PageHeader
         title="Dashboard"
-        subtitle={`Pipeline, delivery and money at a glance · finances for ${data.monthLabel}`}
+        subtitle={`What needs you today, then pipeline, delivery and money · finances for ${data.monthLabel}`}
       />
+
+      {/* Most important first: late, waiting and due items before any totals or history. */}
+      <AttentionPanel attention={attention} canApprove />
 
       {/* Money — tiles link through to the P&L report they're drawn from. */}
       <section className="space-y-3">
@@ -533,4 +543,18 @@ export default async function AdminDashboardPage() {
       </div>
     </div>
   );
+}
+
+/** One URL, three dashboards: each role sees what matters for their job. */
+export default async function AdminDashboardPage() {
+  const session = await getAdminSession();
+  if (session?.role === "employee") {
+    const supabase = createServiceRoleClient();
+    const { data } = session.employeeId
+      ? await supabase.from("employees").select("name").eq("id", session.employeeId).single<{ name: string }>()
+      : { data: null };
+    return <EmployeeDashboard employeeId={session.employeeId} name={data?.name ?? null} />;
+  }
+  if (session?.role === "manager") return <ManagerDashboard />;
+  return <AdminOverview />;
 }

@@ -15,6 +15,7 @@ import { formatDate, formatMoney } from "@/lib/invoices";
 import { Badge, EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import EmployeeFormModal from "@/components/admin/employees/EmployeeFormModal";
 import DeleteEmployeeButton from "@/components/admin/DeleteEmployeeButton";
+import { WriteGate } from "@/components/admin/RoleContext";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +48,11 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
         backLabel="Back to Team"
         title={employee.name}
         subtitle={employee.role ?? undefined}
-        actions={<EmployeeFormModal employee={employee} />}
+        actions={
+          <WriteGate module="team">
+            <EmployeeFormModal employee={employee} />
+          </WriteGate>
+        }
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -128,7 +133,9 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
               <p className="mt-4 whitespace-pre-wrap rounded-xl bg-[#F4F7FE] p-3 text-sm text-[#231F20]/70">{employee.notes}</p>
             )}
           </SectionCard>
-          <DeleteEmployeeButton employeeId={employee.id} />
+          <WriteGate module="team">
+            <DeleteEmployeeButton employeeId={employee.id} employeeName={employee.name} />
+          </WriteGate>
         </div>
       </div>
     </div>

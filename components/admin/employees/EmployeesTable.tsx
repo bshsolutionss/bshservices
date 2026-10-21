@@ -84,10 +84,12 @@ const columns: DataTableColumn<Employee>[] = [
   },
 ];
 
-export default function EmployeesTable({ employees }: { employees: Employee[] }) {
+export default function EmployeesTable({ employees, emptyTitle, emptyAction }: { employees: Employee[]; emptyTitle?: string; emptyAction?: React.ReactNode }) {
   return (
     <AdminDataTable
       tableId="employees"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={employees}
       getRowKey={(row) => row.id}

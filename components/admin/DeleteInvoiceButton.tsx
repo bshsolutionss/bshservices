@@ -4,7 +4,15 @@ import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/admin/ui";
 
-export default function DeleteInvoiceButton({ invoiceId, paymentCount }: { invoiceId: string; paymentCount: number }) {
+export default function DeleteInvoiceButton({
+  invoiceId,
+  invoiceNumber,
+  paymentCount,
+}: {
+  invoiceId: string;
+  invoiceNumber: string;
+  paymentCount: number;
+}) {
   const router = useRouter();
 
   return (
@@ -12,7 +20,7 @@ export default function DeleteInvoiceButton({ invoiceId, paymentCount }: { invoi
       label="Delete invoice"
       display="block"
       icon={<Trash2 className="h-4 w-4" />}
-      title="Delete this invoice?"
+      title={`Delete invoice ${invoiceNumber}?`}
       confirmLabel="Delete permanently"
       message={
         <>

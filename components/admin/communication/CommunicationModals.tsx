@@ -123,7 +123,7 @@ export function LogCommunicationModal(props: SharedProps) {
               Cancel
             </button>
             <button type="button" className={`${btnPrimary} ml-auto`} onClick={save} disabled={saving}>
-              {saving ? "Saving…" : "Save"}
+              {saving ? "Saving…" : "Save communication"}
             </button>
           </>
         }

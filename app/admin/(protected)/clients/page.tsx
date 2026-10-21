@@ -16,11 +16,11 @@ export default async function AdminClientsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Clients"
-        subtitle={`${clients.length} client${clients.length === 1 ? "" : "s"} · created automatically when a lead is marked Won`}
+        subtitle={`Companies you work with - their projects, invoices and conversations in one place. ${clients.length} client${clients.length === 1 ? "" : "s"} (added automatically when a lead is marked Won).`}
         actions={<ClientFormModal />}
       />
 
-      <ClientsTable clients={clients} />
+      <ClientsTable clients={clients} emptyTitle="No clients yet" emptyAction={<ClientFormModal />} />
     </div>
   );
 }

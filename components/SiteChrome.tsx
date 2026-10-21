@@ -5,8 +5,12 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import InstallAppButton from "@/components/InstallAppButton";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import ExitIntentOffer from "@/components/ExitIntentOffer";
-import ChatWidget from "@/components/chatbot/ChatWidget";
+import dynamic from "next/dynamic";
+
+// Interactive overlays (framer-motion + chat logic) are client-only and not
+// needed for first paint — code-split them out of the initial bundle.
+const ExitIntentOffer = dynamic(() => import("@/components/ExitIntentOffer"), { ssr: false });
+const ChatWidget = dynamic(() => import("@/components/chatbot/ChatWidget"), { ssr: false });
 
 /**
  * Wraps the public marketing Header/Footer around page content, except on

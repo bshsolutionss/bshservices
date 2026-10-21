@@ -28,6 +28,7 @@ import InvoiceDetailsEditor from "@/components/admin/invoices/InvoiceDetailsEdit
 import InvoiceEmailButton from "@/components/admin/invoices/InvoiceEmailButton";
 import DuplicateInvoiceButton from "@/components/admin/invoices/DuplicateInvoiceButton";
 import { getInvoiceSettings } from "@/lib/admin/invoice-settings";
+import { WriteGate } from "@/components/admin/RoleContext";
 
 export const dynamic = "force-dynamic";
 
@@ -111,8 +112,11 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
             >
               <Download className="h-4 w-4" /> PDF
             </a>
-            <DuplicateInvoiceButton invoiceId={invoice.id} />
+            <WriteGate module="invoices">
+              <DuplicateInvoiceButton invoiceId={invoice.id} />
+            </WriteGate>
             {client && (
+              <WriteGate module="invoices">
               <InvoiceEmailButton
                 invoiceId={invoice.id}
                 invoiceNumber={invoice.invoice_number}
@@ -121,8 +125,13 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
                 alreadyEmailed={!!invoice.last_emailed_at}
                 isDraft={invoice.status === "draft"}
               />
+              </WriteGate>
             )}
-            {invoice.status === "draft" && <MarkSentButton invoiceId={invoice.id} />}
+            {invoice.status === "draft" && (
+              <WriteGate module="invoices">
+                <MarkSentButton invoiceId={invoice.id} />
+              </WriteGate>
+            )}
           </>
         }
       />
@@ -260,7 +269,7 @@ export default async function AdminInvoiceDetailPage({ params }: { params: Promi
             </dl>
           </SectionCard>
 
-          <DeleteInvoiceButton invoiceId={invoice.id} paymentCount={payments.length} />
+          <DeleteInvoiceButton invoiceId={invoice.id} invoiceNumber={invoice.invoice_number} paymentCount={payments.length} />
         </div>
       </div>
     </div>

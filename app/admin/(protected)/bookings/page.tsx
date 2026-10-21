@@ -59,7 +59,7 @@ export default async function AdminBookingsPage({
         title="Bookings"
         subtitle={
           <>
-            {bookings.length} consultation booking{bookings.length === 1 ? "" : "s"} · contact-form leads are on the{" "}
+            Free consultation calls that visitors booked - confirm times and cancel if needed. {bookings.length} booking{bookings.length === 1 ? "" : "s"} · contact-form leads are on the{" "}
             <Link href="/admin/leads" className="font-medium text-[#1A14A5] hover:underline">
               Leads
             </Link>{" "}

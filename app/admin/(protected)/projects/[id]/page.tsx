@@ -290,6 +290,7 @@ export default async function AdminProjectDetailPage({
 
           <ProjectEditControl
             projectId={project.id}
+            projectName={project.name}
             initialStage={project.stage as ProjectStage}
             initialBudget={project.budget}
             initialCurrency={project.currency}

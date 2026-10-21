@@ -189,7 +189,7 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
               client_type: client.client_type,
             }}
           />
-          <DeleteClientButton clientId={client.id} />
+          <DeleteClientButton clientId={client.id} clientName={client.company_name} />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { getExchangeRates } from "@/lib/admin/exchange-rates";
+import { PageHeader } from "@/components/admin/ui";
 import ExchangeRatesForm from "@/components/admin/settings/ExchangeRatesForm";
 
 export const dynamic = "force-dynamic";
@@ -8,14 +9,10 @@ export default async function ExchangeRatesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-[#231F20]">Exchange Rates</h1>
-        <p className="text-[#231F20]/60 text-sm mt-1">
-          PKR is the business&apos;s standard currency — these rates are what the dashboard KPIs use to convert
-          USD/CAD/AUD amounts into one PKR total. Update them here whenever real rates move; nothing here is fetched
-          automatically.
-        </p>
-      </div>
+      <PageHeader
+        title="Exchange rates"
+        subtitle="PKR is your standard currency. These rates convert USD, CAD and AUD amounts into one PKR total on the dashboard and reports. Update them when real rates move - they are not fetched automatically."
+      />
 
       <ExchangeRatesForm rates={rates} />
     </div>

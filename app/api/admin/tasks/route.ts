@@ -20,6 +20,9 @@ interface CreatePayload {
 export async function POST(request: NextRequest) {
   const auth = await requireAdminUser();
   if (auth.unauthorized) return auth.unauthorized;
+  if (auth.user.role === "employee") {
+    return NextResponse.json({ ok: false, error: "Only managers and admins can create tasks. Ask your manager to assign one to you." }, { status: 403 });
+  }
 
   let payload: CreatePayload;
   try {

@@ -14,7 +14,16 @@ export default function ClarityInit() {
   useEffect(() => {
     const projectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
     if (!projectId) return;
-    Clarity.init(projectId);
+
+    // Session replay isn't needed for first paint — start it once the page is
+    // idle so it never competes with hydration.
+    const start = () => Clarity.init(projectId);
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(start, { timeout: 4000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = window.setTimeout(start, 2000);
+    return () => window.clearTimeout(t);
   }, []);
 
   return null;

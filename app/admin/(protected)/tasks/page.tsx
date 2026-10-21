@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { CheckSquare } from "lucide-react";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import { cn } from "@/lib/utils";
 import { TASK_STATUSES, TASK_STATUS_LABELS, type AssigneeOption, type Task, type TaskStatus } from "@/lib/tasks";
 import type { Project } from "@/lib/projects";
 import { EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import TaskRow from "@/components/admin/TaskRow";
 import NewTaskInlineForm from "@/components/admin/NewTaskInlineForm";
+import { getAdminSession } from "@/lib/admin/session";
 
 export const dynamic = "force-dynamic";
 
@@ -22,8 +24,14 @@ export default async function AdminTasksPage({
   const { status: statusParam, project: projectParam } = await searchParams;
   const activeStatus = isTaskStatus(statusParam) ? statusParam : undefined;
 
+  await ensureStatusOverrides();
+  const session = await getAdminSession();
+  // Employees see only their own tasks and can only move their status forward.
+  const mineOnly = session?.role === "employee";
+  const ownerId = session?.employeeId ?? "00000000-0000-0000-0000-000000000000";
   const supabase = createServiceRoleClient();
   let query = supabase.from("tasks").select("*").order("due_date", { ascending: true, nullsFirst: false }).limit(300);
+  if (mineOnly) query = query.eq("assignee_id", ownerId);
   if (activeStatus) query = query.eq("status", activeStatus);
   if (projectParam) query = query.eq("project_id", projectParam);
 
@@ -33,9 +41,12 @@ export default async function AdminTasksPage({
       supabase.from("projects").select("id, name"),
       supabase.from("employees").select("id, name, email").eq("status", "active").order("name"),
       // Unfiltered, so each chip can carry its own count.
-      projectParam
-        ? supabase.from("tasks").select("status").eq("project_id", projectParam)
-        : supabase.from("tasks").select("status"),
+      (() => {
+        let counts = supabase.from("tasks").select("status");
+        if (projectParam) counts = counts.eq("project_id", projectParam);
+        if (mineOnly) counts = counts.eq("assignee_id", ownerId);
+        return counts;
+      })(),
     ]);
 
   const tasks = (tasksData ?? []) as Task[];
@@ -71,9 +82,10 @@ export default async function AdminTasksPage({
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Tasks"
+        title={mineOnly ? "My tasks" : "Tasks"}
         subtitle={
           <>
+            {mineOnly ? "Your assigned work, earliest deadline first. " : "Who is doing what, and by when. "}
             {tasks.length} task{tasks.length === 1 ? "" : "s"}
             {filteredProjectName && (
               <>
@@ -106,9 +118,11 @@ export default async function AdminTasksPage({
         </div>
       </PageHeader>
 
-      <SectionCard title="New task" subtitle="Assign it to a team member and they are emailed straight away">
-        <NewTaskInlineForm projectId={projectParam} projects={projects} assignees={assignees} />
-      </SectionCard>
+      {!mineOnly && (
+        <SectionCard title="Assign a task" subtitle="Pick a project and a team member - they are emailed straight away">
+          <NewTaskInlineForm projectId={projectParam} projects={projects} assignees={assignees} />
+        </SectionCard>
+      )}
 
       <SectionCard padded={false} bodyClassName="px-5 sm:px-6">
         {tasks.length === 0 ? (
@@ -124,6 +138,7 @@ export default async function AdminTasksPage({
                 key={task.id}
                 task={task}
                 assignees={assignees}
+                readOnly={mineOnly}
                 projectName={projectNames.get(task.project_id) || "—"}
               />
             ))}

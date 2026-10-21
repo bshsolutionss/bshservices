@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
+import { useDraft } from "@/lib/admin/use-draft";
 import { cn } from "@/lib/utils";
 import {
   Alert,
@@ -16,6 +17,7 @@ import {
   btnPrimary,
   btnSecondary,
   inputBase,
+  AdvancedSection,
   type StepDefinition,
 } from "@/components/admin/ui";
 import {
@@ -93,6 +95,21 @@ function addDays(isoDate: string, days: number): string {
  * The preview uses computeInvoiceTotals, the same arithmetic the database
  * applies on write, so what you see is what gets saved.
  */
+interface InvoiceDraft {
+  clientId: string;
+  projectId: string;
+  currency: Currency;
+  lines: LineDraft[];
+  taxRate: string;
+  discount: string;
+  discountMode: "flat" | "percent";
+  issueDate: string;
+  dueDate: string;
+  notes: string;
+  poNumber: string;
+  terms: string;
+}
+
 export default function InvoiceCreateButton({
   clients,
   projects,
@@ -108,6 +125,7 @@ export default function InvoiceCreateButton({
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const { draft, save: saveDraft, clear: clearDraft } = useDraft<InvoiceDraft>(`invoice:${defaultProjectId ?? defaultClientId ?? "new"}`);
 
   const [clientId, setClientId] = useState(defaultClientId ?? "");
   const [projectId, setProjectId] = useState(defaultProjectId ?? "");
@@ -182,6 +200,30 @@ export default function InvoiceCreateButton({
       .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per mount, on first open
   }, [open]);
+
+  // Work in progress is kept in this browser, so a refresh or an accidental close doesn't lose a long invoice.
+  const pristine = !lines.some((l) => l.description || l.unit_price) && !notes && !poNumber && !terms;
+  useEffect(() => {
+    if (!open || pristine) return;
+    saveDraft({ clientId, projectId, currency, lines, taxRate, discount, discountMode, issueDate, dueDate, notes, poNumber, terms });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- save whenever any field changes
+  }, [open, clientId, projectId, currency, lines, taxRate, discount, discountMode, issueDate, dueDate, notes, poNumber, terms]);
+
+  const restoreDraft = () => {
+    if (!draft) return;
+    setClientId(draft.clientId);
+    setProjectId(draft.projectId);
+    setCurrency(draft.currency);
+    setLines(draft.lines.length > 0 ? draft.lines : [newLine()]);
+    setTaxRate(draft.taxRate);
+    setDiscount(draft.discount);
+    setDiscountMode(draft.discountMode);
+    setIssueDate(draft.issueDate);
+    setDueDate(draft.dueDate);
+    setNotes(draft.notes);
+    setPoNumber(draft.poNumber);
+    setTerms(draft.terms);
+  };
 
   const reset = () => {
     setStep(0);
@@ -270,6 +312,7 @@ export default function InvoiceCreateButton({
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || "Failed to create invoice.");
 
+      clearDraft();
       close();
       router.push(`/admin/invoices/${body.id}`);
       router.refresh();
@@ -327,6 +370,20 @@ export default function InvoiceCreateButton({
           </>
         }
       >
+        {open && draft && pristine && (
+          <Alert tone="info" title="You have an unfinished invoice" className="mb-4">
+            <span className="block">Saved automatically on this device. Pick up where you left off, or start fresh.</span>
+            <span className="mt-2 flex gap-2">
+              <button type="button" onClick={restoreDraft} className="rounded-lg bg-[#1A14A5] px-3 py-1 text-xs font-semibold text-white">
+                Restore draft
+              </button>
+              <button type="button" onClick={clearDraft} className="rounded-lg px-3 py-1 text-xs font-semibold text-[#231F20]/70 ring-1 ring-[#1A14A5]/15">
+                Discard draft
+              </button>
+            </span>
+          </Alert>
+        )}
+
         {step === 0 && (
           <div className="grid gap-4 sm:grid-cols-2">
             {lockSelection ? (
@@ -532,6 +589,7 @@ export default function InvoiceCreateButton({
                   ))}
                 </div>
               </div>
+              <AdvancedSection title="More options" hint="PO number, terms for this invoice">
               <TextField
                 id="invoice-po"
                 label="PO / reference number"
@@ -547,6 +605,7 @@ export default function InvoiceCreateButton({
                 rows={2}
                 placeholder="Leave empty to use your default terms from Settings."
               />
+              </AdvancedSection>
               <TextareaField
                 id="invoice-notes"
                 label="Notes"

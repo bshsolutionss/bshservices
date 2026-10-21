@@ -4,6 +4,7 @@ import type { Employee } from "@/lib/employees";
 import { PageHeader, StatCard } from "@/components/admin/ui";
 import EmployeeFormModal from "@/components/admin/employees/EmployeeFormModal";
 import EmployeesTable from "@/components/admin/employees/EmployeesTable";
+import { WriteGate } from "@/components/admin/RoleContext";
 
 export const dynamic = "force-dynamic";
 
@@ -20,12 +21,14 @@ export default async function AdminEmployeesPage() {
     <div className="space-y-6">
       <PageHeader
         title="Team"
-        subtitle={`${employees.length} on record · ${active.length} active`}
+        subtitle={`Your staff and freelancers - how they are paid and what they are working on. ${employees.length} on record · ${active.length} active.`}
         actions={
-          <>
-            <EmployeeFormModal variant="outline" defaultType="freelance" label="Add freelancer" />
-            <EmployeeFormModal label="Add employee" />
-          </>
+          <WriteGate module="team">
+            <span className="flex flex-wrap items-center gap-2">
+              <EmployeeFormModal variant="outline" defaultType="freelance" label="Add freelancer" />
+              <EmployeeFormModal label="Add employee" />
+            </span>
+          </WriteGate>
         }
       />
 
@@ -42,7 +45,7 @@ export default async function AdminEmployeesPage() {
         />
       </div>
 
-      <EmployeesTable employees={employees} />
+      <EmployeesTable employees={employees} emptyTitle="No team members yet" emptyAction={<EmployeeFormModal label="Add first team member" />} />
     </div>
   );
 }

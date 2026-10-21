@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import { cn } from "@/lib/utils";
 import {
   PROJECT_BILLING_LABELS,
@@ -36,6 +37,7 @@ export default async function AdminProjectsPage({
   const activeStage = isProjectStage(stageParam) ? stageParam : undefined;
   const showArchived = archivedParam === "1";
 
+  await ensureStatusOverrides();
   const supabase = createServiceRoleClient();
   let query = supabase
     .from("projects")
@@ -108,9 +110,9 @@ export default async function AdminProjectsPage({
     <div className="space-y-6">
       <PageHeader
         title={showArchived ? "Archived client projects" : "Client projects"}
-        subtitle={`${projects.length} project${projects.length === 1 ? "" : "s"}${
+        subtitle={`Work you are delivering for clients - what is being built, for whom, and by when. ${projects.length} project${projects.length === 1 ? "" : "s"}${
           activeStage ? ` in ${PROJECT_STAGE_LABELS[activeStage]}` : ""
-        }`}
+        }.`}
         actions={
           <>
             <Link
@@ -175,7 +177,9 @@ export default async function AdminProjectsPage({
 
       <ProjectsTable
         projects={projects.map((p) => ({ ...p, clientName: clientNames.get(p.client_id) || "—" }))}
-        emptyMessage={`No ${showArchived ? "archived " : ""}projects found.`}
+        emptyTitle={showArchived ? "No archived projects" : "No projects yet"}
+        emptyMessage={showArchived ? "Archived projects appear here." : "Create a project for a client to start tracking tasks and billing."}
+        emptyAction={showArchived ? undefined : <ProjectCreateButton clients={clients} label="Create first project" />}
       />
     </div>
   );

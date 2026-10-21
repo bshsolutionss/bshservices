@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Alert, ChoiceField, Modal, TextField, btnGhost, btnPrimary } from "@/components/admin/ui";
+import { useOptions } from "@/lib/admin/use-options";
 import { CLIENT_TYPES, CLIENT_TYPE_LABELS, type ClientType } from "@/lib/clients";
 
 /** Add a client by hand. (The usual path is automatic: marking a lead Won creates the client.) */
 export default function ClientFormModal() {
   const router = useRouter();
+  const industries = useOptions("industries");
   const [open, setOpen] = useState(false);
   const [clientType, setClientType] = useState<ClientType>("one_time");
   const [companyName, setCompanyName] = useState("");
@@ -142,6 +144,7 @@ export default function ClientFormModal() {
             id="client-industry"
             label="Industry"
             value={industry}
+            suggestions={industries.options.map((o) => o.label)}
             onChange={setIndustry}
             placeholder="e.g. Immigration services"
           />

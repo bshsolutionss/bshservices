@@ -5,6 +5,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { InvoiceDocument } from "@/lib/pdf/InvoiceDocument";
 import { getInvoiceSettings } from "@/lib/admin/invoice-settings";
 import { getCompanySettings } from "@/lib/admin/company-settings";
+import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
 import type { Invoice, InvoiceBalance, InvoiceItem, Payment } from "@/lib/invoices";
 import type { Client } from "@/lib/clients";
 
@@ -22,6 +23,7 @@ export interface RenderedInvoice {
  * or its client no longer exists. Node runtime only (react-pdf, fs).
  */
 export async function renderInvoicePdf(service: SupabaseClient, id: string): Promise<RenderedInvoice | null> {
+  await ensureStatusOverrides();
   const { data: invoice } = await service.from("invoices").select("*").eq("id", id).single<Invoice>();
   if (!invoice) return null;
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import {
   Alert,
+  AdvancedSection,
   Modal,
   MoneyField,
   SelectField,
@@ -155,13 +156,13 @@ export default function LeadFormModal() {
           <TextField
             id="lead-phone"
             label="Phone / WhatsApp"
+            hint="Add a phone number or an email - at least one."
             type="tel"
             value={phone}
             onChange={setPhone}
             error={errors.contact}
           />
           <TextField id="lead-email" label="Email" type="email" value={email} onChange={setEmail} error={errors.email} />
-          <TextField id="lead-website" label="Website" value={website} onChange={setWebsite} placeholder="https://" />
           <SelectField
             id="lead-source"
             label="Where did they come from?"
@@ -178,6 +179,17 @@ export default function LeadFormModal() {
             options={services.selectOptions}
             placeholder="Select…"
           />
+          <TextareaField
+            id="lead-message"
+            label="What do they need?"
+            className="sm:col-span-2"
+            value={message}
+            onChange={setMessage}
+            rows={3}
+            placeholder="Notes from the conversation, budget, timeline…"
+          />
+          <AdvancedSection title="More details" hint="website, stage, priority, expected value, follow-up emails">
+          <TextField id="lead-website" label="Website" value={website} onChange={setWebsite} placeholder="https://" />
           <TextField
             id="lead-service"
             label="Specific service"
@@ -210,15 +222,6 @@ export default function LeadFormModal() {
             currencies={CURRENCIES}
             error={errors.value}
           />
-          <TextareaField
-            id="lead-message"
-            label="What do they need?"
-            className="sm:col-span-2"
-            value={message}
-            onChange={setMessage}
-            rows={3}
-            placeholder="Notes from the conversation, budget, timeline…"
-          />
           <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#1A14A5]/15 px-4 py-3 sm:col-span-2">
             <input
               type="checkbox"
@@ -236,6 +239,7 @@ export default function LeadFormModal() {
               </span>
             </span>
           </label>
+          </AdvancedSection>
         </div>
 
         {error && <Alert tone="error" className="mt-4">{error}</Alert>}

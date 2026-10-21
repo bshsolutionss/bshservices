@@ -13,9 +13,12 @@ export default function GoogleAnalytics() {
 
   return (
     <>
+      {/* The heavy gtag.js download waits for the load event so it can't compete
+          with first render; the tiny inline stub below still runs early and
+          queues any events into dataLayer, which gtag.js replays on arrival. */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <Script id="google-analytics" strategy="afterInteractive">
         {`

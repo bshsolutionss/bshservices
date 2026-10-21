@@ -93,15 +93,21 @@ const columns: DataTableColumn<InvoiceListItem>[] = [
 export default function InvoicesTable({
   invoices,
   toolbarExtra,
-  emptyMessage = "No invoices found.",
+  emptyMessage = "Create one for a client or project and it appears here.",
+  emptyTitle,
+  emptyAction,
 }: {
   invoices: InvoiceListItem[];
   toolbarExtra?: React.ReactNode;
   emptyMessage?: string;
+  emptyTitle?: string;
+  emptyAction?: React.ReactNode;
 }) {
   return (
     <AdminDataTable
       tableId="invoices"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={invoices}
       getRowKey={(row) => row.invoice_id}

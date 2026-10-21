@@ -191,7 +191,7 @@ export default function LeadStatusControl({
           disabled={saving}
           className="bg-[#1A14A5] hover:bg-[#0e0a7a] text-white rounded-xl"
         >
-          {saving ? "Saving..." : "Save"}
+          {saving ? "Saving…" : "Save changes"}
         </Button>
         {saved && <span className="text-sm text-green-600">✅ Saved</span>}
         {error && <span className="text-sm text-red-600">❌ {error}</span>}

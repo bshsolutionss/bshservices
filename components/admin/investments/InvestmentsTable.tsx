@@ -15,7 +15,7 @@ import { useOptions } from "@/lib/admin/use-options";
 
 export type InvestmentRow = Investment & { returnsTotal: number };
 
-export default function InvestmentsTable({ investments }: { investments: InvestmentRow[] }) {
+export default function InvestmentsTable({ investments, emptyTitle, emptyAction }: { investments: InvestmentRow[]; emptyTitle?: string; emptyAction?: React.ReactNode }) {
   const types = useOptions("investment_types");
 
   const columns: DataTableColumn<InvestmentRow>[] = [
@@ -91,6 +91,8 @@ export default function InvestmentsTable({ investments }: { investments: Investm
   return (
     <AdminDataTable
       tableId="investments"
+      emptyTitle={emptyTitle}
+      emptyAction={emptyAction}
       columns={columns}
       rows={investments}
       getRowKey={(row) => row.id}

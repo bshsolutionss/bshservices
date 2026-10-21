@@ -79,7 +79,7 @@ export default function PersonalProjectEntries({
           </div>
           <button type="submit" disabled={saving} className={btnPrimary}>
             <Plus className="h-4 w-4" />
-            {saving ? "Adding…" : "Add"}
+            {saving ? "Adding…" : "Add entry"}
           </button>
         </div>
       </form>

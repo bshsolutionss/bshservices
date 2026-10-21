@@ -7,6 +7,7 @@ import { isValidPeriodKey, periodLabel, shiftPeriod, type GoalPeriodType } from 
 import { EmptyState, PageHeader, StatCard } from "@/components/admin/ui";
 import GoalCard from "@/components/admin/goals/GoalCard";
 import GoalFormModal from "@/components/admin/goals/GoalFormModal";
+import { WriteGate } from "@/components/admin/RoleContext";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,11 @@ export default async function AdminGoalsPage({
       <PageHeader
         title="Goals"
         subtitle="Set monthly and yearly targets - progress is measured live from your real revenue, leads and clients."
-        actions={<GoalFormModal periodType={type} periodKey={key} />}
+        actions={
+          <WriteGate module="goals">
+            <GoalFormModal periodType={type} periodKey={key} />
+          </WriteGate>
+        }
       >
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex rounded-full border border-[#1A14A5]/10 bg-white p-1">
@@ -81,7 +86,11 @@ export default async function AdminGoalsPage({
             icon={Target}
             title={`No ${type} goals for ${periodLabel(type, key)}`}
             description="Pick something to aim for - revenue, new leads, deals won - and watch the bar fill as real data comes in."
-            action={<GoalFormModal periodType={type} periodKey={key} />}
+            action={
+              <WriteGate module="goals">
+                <GoalFormModal periodType={type} periodKey={key} />
+              </WriteGate>
+            }
           />
         </div>
       ) : (

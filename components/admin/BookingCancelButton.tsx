@@ -1,45 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { CalendarX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/admin/ui";
 
-export default function BookingCancelButton({ leadId }: { leadId: string }) {
+export default function BookingCancelButton({ leadId, guestName }: { leadId: string; guestName: string }) {
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleCancel = async () => {
-    if (!confirm("Cancel this consultation booking? The time slot will become available again.")) return;
-
-    setSaving(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/leads/${leadId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_status: "cancelled" }),
-      });
-      if (!res.ok) throw new Error("Failed to cancel booking.");
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to cancel booking.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
-    <div>
-      <Button
-        onClick={handleCancel}
-        disabled={saving}
-        variant="outline"
-        className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50"
-      >
-        {saving ? "Cancelling..." : "Cancel Booking"}
-      </Button>
-      {error && <p className="text-sm text-red-600 mt-2">❌ {error}</p>}
-    </div>
+    <ConfirmButton
+      label="Cancel booking"
+      display="block"
+      icon={<CalendarX className="h-4 w-4" />}
+      title={`Cancel the booking for "${guestName}"?`}
+      confirmLabel="Cancel booking"
+      message="The time slot becomes available for other visitors again. The guest is not emailed automatically - let them know yourself."
+      onConfirm={async () => {
+        const res = await fetch(`/api/admin/leads/${leadId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ booking_status: "cancelled" }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Could not cancel the booking.");
+        router.refresh();
+      }}
+    />
   );
 }
