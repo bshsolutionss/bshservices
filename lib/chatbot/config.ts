@@ -77,6 +77,10 @@ export const BUSINESS_FACTS = {
   },
 } as const;
 
+/** The mascot's name, from Business Smart *Hub*. Used by the widget and the
+ *  system prompt, so renaming the assistant is a one-line change. */
+export const ASSISTANT_NAME = "Hubi";
+
 /** Shown as tappable chips when the panel first opens. */
 export const STARTER_PROMPTS = [
   "What does BSH Solutions do?",
@@ -85,5 +89,4 @@ export const STARTER_PROMPTS = [
   "I want to book a free consultation",
 ] as const;
 
-export const GREETING =
-  "Hi there! Ask me anything about our services, pricing or packages, or I can set up a free consultation with the team.";
+export const GREETING = `Hi, I'm ${ASSISTANT_NAME}, the guide at ${BUSINESS_FACTS.name}. We build websites, online stores, custom software and AI chatbots, and run marketing for businesses in Pakistan and worldwide.\n\nWhat are you working on?`;

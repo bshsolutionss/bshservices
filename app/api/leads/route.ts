@@ -66,7 +66,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid email address." }, { status: 400 });
   }
 
-  const VALID_SOURCES: LeadSource[] = ["contact_form", "service_form", "lead_magnet", "exit_popup"];
+  // "chatbot" covers the widget's instant-estimate flow, which collects name
+  // and email in a form rather than through the model.
+  const VALID_SOURCES: LeadSource[] = ["contact_form", "service_form", "lead_magnet", "exit_popup", "chatbot"];
   if (!VALID_SOURCES.includes(payload.source)) {
     return NextResponse.json({ ok: false, error: "Invalid source." }, { status: 400 });
   }
