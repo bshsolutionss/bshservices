@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
-import { LEAD_PRIORITIES, LEAD_STATUSES, type LeadPriority, type LeadStatus } from "@/lib/leads";
+import { LEAD_PRIORITIES, type LeadPriority, type LeadStatus } from "@/lib/leads";
+import { loadLeadStages } from "@/lib/admin/lead-stages";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,10 @@ interface CreatePayload {
   expected_value_currency?: Currency;
   /** Opt in to the automatic Day 1/3/7 follow-up emails (needs an email address). */
   auto_follow_up?: boolean;
+  assigned_to?: string | null;
+  location?: string;
+  /** ISO time of a follow-up reminder the admin picked (overrides the automatic one). */
+  follow_up_at?: string;
 }
 
 /** Adds a lead by hand - a phone call, a WhatsApp chat, a referral - so everything lives in one pipeline. */
@@ -51,10 +56,12 @@ export async function POST(request: NextRequest) {
   if (email && !EMAIL_RE.test(email)) {
     return NextResponse.json({ ok: false, error: "That email address doesn't look right." }, { status: 400 });
   }
-  if (payload.status && !LEAD_STATUSES.includes(payload.status)) {
+  const stages = await loadLeadStages();
+  const chosenStage = payload.status ? stages.find((s) => s.key === payload.status) : undefined;
+  if (payload.status && !chosenStage) {
     return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
   }
-  if (payload.status === "lost") {
+  if (chosenStage?.kind === "lost") {
     return NextResponse.json({ ok: false, error: "Add the lead first, then mark it lost with a reason." }, { status: 400 });
   }
   if (payload.priority && !LEAD_PRIORITIES.includes(payload.priority)) {
@@ -68,9 +75,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Expected value can't be negative." }, { status: 400 });
   }
 
-  const status: LeadStatus = payload.status || "new";
+  const status: LeadStatus = payload.status || stages[0]?.key || "new";
+  const followUpAt = payload.follow_up_at ? new Date(payload.follow_up_at) : null;
+  if (followUpAt && Number.isNaN(followUpAt.getTime())) {
+    return NextResponse.json({ ok: false, error: "That follow-up date doesn't look right." }, { status: 400 });
+  }
+  if (payload.assigned_to) {
+    const { data: emp } = await createServiceRoleClient().from("employees").select("id").eq("id", payload.assigned_to).maybeSingle();
+    if (!emp) return NextResponse.json({ ok: false, error: "That team member no longer exists." }, { status: 400 });
+  }
   // The nurture emails only make sense for someone who hasn't been spoken to and who has an inbox.
-  const autoFollowUp = !!payload.auto_follow_up && !!email && (status === "new" || status === "contacted");
+  const autoFollowUp = !!payload.auto_follow_up && !!email && stages.findIndex((s) => s.key === status) <= 1;
   const clean = (v: string | undefined, max: number) => v?.trim().slice(0, max) || null;
 
   const service = createServiceRoleClient();
@@ -82,6 +97,9 @@ export async function POST(request: NextRequest) {
       phone: phone?.slice(0, 60) ?? null,
       business: clean(payload.business, 200),
       website: clean(payload.website, 300),
+      location: clean(payload.location, 200),
+      assigned_to: payload.assigned_to || null,
+      reminder_at: followUpAt ? followUpAt.toISOString() : null,
       lead_source_detail: clean(payload.source_detail, 100),
       service_category: clean(payload.service_category, 100),
       selected_service: clean(payload.selected_service, 150),

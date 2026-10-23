@@ -11,6 +11,8 @@ import {
   type GoalState,
 } from "@/lib/goals";
 import type { Currency } from "@/lib/invoices";
+import { loadLeadStages } from "@/lib/admin/lead-stages";
+import { stageKeys } from "@/lib/lead-stages";
 
 interface PeriodStats {
   revenue: number;
@@ -28,6 +30,7 @@ async function statsForRange(from: string, to: string, rates: Awaited<RatesPromi
   const supabase = createServiceRoleClient();
   const fromTs = `${from}T00:00:00Z`;
   const toTs = `${to}T00:00:00Z`;
+  const wonKeys = stageKeys(await loadLeadStages(), "won");
 
   const [payments, expenses, leads, won, clients, projects] = await Promise.all([
     supabase.from("payments").select("amount, invoices(currency)").gte("paid_on", from).lt("paid_on", to),
@@ -41,7 +44,7 @@ async function statsForRange(from: string, to: string, rates: Awaited<RatesPromi
     supabase
       .from("leads")
       .select("id", { count: "exact", head: true })
-      .eq("status", "won")
+      .in("status", wonKeys)
       .gte("status_updated_at", fromTs)
       .lt("status_updated_at", toTs),
     supabase.from("clients").select("id", { count: "exact", head: true }).gte("created_at", fromTs).lt("created_at", toTs),

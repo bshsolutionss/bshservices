@@ -29,15 +29,15 @@ export async function notifyTaskAssigned(taskId: string, options: { reassigned?:
         .select("name, email")
         .eq("id", task.assignee_id)
         .single<{ name: string; email: string | null }>(),
-      supabase
-        .from("projects")
-        .select("name, client_id")
-        .eq("id", task.project_id)
-        .single<{ name: string; client_id: string }>(),
+      task.project_id
+        ? supabase.from("projects").select("name, client_id").eq("id", task.project_id).single<{ name: string; client_id: string }>()
+        : task.board_id
+          ? supabase.from("task_boards").select("name").eq("id", task.board_id).single<{ name: string }>().then((r) => ({ data: r.data ? { name: r.data.name, client_id: null as string | null } : null }))
+          : Promise.resolve({ data: null }),
     ]);
     if (!employee?.email) return;
 
-    const { data: client } = project
+    const { data: client } = project && project.client_id
       ? await supabase
           .from("clients")
           .select("company_name")
@@ -68,6 +68,7 @@ export async function notifyTaskAssigned(taskId: string, options: { reassigned?:
     if (result.ok) {
       await supabase.from("tasks").update({ assigned_notified_at: new Date().toISOString() }).eq("id", task.id);
     }
+    if (!task.project_id) return;
     await logActivity({
       entityType: "project",
       entityId: task.project_id,

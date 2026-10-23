@@ -3,6 +3,7 @@ import { getAdminSession } from "@/lib/admin/session";
 import AdminShell from "@/components/admin/AdminShell";
 import StatusOverridesInit from "@/components/admin/StatusOverridesInit";
 import { ensureStatusOverrides } from "@/lib/admin/status-overrides";
+import { ensureLeadStages } from "@/lib/admin/lead-stages";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -14,6 +15,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const [user, statusOverrides] = await Promise.all([getAdminSession(), ensureStatusOverrides()]);
+  const leadStages = await ensureLeadStages();
 
   // Belt-and-suspenders: proxy.ts already redirects unauthenticated /admin/*
   // requests, this is a second check in case that ever drifts.
@@ -23,7 +25,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F4F7FE]">
-      <StatusOverridesInit rows={statusOverrides} />
+      <StatusOverridesInit rows={statusOverrides} leadStages={leadStages} />
       <AdminShell userEmail={user.email} role={user.role}>{children}</AdminShell>
     </div>
   );

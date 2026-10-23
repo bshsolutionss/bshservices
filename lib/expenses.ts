@@ -8,6 +8,12 @@ export type ExpenseCategory = string;
 /** "monthly" repeats every month (rent, hosting, salaries); "one_time" is a single payment. */
 export type ExpenseType = "monthly" | "one_time";
 
+/** How often an auto (recurring) expense repeats. */
+export type ExpenseRecurrence = "monthly" | "quarterly" | "yearly";
+export const EXPENSE_RECURRENCES: ExpenseRecurrence[] = ["monthly", "quarterly", "yearly"];
+export const EXPENSE_RECURRENCE_LABELS: Record<ExpenseRecurrence, string> = { monthly: "Every month", quarterly: "Every 3 months", yearly: "Every year" };
+export const EXPENSE_RECURRENCE_MONTHS: Record<ExpenseRecurrence, number> = { monthly: 1, quarterly: 3, yearly: 12 };
+
 export interface Expense {
   id: string;
   created_at: string;
@@ -24,6 +30,9 @@ export interface Expense {
   recurring_parent_id: string | null;
   /** Optional project this cost belongs to. */
   project_id: string | null;
+  /** Set when the money went to a team member. */
+  employee_id: string | null;
+  recurrence: ExpenseRecurrence;
 }
 
 export const EXPENSE_TYPES: ExpenseType[] = ["one_time", "monthly"];

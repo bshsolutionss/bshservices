@@ -56,6 +56,8 @@ const SOURCE_POINTS: Record<LeadSource, number> = {
   chatbot: 12, // volunteered details mid-chat — warm, but lighter than a filled-out form
   manual: 20, // an admin chose to log it - a real conversation already happened
   exit_popup: 8, // left an email for the free-month offer — interested, but nothing else known yet
+  form: 15, // filled in a shared form link - asked to be contacted
+  webhook: 15, // arrived from an ad / marketplace integration
   lead_magnet: 5, // downloaded something free — early-funnel, not yet a real inquiry
 };
 

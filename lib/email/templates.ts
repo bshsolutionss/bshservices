@@ -108,6 +108,8 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   lead_magnet: "Lead Magnet Download",
   chatbot: "Website Chatbot",
   exit_popup: "Website Popup",
+  form: "Collect form",
+  webhook: "Lead source",
   manual: "Added manually",
 };
 

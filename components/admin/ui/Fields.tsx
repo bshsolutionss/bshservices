@@ -56,7 +56,7 @@ type BaseControlProps = Omit<FieldProps, "children" | "htmlFor"> & { id?: string
 interface TextFieldProps extends BaseControlProps {
   value: string;
   onChange: (value: string) => void;
-  type?: "text" | "email" | "tel" | "date" | "datetime-local" | "number" | "search";
+  type?: "text" | "email" | "tel" | "date" | "time" | "datetime-local" | "number" | "search";
   placeholder?: string;
   min?: string;
   step?: string;

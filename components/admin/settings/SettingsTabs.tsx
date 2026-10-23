@@ -10,6 +10,7 @@ const TABS = [
   { href: "/admin/settings/invoices", label: "Invoices" },
   { href: "/admin/settings/lists", label: "Lists" },
   { href: "/admin/settings/statuses", label: "Statuses" },
+  { href: "/admin/settings/portal", label: "Client portal" },
   { href: "/admin/settings/templates", label: "Message templates" },
   { href: "/admin/settings/exchange-rates", label: "Exchange rates" },
   { href: "/admin/settings/users", label: "Users & roles" },

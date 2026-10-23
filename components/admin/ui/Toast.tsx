@@ -45,10 +45,19 @@ const ENTITY_BY_SEGMENT: Record<string, string> = {
   users: "User",
   blocks: "Time block",
   rules: "Schedule",
+  portal: "Portal access",
+  "task-boards": "Board",
+  approvals: "Approval",
+  meetings: "Meeting",
+  documents: "Document",
+  updates: "Progress update",
+  requests: "Request",
+  reviews: "Review",
+  visibility: "Portal visibility",
 };
 
 /** Calls that already show their own, more specific confirmation. */
-const OWN_MESSAGE = [/\/settings\/email$/, /\/invoices\/[^/]+\/email$/, /\/communications\/send$/, /\/recurring$/];
+const OWN_MESSAGE = [/\/api\/admin\/messages\//, /\/clients\/[^/]+\/portal$/,/\/settings\/email$/, /\/invoices\/[^/]+\/email$/, /\/communications\/send$/, /\/recurring$/];
 
 function describe(method: string, pathname: string): string | null {
   if (OWN_MESSAGE.some((re) => re.test(pathname))) return null;

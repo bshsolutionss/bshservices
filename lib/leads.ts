@@ -1,15 +1,8 @@
 /** Shared types/constants for leads — used by API routes, the admin panel, and email templates. */
 import type { Currency } from "@/lib/invoices";
 
-export type LeadStatus =
-  | "new"
-  | "contacted"
-  | "qualified"
-  | "meeting"
-  | "proposal_sent"
-  | "negotiation"
-  | "won"
-  | "lost";
+/** A pipeline stage key. Stages are editable (Leads > Stages, lib/lead-stages.ts), so this is a plain string; "won" and "lost" are only the built-in keys. */
+export type LeadStatus = string;
 // "lead_magnet" added for the gated PDF-download funnel (app/api/lead-magnet).
 // No DB migration needed — `leads.source` is a plain `text` column with no
 // CHECK constraint (see supabase/migrations/0001_leads.sql), so a new
@@ -26,6 +19,8 @@ export type LeadSource =
   | "lead_magnet"
   | "chatbot"
   | "exit_popup"
+  | "form"
+  | "webhook"
   | "manual";
 export type LeadPriority = "low" | "medium" | "high" | "urgent";
 export type LeadLostReason = "budget" | "timing" | "competitor" | "no_response" | "other";
@@ -69,6 +64,15 @@ export interface Lead {
   website: string | null;
   /** For manual leads: where it came from, e.g. "Referral", "WhatsApp". */
   lead_source_detail: string | null;
+  /** The team member handling this lead. */
+  assigned_to: string | null;
+  location: string | null;
+  /** Manual "follow up on..." reminder picked by the team (not the automatic nurture schedule). */
+  reminder_at: string | null;
+  /** Answers to a form's custom questions and unmapped webhook fields. */
+  extra: Record<string, string> | null;
+  form_id: string | null;
+  source_id: string | null;
 }
 
 /** Ways a lead reaches you outside the website forms - offered when adding a lead by hand. */
@@ -85,16 +89,8 @@ export const MANUAL_LEAD_SOURCES = [
   "Other",
 ] as const;
 
-export const LEAD_STATUSES: LeadStatus[] = [
-  "new",
-  "contacted",
-  "qualified",
-  "meeting",
-  "proposal_sent",
-  "negotiation",
-  "won",
-  "lost",
-];
+/** Rewritten in place from the stages table (lib/lead-stages.ts); the values here are only the starting point. */
+export const LEAD_STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "meeting", "proposal_sent", "negotiation", "won", "lost"];
 
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   new: "New",

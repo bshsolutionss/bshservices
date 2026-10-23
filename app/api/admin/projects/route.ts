@@ -10,6 +10,7 @@ import {
   type ProjectStage,
 } from "@/lib/projects";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
+import { cleanText, isUuid } from "@/lib/portal/admin-input";
 
 interface CreatePayload {
   name: string;
@@ -25,6 +26,11 @@ interface CreatePayload {
   monthly_fee?: number | null;
   billing_day?: number;
   auto_invoice?: boolean;
+  domain_name?: string;
+  domain_expires_on?: string;
+  hosting_provider?: string;
+  hosting_expires_on?: string;
+  member_ids?: string[];
 }
 
 export async function POST(request: NextRequest) {
@@ -89,6 +95,10 @@ export async function POST(request: NextRequest) {
       monthly_fee: billingType === "monthly" ? monthlyFee : null,
       billing_day: billingDay,
       auto_invoice: billingType === "monthly" && !!payload.auto_invoice,
+      domain_name: cleanText(payload.domain_name, 200),
+      domain_expires_on: payload.domain_expires_on || null,
+      hosting_provider: cleanText(payload.hosting_provider, 120),
+      hosting_expires_on: payload.hosting_expires_on || null,
     })
     .select("id")
     .single();
@@ -96,6 +106,12 @@ export async function POST(request: NextRequest) {
   if (error || !data) {
     console.error("[api/admin/projects] insert failed:", error);
     return NextResponse.json({ ok: false, error: "Could not create project." }, { status: 500 });
+  }
+
+  const memberIds = Array.isArray(payload.member_ids) ? [...new Set(payload.member_ids.filter(isUuid))].slice(0, 50) : [];
+  if (memberIds.length) {
+    const { error: memberError } = await service.from("project_members").insert(memberIds.map((employee_id) => ({ project_id: data.id, employee_id })));
+    if (memberError) console.error("[api/admin/projects] members failed:", memberError);
   }
 
   await logActivity({

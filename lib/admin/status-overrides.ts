@@ -1,4 +1,5 @@
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import { ensureLeadStages } from "@/lib/admin/lead-stages";
 import { applyStatusOverrides, isStatusListId, type StatusOverrideRow } from "@/lib/status-config";
 
 const TTL_MS = 30_000;
@@ -21,6 +22,8 @@ async function fetchRows(): Promise<StatusOverrideRow[]> {
  * the browser. Never throws - on any problem the built-in names are used.
  */
 export async function ensureStatusOverrides(): Promise<StatusOverrideRow[]> {
+  // Lead stages live in their own table; applying them here means every page that already calls this follows them.
+  await ensureLeadStages();
   if (cache && Date.now() - cache.at < TTL_MS) return cache.rows;
   const rows = await fetchRows();
   applyStatusOverrides(rows);

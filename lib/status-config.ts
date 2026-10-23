@@ -12,10 +12,9 @@
 import { PROJECT_STAGES, PROJECT_STAGE_COLORS, PROJECT_STAGE_LABELS } from "@/lib/projects";
 import { TASK_STATUSES, TASK_STATUS_COLORS, TASK_STATUS_LABELS } from "@/lib/tasks";
 import { INVOICE_STATUSES, INVOICE_STATUS_COLORS, INVOICE_STATUS_LABELS } from "@/lib/invoices";
-import { LEAD_STATUSES, LEAD_STATUS_COLORS, LEAD_STATUS_LABELS } from "@/lib/leads";
 import { optionBadgeColors } from "@/lib/option-lists";
 
-export type StatusListKey = "project_stage" | "task_status" | "invoice_status" | "lead_status";
+export type StatusListKey = "project_stage" | "task_status" | "invoice_status";
 
 interface StatusListDef {
   key: StatusListKey;
@@ -27,14 +26,6 @@ interface StatusListDef {
 }
 
 export const STATUS_LISTS: StatusListDef[] = [
-  {
-    key: "lead_status",
-    label: "Lead stages",
-    description: "The sales pipeline on the Leads page.",
-    keys: LEAD_STATUSES,
-    labels: LEAD_STATUS_LABELS,
-    colors: LEAD_STATUS_COLORS,
-  },
   {
     key: "project_stage",
     label: "Project stages",

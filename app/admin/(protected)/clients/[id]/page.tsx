@@ -22,6 +22,10 @@ import { ComposeEmailModal, LogCommunicationModal } from "@/components/admin/com
 import CommunicationTable from "@/components/admin/communication/CommunicationTable";
 import { loadCommunicationData } from "@/lib/admin/communication-data";
 import { CLIENT_TYPE_COLORS, CLIENT_TYPE_LABELS } from "@/lib/clients";
+import PortalAccessCard from "@/components/admin/portal/PortalAccessCard";
+import MessageClientButton from "@/components/admin/portal/MessageClientButton";
+import { ApprovalsCard, DocumentsCard, MeetingsCard, UpdatesCard, VisibilityCard } from "@/components/admin/portal/PortalManager";
+import { loadClientPortalData } from "@/lib/admin/portal-data";
 
 export const dynamic = "force-dynamic";
 
@@ -29,12 +33,14 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
   const { id } = await params;
   const supabase = createServiceRoleClient();
 
-  const [{ data: client }, { data: projectsData }, { data: invoicesData }, comms] = await Promise.all([
+  const [{ data: client }, { data: projectsData }, { data: invoicesData }, comms, portal] = await Promise.all([
     supabase.from("clients").select("*").eq("id", id).single<Client>(),
     supabase.from("projects").select("*").eq("client_id", id).order("created_at", { ascending: false }),
     supabase.from("invoices").select("*").eq("client_id", id).order("created_at", { ascending: false }),
     loadCommunicationData({ clientId: id, limit: 100 }),
+    loadClientPortalData(id),
   ]);
+  const { data: teamData } = await supabase.from("employees").select("id, name").eq("status", "active").order("name");
 
   if (!client) {
     notFound();
@@ -66,9 +72,11 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
         }
         actions={
           <>
+            <MessageClientButton clientId={client.id} />
             <ProjectCreateButton
               clientId={client.id}
               clientName={client.company_name}
+              employees={(teamData ?? []) as { id: string; name: string }[]}
               variant="outline"
               label="New project"
             />
@@ -90,6 +98,14 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
+          <PortalAccessCard
+            clientId={client.id}
+            defaultEmail={client.contact_email}
+            defaultName={client.contact_name ?? ""}
+            portalUrl={portal.portalUrl}
+            user={portal.user}
+          />
+
           <SectionCard title="Projects" subtitle={`${projects.length} total`}>
             {projects.length === 0 ? (
               <EmptyState
@@ -155,6 +171,12 @@ export default async function AdminClientDetailPage({ params }: { params: Promis
               </ul>
             )}
           </SectionCard>
+
+          <ApprovalsCard clientId={client.id} projects={portal.projects} rows={portal.approvals} />
+          <MeetingsCard clientId={client.id} projects={portal.projects} rows={portal.meetings} />
+          <DocumentsCard clientId={client.id} projects={portal.projects} rows={portal.documents} />
+          <UpdatesCard projects={portal.projects} rows={portal.updates} />
+          <VisibilityCard projects={portal.visibility} />
 
           <SectionCard
             title="Communication"

@@ -33,6 +33,10 @@ export interface Project {
   auto_invoice: boolean;
   /** Off = paused retainer: history stays, billing stops. */
   recurring_active: boolean;
+  domain_name: string | null;
+  domain_expires_on: string | null;
+  hosting_provider: string | null;
+  hosting_expires_on: string | null;
 }
 
 export const PROJECT_STAGES: ProjectStage[] = ["planning", "in_progress", "review", "completed"];

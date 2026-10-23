@@ -21,7 +21,12 @@ export type ActivityType =
   | "project_updated"
   | "lead_created"
   | "invoice_emailed"
-  | "recurring_invoice";
+  | "recurring_invoice"
+  | "portal_invited"
+  | "portal_approval"
+  | "portal_request"
+  | "portal_referral"
+  | "portal_review";
 
 export interface Activity {
   id: string;

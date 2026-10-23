@@ -71,10 +71,12 @@ export async function proxy(request: NextRequest) {
   // Only /admin needs it: public pages never read the session, and the
   // check used to add an auth round trip to every marketing-site request.
   const isAdminRoute = pathname.startsWith('/admin');
+  const isPortalRoute = pathname === '/portal' || pathname.startsWith('/portal/');
+  const isTeamRoute = pathname === '/team' || pathname.startsWith('/team/');
   let response: NextResponse;
   let authenticated = false;
   let email: string | null = null;
-  if (isAdminRoute) {
+  if (isAdminRoute || isPortalRoute || isTeamRoute) {
     ({ response, authenticated, email } = await updateSession(request, requestHeaders));
   } else {
     response = NextResponse.next({ request: { headers: requestHeaders } });
@@ -95,11 +97,27 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Client portal: same idea - signed-out visitors go to the portal login. Whether the
+  // login belongs to a client is checked by the portal layout (lib/portal/session.ts).
+  if (isPortalRoute && pathname !== '/portal/login' && !authenticated) {
+    return NextResponse.redirect(new URL('/portal/login', request.url));
+  }
+
+  // Team dashboard: signed-out visitors go to the team login. Whether the login is a team
+  // member (and what they may open) is checked by the team layout and each /api/team route.
+  if (isTeamRoute && pathname !== '/team/login' && !authenticated) {
+    return NextResponse.redirect(new URL('/team/login', request.url));
+  }
+
   // Role guard for pages: a signed-in person only reaches the screens their role allows.
   if (isAdminRoute && authenticated && pathname !== '/admin/login' && pathname !== '/admin/restricted') {
     const info = await lookupRole(email);
     if (!info) {
       return NextResponse.redirect(new URL('/admin/restricted?reason=norole', request.url));
+    }
+    // Team members live in their own dashboard, not the admin panel.
+    if (info.role === 'employee') {
+      return NextResponse.redirect(new URL('/team', request.url));
     }
     const area = moduleForPath(pathname);
     if (area && !canView(info.role, area)) {

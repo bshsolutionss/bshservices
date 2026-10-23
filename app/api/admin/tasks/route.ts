@@ -5,7 +5,10 @@ import { TASK_PRIORITIES, type TaskPriority } from "@/lib/tasks";
 import { notifyTaskAssigned } from "@/lib/admin/task-notify";
 
 interface CreatePayload {
-  project_id: string;
+  /** A client project... */
+  project_id?: string;
+  /** ...or an internal board (hiring, marketing, ops). One of the two is required. */
+  board_id?: string;
   title: string;
   description?: string;
   /** Preferred: an employee id. Assigning this way also emails them. */
@@ -31,8 +34,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
   }
 
-  if (!payload.project_id || !payload.title?.trim()) {
-    return NextResponse.json({ ok: false, error: "Project and title are required." }, { status: 400 });
+  if ((!payload.project_id && !payload.board_id) || !payload.title?.trim()) {
+    return NextResponse.json({ ok: false, error: "A project or board, and a title, are required." }, { status: 400 });
   }
 
   if (payload.priority && !TASK_PRIORITIES.includes(payload.priority)) {
@@ -59,7 +62,8 @@ export async function POST(request: NextRequest) {
   const { data, error } = await service
     .from("tasks")
     .insert({
-      project_id: payload.project_id,
+      project_id: payload.project_id || null,
+      board_id: payload.project_id ? null : payload.board_id,
       title: payload.title.trim().slice(0, 200),
       description: payload.description?.trim().slice(0, 5000) || null,
       assignee_id: payload.assignee_id || null,

@@ -6,7 +6,9 @@ export type TaskPriority = "low" | "medium" | "high" | "urgent";
 export interface Task {
   id: string;
   created_at: string;
-  project_id: string;
+  /** A task belongs to a project or, for internal work, to a board. */
+  project_id: string | null;
+  board_id: string | null;
   title: string;
   description: string | null;
   assignee_name: string | null;

@@ -3,7 +3,6 @@ import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { logActivity } from "@/lib/activity";
 import {
-  LEAD_STATUSES,
   LEAD_STATUS_LABELS,
   LEAD_PRIORITIES,
   LEAD_LOST_REASONS,
@@ -13,6 +12,7 @@ import {
   type LeadLostReason,
 } from "@/lib/leads";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
+import { loadLeadStages } from "@/lib/admin/lead-stages";
 
 interface UpdatePayload {
   status?: LeadStatus;
@@ -20,6 +20,9 @@ interface UpdatePayload {
   expected_value?: number | null;
   expected_value_currency?: Currency;
   priority?: LeadPriority;
+  assigned_to?: string | null;
+  location?: string | null;
+  reminder_at?: string | null;
   lost_reason?: LeadLostReason;
   /** Only meaningful for source === "consultation_booking" — cancelling frees the slot back up. */
   booking_status?: "cancelled";
@@ -53,16 +56,20 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "Lead not found." }, { status: 404 });
   }
 
+  const stages = await loadLeadStages();
+  const stageOf = (key: string) => stages.find((s) => s.key === key);
+  const newStage = payload.status !== undefined ? stageOf(payload.status) : undefined;
+
   const updates: Record<string, unknown> = {};
   let statusChanged = false;
 
   if (payload.status !== undefined) {
-    if (!LEAD_STATUSES.includes(payload.status)) {
+    if (!newStage) {
       return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
     }
 
     // "Lost requires a reason" (PRD 6.2 acceptance criteria).
-    if (payload.status === "lost" && !payload.lost_reason && !existingLead.lost_reason) {
+    if (newStage?.kind === "lost" && !payload.lost_reason && !existingLead.lost_reason) {
       return NextResponse.json(
         { ok: false, error: "A lost reason is required when marking a lead as lost." },
         { status: 400 }
@@ -76,10 +83,29 @@ export async function PATCH(
       // Anything past "contacted" stops the automated follow-up loop — the
       // cron route's query already excludes completed leads, so this is all
       // that's needed, no separate "cancel" branch.
-      if (payload.status !== "new" && payload.status !== "contacted") {
+      // Past the first two stages the lead has been spoken to - stop the automated nurture emails.
+      if (stages.findIndex((s) => s.key === payload.status) > 1) {
         updates.follow_up_completed = true;
       }
     }
+  }
+
+  if (payload.assigned_to !== undefined) {
+    if (payload.assigned_to !== null) {
+      const { data: emp } = await service.from("employees").select("id").eq("id", payload.assigned_to).maybeSingle();
+      if (!emp) return NextResponse.json({ ok: false, error: "That team member no longer exists." }, { status: 400 });
+    }
+    updates.assigned_to = payload.assigned_to;
+  }
+
+  if (payload.location !== undefined) {
+    updates.location = payload.location ? String(payload.location).trim().slice(0, 200) || null : null;
+  }
+
+  if (payload.reminder_at !== undefined) {
+    const when = payload.reminder_at ? new Date(payload.reminder_at) : null;
+    if (when && Number.isNaN(when.getTime())) return NextResponse.json({ ok: false, error: "That date doesn't look right." }, { status: 400 });
+    updates.reminder_at = when ? when.toISOString() : null;
   }
 
   if (payload.notes !== undefined) {
@@ -153,10 +179,10 @@ export async function PATCH(
       entityType: "lead",
       entityId: id,
       type: "status_change",
-      description: `Status changed from ${LEAD_STATUS_LABELS[existingLead.status]} to ${LEAD_STATUS_LABELS[payload.status as LeadStatus]}`,
+      description: `Status changed from ${LEAD_STATUS_LABELS[existingLead.status] ?? existingLead.status} to ${newStage?.label ?? payload.status}`,
     });
 
-    if (payload.status === "lost") {
+    if (newStage?.kind === "lost") {
       await logActivity({
         entityType: "lead",
         entityId: id,
@@ -168,7 +194,7 @@ export async function PATCH(
     // "The backbone": marking a lead Won automatically creates the
     // downstream Client + Project. The Postgres function handles dedupe/
     // idempotency, so this is safe even if the lead is re-saved as "won".
-    if (payload.status === "won") {
+    if (newStage?.kind === "won") {
       const { data: conversion, error: conversionError } = await service
         .rpc("convert_lead_to_client_and_project", { p_lead_id: id })
         .single<{

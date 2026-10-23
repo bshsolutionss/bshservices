@@ -137,7 +137,7 @@ export default function TaskRow({ task, assignees = [], projectName, readOnly = 
         <p className="text-xs text-[#231F20]/50">
           {projectName && (
             <>
-              {readOnly ? (
+              {readOnly || !task.project_id ? (
                 projectName
               ) : (
                 <Link href={`/admin/projects/${task.project_id}`} className="hover:text-[#1A14A5] hover:underline">

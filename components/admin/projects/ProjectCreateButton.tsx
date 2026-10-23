@@ -13,6 +13,7 @@ import {
   TextField,
   TextareaField,
   MoneyField,
+  AdvancedSection,
   btnGhost,
   btnPrimary,
   btnSecondary,
@@ -44,6 +45,10 @@ interface ProjectCreateButtonProps {
   clients?: { id: string; company_name: string }[];
   variant?: "solid" | "outline";
   label?: string;
+  /** Active team members that can be assigned to the project. */
+  employees?: { id: string; name: string }[];
+  /** Start with Monthly selected (the Retainers page's "New retainer"). */
+  defaultBillingType?: ProjectBillingType;
 }
 
 /**
@@ -60,6 +65,8 @@ export default function ProjectCreateButton({
   clients,
   variant = "solid",
   label = "New Project",
+  employees = [],
+  defaultBillingType = "one_time",
 }: ProjectCreateButtonProps) {
   const router = useRouter();
   const services = useOptions("service_categories");
@@ -70,7 +77,7 @@ export default function ProjectCreateButton({
   const [name, setName] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [billingType, setBillingType] = useState<ProjectBillingType>("one_time");
+  const [billingType, setBillingType] = useState<ProjectBillingType>(defaultBillingType);
   const [monthlyFee, setMonthlyFee] = useState("");
   const [billingDay, setBillingDay] = useState("1");
   const [autoInvoice, setAutoInvoice] = useState(true);
@@ -80,6 +87,11 @@ export default function ProjectCreateButton({
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [invoiceNext, setInvoiceNext] = useState(true);
+  const [domainName, setDomainName] = useState("");
+  const [domainExpires, setDomainExpires] = useState("");
+  const [hostingProvider, setHostingProvider] = useState("");
+  const [hostingExpires, setHostingExpires] = useState("");
+  const [memberIds, setMemberIds] = useState<string[]>([]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
@@ -98,7 +110,7 @@ export default function ProjectCreateButton({
     setName("");
     setServiceCategory("");
     setDescription("");
-    setBillingType("one_time");
+    setBillingType(defaultBillingType);
     setMonthlyFee("");
     setBillingDay("1");
     setAutoInvoice(true);
@@ -108,6 +120,11 @@ export default function ProjectCreateButton({
     setStartDate("");
     setDueDate("");
     setInvoiceNext(true);
+    setDomainName("");
+    setDomainExpires("");
+    setHostingProvider("");
+    setHostingExpires("");
+    setMemberIds([]);
     setErrors({});
     setSubmitError(null);
   };
@@ -169,6 +186,11 @@ export default function ProjectCreateButton({
           description: description.trim() || undefined,
           start_date: startDate || undefined,
           due_date: dueDate || undefined,
+          domain_name: domainName.trim() || undefined,
+          domain_expires_on: domainExpires || undefined,
+          hosting_provider: hostingProvider.trim() || undefined,
+          hosting_expires_on: hostingExpires || undefined,
+          member_ids: memberIds,
         }),
       });
       const body = await res.json().catch(() => ({}));
@@ -197,6 +219,8 @@ export default function ProjectCreateButton({
     { label: "Stage", value: PROJECT_STAGE_LABELS[stage] },
     { label: "Start", value: startDate || "-" },
     { label: "Due", value: dueDate || "-" },
+    { label: "Team", value: memberIds.length ? employees.filter((e) => memberIds.includes(e.id)).map((e) => e.name).join(", ") : "Nobody assigned yet" },
+    ...(domainName.trim() ? [{ label: "Domain", value: domainExpires ? `${domainName.trim()} (renews ${domainExpires})` : domainName.trim() }] : []),
   ];
 
   return (
@@ -377,6 +401,35 @@ export default function ProjectCreateButton({
               onChange={setDueDate}
               error={errors.dueDate}
             />
+            <AdvancedSection title="Domain & hosting" hint="Optional - track renewal dates to get expiry warnings">
+              <TextField id="project-domain" label="Domain" value={domainName} onChange={setDomainName} placeholder="example.com" />
+              <TextField id="project-domain-exp" label="Domain renews on" type="date" value={domainExpires} onChange={setDomainExpires} />
+              <TextField id="project-host" label="Hosting provider" value={hostingProvider} onChange={setHostingProvider} placeholder="e.g. Hostinger, Vercel" />
+              <TextField id="project-host-exp" label="Hosting renews on" type="date" value={hostingExpires} onChange={setHostingExpires} />
+            </AdvancedSection>
+            <div className="sm:col-span-2">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#231F20]/55">Assign team members</p>
+              {employees.length === 0 ? (
+                <p className="rounded-xl border border-dashed border-[#1A14A5]/20 px-4 py-3 text-center text-sm text-[#231F20]/50">No active team members yet - add them under Team.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {employees.map((e) => {
+                    const on = memberIds.includes(e.id);
+                    return (
+                      <button
+                        key={e.id}
+                        type="button"
+                        onClick={() => setMemberIds(on ? memberIds.filter((x) => x !== e.id) : [...memberIds, e.id])}
+                        className={cn("rounded-full border px-3 py-1.5 text-sm font-semibold transition", on ? "border-[#1A14A5] bg-[#E8E7FB] text-[#1A14A5]" : "border-[#1A14A5]/15 text-[#231F20]/70 hover:bg-[#F4F7FE]")}
+                      >
+                        {on ? "✓ " : "+ "}
+                        {e.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

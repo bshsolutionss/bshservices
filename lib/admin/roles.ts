@@ -37,6 +37,26 @@ export function invalidateRoleCache() {
   cache = null;
 }
 
+let portalCache: { at: number; emails: Set<string> } | null = null;
+
+/** Emails of client-portal logins. A client must never inherit admin access from the "no roles configured yet" fallback below. */
+async function portalEmails(): Promise<Set<string>> {
+  if (portalCache && Date.now() - portalCache.at < TTL_MS) return portalCache.emails;
+  const emails = new Set<string>();
+  try {
+    const { data } = await createServiceRoleClient().from("client_users").select("email");
+    for (const row of data ?? []) emails.add(String(row.email).toLowerCase());
+  } catch {
+    // Table missing (migration 0015 not run yet) - nobody is a portal user.
+  }
+  portalCache = { at: Date.now(), emails };
+  return emails;
+}
+
+export function invalidatePortalEmailCache() {
+  portalCache = null;
+}
+
 export async function listRoleRows(): Promise<RoleRow[]> {
   invalidateRoleCache();
   return (await loadRows()) ?? [];
@@ -50,7 +70,10 @@ export async function listRoleRows(): Promise<RoleRow[]> {
  */
 export async function lookupRole(email: string | null | undefined): Promise<RoleInfo | null> {
   const rows = await loadRows();
-  if (!rows || rows.length === 0) return { role: "admin", employeeId: null, implicit: true };
+  if (!rows || rows.length === 0) {
+    if ((await portalEmails()).has((email ?? "").toLowerCase())) return null;
+    return { role: "admin", employeeId: null, implicit: true };
+  }
   const match = rows.find((r) => r.email.toLowerCase() === (email ?? "").toLowerCase() && r.active);
   return match ? { role: match.role, employeeId: match.employee_id, implicit: false } : null;
 }

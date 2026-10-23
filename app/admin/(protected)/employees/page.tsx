@@ -3,6 +3,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { Employee } from "@/lib/employees";
 import { PageHeader, StatCard } from "@/components/admin/ui";
 import EmployeeFormModal from "@/components/admin/employees/EmployeeFormModal";
+import TeamMemberModal from "@/components/admin/team/TeamMemberModal";
 import EmployeesTable from "@/components/admin/employees/EmployeesTable";
 import { WriteGate } from "@/components/admin/RoleContext";
 
@@ -26,7 +27,8 @@ export default async function AdminEmployeesPage() {
           <WriteGate module="team">
             <span className="flex flex-wrap items-center gap-2">
               <EmployeeFormModal variant="outline" defaultType="freelance" label="Add freelancer" />
-              <EmployeeFormModal label="Add employee" />
+              <EmployeeFormModal variant="outline" label="Add employee" />
+              <TeamMemberModal label="Add team member" />
             </span>
           </WriteGate>
         }

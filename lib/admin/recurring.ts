@@ -12,7 +12,7 @@ import { logActivity } from "@/lib/activity";
 import { getInvoiceSettings } from "@/lib/admin/invoice-settings";
 import { todayInPkt } from "@/lib/availability";
 import type { Project } from "@/lib/projects";
-import type { Expense } from "@/lib/expenses";
+import { EXPENSE_RECURRENCE_MONTHS, type Expense } from "@/lib/expenses";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -178,10 +178,11 @@ export async function runRecurringJobs(today = todayInPkt()): Promise<RecurringR
     // Walk every month from the one after the template up to today, so a missed cron run catches up.
     let y = ty;
     let m = tm;
+    const step = EXPENSE_RECURRENCE_MONTHS[template.recurrence] ?? 1;
     for (let guard = 0; guard < 36; guard++) {
-      m += 1;
-      if (m > 12) {
-        m = 1;
+      m += step;
+      while (m > 12) {
+        m -= 12;
         y += 1;
       }
       const dueDay = Math.min(td, lastDayOfMonth(y, m));
@@ -196,6 +197,8 @@ export async function runRecurringJobs(today = todayInPkt()): Promise<RecurringR
         vendor: template.vendor,
         description: template.description,
         project_id: template.project_id,
+        employee_id: template.employee_id,
+        recurrence: template.recurrence,
         expense_type: "monthly",
         recurring_parent_id: template.id,
         recurring_active: false,

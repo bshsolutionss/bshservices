@@ -48,7 +48,7 @@ export default async function AdminProjectsPage({
   if (activeStage) query = query.eq("stage", activeStage);
   if (activeBilling) query = query.eq("billing_type", activeBilling);
 
-  const [{ data: projectsData }, { data: clientsData }, { data: stageCountsData }, { data: retainerData }, rates] = await Promise.all([
+  const [{ data: projectsData }, { data: clientsData }, { data: stageCountsData }, { data: retainerData }, rates, { data: employeesData }] = await Promise.all([
     query,
     supabase.from("clients").select("id, company_name").order("company_name"),
     // Stage counts for the filter chips — fetched unfiltered so each chip can
@@ -63,7 +63,9 @@ export default async function AdminProjectsPage({
       .eq("archived", false)
       .neq("stage", "completed"),
     getExchangeRates(),
+    supabase.from("employees").select("id, name").eq("status", "active").order("name"),
   ]);
+  const teamOptions = (employeesData ?? []) as { id: string; name: string }[];
 
   const retainers = (retainerData ?? []) as { monthly_fee: number | null; currency: Project["currency"] }[];
   const mrr = retainers.reduce((sum, r) => sum + convertToPKR(Number(r.monthly_fee ?? 0), r.currency, rates), 0);
@@ -126,7 +128,10 @@ export default async function AdminProjectsPage({
               {showArchived ? "← Active projects" : "View archived →"}
             </Link>
             <RecurringSyncButton />
-            <ProjectCreateButton clients={clients} />
+            <Link href="/admin/retainers" className="text-sm font-medium text-[#231F20]/60 hover:text-[#1A14A5]">
+              Retainers →
+            </Link>
+            <ProjectCreateButton clients={clients} employees={teamOptions} />
           </>
         }
       >
@@ -179,7 +184,7 @@ export default async function AdminProjectsPage({
         projects={projects.map((p) => ({ ...p, clientName: clientNames.get(p.client_id) || "-" }))}
         emptyTitle={showArchived ? "No archived projects" : "No projects yet"}
         emptyMessage={showArchived ? "Archived projects appear here." : "Create a project for a client to start tracking tasks and billing."}
-        emptyAction={showArchived ? undefined : <ProjectCreateButton clients={clients} label="Create first project" />}
+        emptyAction={showArchived ? undefined : <ProjectCreateButton clients={clients} employees={teamOptions} label="Create first project" />}
       />
     </div>
   );

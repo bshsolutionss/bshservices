@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import { formatBookingDateTime, type Lead, type LeadStatus, type LeadPriority, type LeadLostReason, type LeadSource } from "@/lib/leads";
+import { ensureLeadStages } from "@/lib/admin/lead-stages";
 import LeadStatusControl from "@/components/admin/LeadStatusControl";
 import BookingCancelButton from "@/components/admin/BookingCancelButton";
 import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
@@ -16,6 +17,8 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   lead_magnet: "Lead Magnet Download",
   chatbot: "Website Chatbot",
   exit_popup: "Website Popup",
+  form: "Collect form",
+  webhook: "Lead source",
   manual: "Added manually",
 };
 
@@ -48,6 +51,11 @@ export default async function AdminLeadDetailPage({
   }
 
   const isBooking = lead.source === "consultation_booking";
+  const [stages, { data: employees }] = await Promise.all([
+    ensureLeadStages(),
+    supabase.from("employees").select("id, name").eq("status", "active").order("name"),
+  ]);
+  const extraEntries = Object.entries(lead.extra ?? {});
 
   return (
     <div className="space-y-6">
@@ -102,6 +110,11 @@ export default async function AdminLeadDetailPage({
               <Field label="Service category" value={lead.service_category} />
               <Field label="Selected service" value={lead.selected_service} />
               <Field label="Business type" value={lead.business_type} />
+              <Field label="Location" value={lead.location} />
+              <Field label="Came from" value={lead.lead_source_detail} />
+              {extraEntries.map(([k, v]) => (
+                <Field key={k} label={k} value={v} />
+              ))}
             </dl>
             {lead.message && (
               <div className="mt-4 pt-4 border-t border-[#1A14A5]/10">
@@ -148,6 +161,11 @@ export default async function AdminLeadDetailPage({
             initialExpectedValue={lead.expected_value}
             initialExpectedValueCurrency={lead.expected_value_currency}
             initialLostReason={lead.lost_reason as LeadLostReason | null}
+            stages={stages.map(({ key, label, kind }) => ({ key, label, kind }))}
+            employees={(employees ?? []) as { id: string; name: string }[]}
+            initialAssignedTo={lead.assigned_to}
+            initialLocation={lead.location}
+            initialReminderAt={lead.reminder_at}
           />
 
           <DeleteLeadButton leadId={lead.id} leadName={lead.name} isBooking={isBooking} />

@@ -20,6 +20,10 @@ import {
   FileText,
   Target,
   MessagesSquare,
+  MessageCircle,
+  Inbox,
+  Repeat,
+  ArrowLeftRight,
   Rocket,
   PiggyBank,
   ListChecks,
@@ -73,6 +77,8 @@ const ALL_NAV_GROUPS: NavGroup[] = [
     icon: Building2,
     items: [
       { href: "/admin/clients", label: "Clients", icon: Building2 },
+      { href: "/admin/messages", label: "Messages", icon: MessageCircle },
+      { href: "/admin/portal", label: "Portal activity", icon: Inbox },
       { href: "/admin/communication", label: "Communication", icon: MessagesSquare },
     ],
   },
@@ -82,6 +88,7 @@ const ALL_NAV_GROUPS: NavGroup[] = [
     icon: FolderKanban,
     items: [
       { href: "/admin/projects", label: "Client projects", icon: FolderKanban },
+      { href: "/admin/retainers", label: "Retainers", icon: Repeat },
       { href: "/admin/tasks", label: "Tasks", icon: CheckSquare },
       { href: "/admin/personal-projects", label: "Personal projects", icon: Rocket },
     ],
@@ -91,6 +98,7 @@ const ALL_NAV_GROUPS: NavGroup[] = [
     label: "Finance",
     icon: Wallet,
     items: [
+      { href: "/admin/payments", label: "Payments", icon: ArrowLeftRight },
       { href: "/admin/invoices", label: "Invoices", icon: Receipt },
       { href: "/admin/expenses", label: "Expenses", icon: Wallet },
       { href: "/admin/finance", label: "Profit & Loss", icon: TrendingUp },

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/admin/api-auth";
 import { createServiceRoleClient } from "@/lib/supabase/service";
-import { EXPENSE_TYPES, type ExpenseCategory, type ExpenseType } from "@/lib/expenses";
+import { EXPENSE_RECURRENCES, EXPENSE_TYPES, type ExpenseCategory, type ExpenseRecurrence, type ExpenseType } from "@/lib/expenses";
 import { CURRENCIES, type Currency } from "@/lib/invoices";
 
 interface CreatePayload {
@@ -13,6 +13,9 @@ interface CreatePayload {
   description?: string;
   expense_type?: ExpenseType;
   project_id?: string | null;
+  employee_id?: string | null;
+  /** For an auto (monthly-type) expense: how often it repeats. */
+  recurrence?: ExpenseRecurrence;
 }
 
 export async function POST(request: NextRequest) {
@@ -40,6 +43,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid expense type." }, { status: 400 });
   }
 
+  if (payload.recurrence && !EXPENSE_RECURRENCES.includes(payload.recurrence)) {
+    return NextResponse.json({ ok: false, error: "Invalid repeat interval." }, { status: 400 });
+  }
+
   const service = createServiceRoleClient();
   const { data, error } = await service
     .from("expenses")
@@ -53,6 +60,8 @@ export async function POST(request: NextRequest) {
       description: payload.description?.trim().slice(0, 1000) || null,
       expense_type: payload.expense_type || "one_time",
       project_id: payload.project_id || null,
+      employee_id: payload.employee_id || null,
+      recurrence: payload.recurrence || "monthly",
     })
     .select("id")
     .single();

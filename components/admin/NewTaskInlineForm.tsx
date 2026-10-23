@@ -10,6 +10,10 @@ import { TASK_PRIORITIES, TASK_PRIORITY_LABELS, type AssigneeOption, type TaskPr
 interface NewTaskInlineFormProps {
   /** Fixed project - used on a project's own page. */
   projectId?: string;
+  /** Fixed internal board - used on a board's own view. */
+  boardId?: string;
+  /** Selectable internal boards, offered next to the projects. */
+  boards?: { id: string; name: string }[];
   /** Selectable projects - used on the global Tasks page (no fixed project). */
   projects?: { id: string; name: string }[];
   /** Active team members. Picking one emails them the assignment. */
@@ -22,9 +26,10 @@ interface NewTaskInlineFormProps {
  * them an email (if they have one on file) - the confirmation under the form
  * says so, or warns when there's no address to send to.
  */
-export default function NewTaskInlineForm({ projectId, projects, assignees = [] }: NewTaskInlineFormProps) {
+export default function NewTaskInlineForm({ projectId, boardId, boards, projects, assignees = [] }: NewTaskInlineFormProps) {
   const router = useRouter();
-  const [selectedProject, setSelectedProject] = useState(projectId ?? "");
+  // "p:<id>" is a client project, "b:<id>" an internal board.
+  const [selectedProject, setSelectedProject] = useState(projectId ? `p:${projectId}` : boardId ? `b:${boardId}` : "");
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [assigneeId, setAssigneeId] = useState("");
@@ -40,7 +45,7 @@ export default function NewTaskInlineForm({ projectId, projects, assignees = [] 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProject) {
-      setError("Choose a project for this task.");
+      setError("Choose a project or board for this task.");
       return;
     }
     if (!title.trim()) {
@@ -56,7 +61,8 @@ export default function NewTaskInlineForm({ projectId, projects, assignees = [] 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          project_id: selectedProject,
+          project_id: selectedProject.startsWith("p:") ? selectedProject.slice(2) : undefined,
+          board_id: selectedProject.startsWith("b:") ? selectedProject.slice(2) : undefined,
           title: title.trim(),
           description: details.trim() || undefined,
           assignee_id: assigneeId || undefined,
@@ -94,17 +100,22 @@ export default function NewTaskInlineForm({ projectId, projects, assignees = [] 
   return (
     <form onSubmit={handleSubmit} className="mb-4 space-y-2 rounded-xl bg-[#F4F7FE] p-3">
       <div className="flex flex-wrap items-center gap-2">
-        {!projectId && projects && (
+        {!projectId && !boardId && (projects || boards) && (
           <select
             aria-label="Project"
             value={selectedProject}
             onChange={(e) => setSelectedProject(e.target.value)}
             className={cn(inputBase, "w-48")}
           >
-            <option value="">Project…</option>
-            {projects.map((p) => (
-              <option key={p.id} value={p.id}>
+            <option value="">Project or board…</option>
+            {(projects ?? []).map((p) => (
+              <option key={p.id} value={`p:${p.id}`}>
                 {p.name}
+              </option>
+            ))}
+            {(boards ?? []).map((b) => (
+              <option key={b.id} value={`b:${b.id}`}>
+                Board: {b.name}
               </option>
             ))}
           </select>

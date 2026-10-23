@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  LEAD_STATUSES,
-  LEAD_STATUS_LABELS,
   LEAD_PRIORITIES,
   LEAD_PRIORITY_LABELS,
   LEAD_LOST_REASONS,
@@ -26,6 +24,12 @@ interface LeadStatusControlProps {
   initialExpectedValue: number | null;
   initialExpectedValueCurrency: Currency;
   initialLostReason: LeadLostReason | null;
+  stages: { key: string; label: string; kind: "open" | "won" | "lost" }[];
+  employees: { id: string; name: string }[];
+  initialAssignedTo: string | null;
+  initialLocation: string | null;
+  /** ISO time of the manual follow-up reminder, if one is set. */
+  initialReminderAt: string | null;
 }
 
 /**
@@ -41,6 +45,11 @@ export default function LeadStatusControl({
   initialExpectedValue,
   initialExpectedValueCurrency,
   initialLostReason,
+  stages,
+  employees,
+  initialAssignedTo,
+  initialLocation,
+  initialReminderAt,
 }: LeadStatusControlProps) {
   const router = useRouter();
   const [status, setStatus] = useState<LeadStatus>(initialStatus);
@@ -51,6 +60,16 @@ export default function LeadStatusControl({
   const [expectedValueCurrency, setExpectedValueCurrency] = useState<Currency>(initialExpectedValueCurrency);
   const [lostReason, setLostReason] = useState<LeadLostReason | "">(initialLostReason ?? "");
   const [notes, setNotes] = useState(initialNotes ?? "");
+  const [assignedTo, setAssignedTo] = useState(initialAssignedTo ?? "");
+  const [location, setLocation] = useState(initialLocation ?? "");
+  // datetime-local wants local wall-clock text, not an ISO instant.
+  const [reminder, setReminder] = useState(() => {
+    if (!initialReminderAt) return "";
+    const d = new Date(initialReminderAt);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
+  });
+  const stageKind = stages.find((s) => s.key === status)?.kind;
+  const stageIndex = stages.findIndex((s) => s.key === status);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +87,9 @@ export default function LeadStatusControl({
           status,
           notes,
           priority,
+          assigned_to: assignedTo || null,
+          location,
+          reminder_at: reminder ? new Date(reminder).toISOString() : null,
           expected_value: expectedValue === "" ? null : Number(expectedValue),
           expected_value_currency: expectedValueCurrency,
           ...(lostReason ? { lost_reason: lostReason } : {}),
@@ -97,25 +119,25 @@ export default function LeadStatusControl({
           onChange={(e) => setStatus(e.target.value as LeadStatus)}
           className="w-full rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white"
         >
-          {LEAD_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {LEAD_STATUS_LABELS[s]}
+          {stages.map((s) => (
+            <option key={s.key} value={s.key}>
+              {s.label}
             </option>
           ))}
         </select>
-        {status !== "new" && status !== "contacted" && (
+        {stageIndex > 1 && (
           <p className="text-xs text-[#231F20]/50 mt-1.5">
             Saving this will stop automated follow-up emails for this lead.
           </p>
         )}
-        {status === "won" && (
+        {stageKind === "won" && (
           <p className="text-xs text-[#1A14A5] mt-1.5">
             Saving this will automatically create/link a Client and Project.
           </p>
         )}
       </div>
 
-      {status === "lost" && (
+      {stageKind === "lost" && (
         <div>
           <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Lost Reason</label>
           <select
@@ -173,6 +195,29 @@ export default function LeadStatusControl({
             </select>
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Assigned to</label>
+          <select value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} className="w-full rounded-lg border border-[#1A14A5]/20 px-3 py-2 text-sm bg-white">
+            <option value="">Unassigned</option>
+            {employees.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Location</label>
+          <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, country" />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-sm font-medium text-[#231F20]/70 block mb-1.5">Follow-up reminder</label>
+        <Input type="datetime-local" value={reminder} onChange={(e) => setReminder(e.target.value)} />
       </div>
 
       <div>

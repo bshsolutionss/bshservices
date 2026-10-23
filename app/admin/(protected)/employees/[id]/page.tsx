@@ -16,6 +16,10 @@ import { Badge, EmptyState, PageHeader, SectionCard } from "@/components/admin/u
 import EmployeeFormModal from "@/components/admin/employees/EmployeeFormModal";
 import DeleteEmployeeButton from "@/components/admin/DeleteEmployeeButton";
 import { WriteGate } from "@/components/admin/RoleContext";
+import TeamAccessCard from "@/components/admin/team/TeamAccessCard";
+import { getAdminSession } from "@/lib/admin/session";
+import { normalizeAccess } from "@/lib/team-access";
+import { TEAM_LOGIN_URL } from "@/lib/admin/team-login";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +38,13 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
   ]);
 
   if (!employee) notFound();
+
+  // The login card is for admins only: access and passwords are owner-level decisions.
+  const session = await getAdminSession();
+  const { data: loginRow } =
+    session?.role === "admin"
+      ? await supabase.from("admin_roles").select("email, active, access, must_change_password").eq("employee_id", id).eq("role", "employee").maybeSingle()
+      : { data: null };
 
   type TaskRowData = Pick<Task, "id" | "title" | "status" | "due_date" | "project_id"> & {
     projects: { name: string } | { name: string }[] | null;
@@ -89,6 +100,13 @@ export default async function AdminEmployeeDetailPage({ params }: { params: Prom
         </div>
 
         <div className="space-y-6">
+          {session?.role === "admin" && (
+            <TeamAccessCard
+              employeeId={employee.id}
+              loginUrl={TEAM_LOGIN_URL}
+              login={loginRow ? { email: loginRow.email, active: loginRow.active, mustChangePassword: !!loginRow.must_change_password, access: normalizeAccess(loginRow.access) } : null}
+            />
+          )}
           <SectionCard title="Profile">
             <dl className="space-y-2.5 text-sm">
               <Row

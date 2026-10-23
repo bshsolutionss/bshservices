@@ -25,6 +25,7 @@ import {
 } from "@/lib/invoices";
 import { Badge, EmptyState, PageHeader, SectionCard } from "@/components/admin/ui";
 import ProjectEditControl from "@/components/admin/ProjectEditControl";
+import ProjectTeamCard from "@/components/admin/projects/ProjectTeamCard";
 import NewTaskInlineForm from "@/components/admin/NewTaskInlineForm";
 import TaskRow from "@/components/admin/TaskRow";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
@@ -50,13 +51,14 @@ export default async function AdminProjectDetailPage({
 
   // One round trip: the project (with its client embedded) and everything keyed on its id,
   // instead of project -> client/tasks/invoices -> balances in sequence.
-  const [{ data: projectRow }, { data: tasksData }, { data: invoicesData }, { data: employeesData }, { data: balanceRows }] =
+  const [{ data: projectRow }, { data: tasksData }, { data: invoicesData }, { data: employeesData }, { data: balanceRows }, { data: memberRows }] =
     await Promise.all([
       supabase.from("projects").select("*, clients(*)").eq("id", id).single(),
       supabase.from("tasks").select("*").eq("project_id", id).order("created_at", { ascending: false }),
       supabase.from("invoices").select("*").eq("project_id", id).order("created_at", { ascending: false }),
       supabase.from("employees").select("id, name, email").eq("status", "active").order("name"),
       supabase.from("invoice_balances").select("*").eq("project_id", id),
+      supabase.from("project_members").select("employee_id").eq("project_id", id),
     ]);
 
   if (!projectRow) {
@@ -70,6 +72,8 @@ export default async function AdminProjectDetailPage({
   const completedCount = tasks.filter((t) => t.status === "completed").length;
   const invoiceRows = (invoicesData ?? []) as Invoice[];
   const assignees = (employeesData ?? []) as AssigneeOption[];
+  const teamOptions = assignees.map((a) => ({ id: a.id, name: a.name }));
+  const memberIds = (memberRows ?? []).map((m) => m.employee_id as string);
 
   // paid/balance/overdue come from the invoice_balances view - the single
   // source of truth for that math - joined back onto the invoices above.
@@ -287,6 +291,16 @@ export default async function AdminProjectDetailPage({
               )}
             </dl>
           </SectionCard>
+
+          <ProjectTeamCard
+            projectId={project.id}
+            employees={teamOptions}
+            memberIds={memberIds}
+            domainName={project.domain_name}
+            domainExpiresOn={project.domain_expires_on}
+            hostingProvider={project.hosting_provider}
+            hostingExpiresOn={project.hosting_expires_on}
+          />
 
           <ProjectEditControl
             projectId={project.id}
